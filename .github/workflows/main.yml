@@ -1,6 +1,7 @@
 name: Deploy to Skynet
 
 on:
+  pull_request:
   push:
     branches: [master]
 
@@ -14,14 +15,17 @@ jobs:
         with:
           node-version: 16.x
 
-      - run: yarn
-      - run: yarn run build
+      - name: Install dependencies
+        run: npm ci
 
-      - name: "Deploy to Skynet"
+      - name: Build webapp
+        run: npm run build
+
+      - name: Deploy to Skynet
         uses: SkynetLabs/deploy-to-skynet-action@v2
         with:
-          upload-dir: build
+          upload-dir: dist
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          registry-seed: ${{ secrets.SKYNET_REGISTRY_SEED || '' }}
-          skynet-jwt: ${{ secrets.SKYNET_JWT}}
           portal-url: https://skynetfree.net
+          skynet-api-key: ${{ secrets.SKYNET_API_KEY }}
+          registry-seed: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.REGISTRY_SEED || '' }}
