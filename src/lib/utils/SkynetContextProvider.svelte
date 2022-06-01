@@ -64,6 +64,8 @@
 
   $: !$state.mySky && !$state.mySkyInitialising ? initMySky() : "";
 
+  setContext('skynetContext', {skynetState: state});
+
   onDestroy(() => {
     if ($state.mySky) {
       $state.mySky.destroy();
