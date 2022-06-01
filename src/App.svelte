@@ -1,24 +1,30 @@
 <script>
-  import logo from './assets/svelte.png'
-  import Counter from './lib/Counter.svelte'
+	import { Router, Route, createHistory } from "svelte-navigator";
+  import createHashSource from "./hashHistory";
+  import Navbar from "./lib/Navbar.svelte";
+  
+  const hash = createHistory(createHashSource());
 </script>
 
-<main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello world!</h1>
+<Router history={hash}>
+  <Navbar />
+  <main>
+    <Route path="home">
+      <h3>Home</h3>
+      <p>Home sweet home...</p>
+    </Route>
 
-  <Counter />
+    <Route path="about">
+      <h3>About</h3>
+      <p>That's what it's all about!</p>
+    </Route>
 
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
-</main>
+    <Route>
+      <h3>Default</h3>
+      <p>No Route could be matched.</p>
+    </Route>
+  </main>
+</Router>
 
 <style>
   :root {
