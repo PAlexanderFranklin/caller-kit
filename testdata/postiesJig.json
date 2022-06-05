@@ -1,0 +1,67 @@
+{
+  "dance": {
+    "name": "Postie's Jig",
+    "tempo": "8/4",
+    "instructions": {
+      "verseLength": 80,
+      "overview": "This dance is done in sets of four couples. The four gentlemen stand in a line facing their partners in another line, and both lines are perpendicular to the music. The two couples that have neighbours on both their left and right at the start of the dance are the post couples, and the two outside couples are the active couples. The posts and active couples switch roles each verse.",
+      "active": [
+        {
+          "name": "Set",
+          "move": {
+            "name": "Set",
+            "instructions": "step left, shift to right foot, shift to left foot, step right, shift to left, shift to right.",
+            "demonstration": "SoftLink"
+          },
+          "duration": 4
+        },
+        {
+          "name": "Cast Off",
+          "move": {
+            "name": "Cast Off",
+            "instructions": "turn away from your neighbor and walk around their backside, ending up on the other side of them facing the same direction you started.",
+            "demonstration": "SoftLink"
+          },
+          "duration": 4
+        }
+      ],
+      "posts": [
+        {
+          "name": "Wait",
+          "move": {
+            "name": "Wait",
+            "instructions": "Wait",
+            "demonstration": "SoftLink"
+          },
+          "duration": 4
+        },
+        {
+          "name": "Step Over",
+          "move": {
+            "name": "Step Over",
+            "instructions": "Move into your neighbors old position as they cast off around you.",
+            "demonstration": "SoftLink"
+          },
+          "duration": 4
+        }
+      ]
+    },
+    "music": [
+      {
+        "favorite": true,
+        "name": "Lanigan's Ball",
+        "softLink": "SoftLink",
+        "youtube": "https://youtu.be/GFwjp3GfEGM",
+        "sheetMusic": "SoftLink"
+      }
+    ]
+  },
+  "lanigansBallMp3": {
+    "extension": {
+      "tempo": "8/4",
+      "verseLength": 80,
+      "beatsBetweenVerses": 8
+    }
+  },
+  "demonstration": "SoftLink"
+}
