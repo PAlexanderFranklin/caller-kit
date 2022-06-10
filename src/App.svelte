@@ -5,26 +5,24 @@
   import createHashSource from "./lib/utils/hashHistory.js";
   // import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
   // import Login from "./lib/Components/Login.svelte";
-
-  import * as kernel from "libkernel";
-
   import {
     IdentityDAC,
     ProfileDAC,
     SocialDAC,
     FeedDAC,
   } from "skynet-dacs-library";
+
+  import * as kernel from "libkernel";
+  import CreateCall from "./lib/Components/CreateCall.svelte";
+
+  const identityDAC = new IdentityDAC();
   
   const hash = createHistory(createHashSource());
 
-  // const identityDAC = new IdentityDAC();
-
-  // const profileDAC = new ProfileDAC();
-  // const socialDAC = new SocialDAC();
-  // const feedDAC = new FeedDAC();
-
   let loading = true
-  kernel.init().then(loading = false);
+  kernel.init().then(
+    loading = false
+  );
 
 </script>
 
@@ -36,7 +34,9 @@
       <!-- <Route path="login" component={Login} /> -->
 
       <Route>
-        <p>This is the default route.</p>
+        <p>All content created using this application is published in the public domain under the <a rel="license"
+          href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a>.</p>
+        <CreateCall />
       </Route>
     <!-- </SkynetContextProvider> -->
   </Router>
