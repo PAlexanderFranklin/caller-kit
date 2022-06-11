@@ -26,3 +26,7 @@ dist-ssr
 # Secrets
 SKYNET_REGISTRY_SEED.txt
 SKYNET_API_KEY.json
+
+# Modules
+build/
+dist-build/

@@ -1,3 +1,5 @@
+import {v4 as uuid} from 'uuid';
+
 interface Call {
   id: String,
   title: String,
@@ -34,3 +36,26 @@ interface Dance {
 
 let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
+let formations: Array<Formation> = [];
+
+const setCalls = (newCalls:Array<Call>) => {
+  calls = newCalls;
+}
+
+const setDances = (newDances:Array<Dance>) => {
+  dances = newDances;
+}
+
+const setFormations = (newFormations:Array<Formation>) => {
+  formations = newFormations;
+}
+
+const createCall = (call:any) => {
+  const newCall:Call = {
+    id: uuid(),
+    title: call.title,
+    text: call.text,
+    duration: call.duration
+  };
+  setCalls([...calls, newCall])
+}
