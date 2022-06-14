@@ -1,5 +1,6 @@
 export interface Call {
   id: String,
+  skyfeed?: String,
   title: String,
   text?: String,
   license?: String,
@@ -11,8 +12,8 @@ export interface Call {
 
 export interface CallRef {
   id: String,
-  beats?: Number,
   skyfeed?: String,
+  beats?: Number,
 }
 
 export interface Dancer {
@@ -23,6 +24,7 @@ export interface Dancer {
 
 export interface Formation {
   id: String,
+  skyfeed?: String,
   title: String,
   text?: String,
   dancers?: Array<Dancer>
@@ -35,11 +37,17 @@ export interface FormationRef {
 
 export interface Dance {
   id: String,
+  skyfeed?: String,
   title: String,
   text?: String,
   formation?: FormationRef,
   instructions: Array<CallRef>
-  variantOf?: CallRef,
+  variantOf?: DanceRef,
   footwork?: CallRef,
   hold?: CallRef,
+}
+
+export interface DanceRef {
+  id: String,
+  skyfeed?: String,
 }
