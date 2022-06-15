@@ -1,9 +1,10 @@
 <script>
-import { writable, setContext } from "svelte/store";
-import { init as kernelInit, openAuthWindow } from 'libkernel';
+import { setContext } from 'svelte';
+import { writable } from 'svelte/store';
+import { init as kernelInit, loginComplete, openAuthWindow } from 'libkernel';
 
-let userAuthStatus = writable(false)
-let authInProgress = writable(false)
+let userAuthStatus = writable(false);
+let authInProgress = writable(false);
 
 // on first load, check authentication status of user
 // this also calls init()
@@ -12,14 +13,14 @@ $: checkAuthStatus();
 const checkAuthStatus = async () => {
   $authInProgress = true;
   const result = await kernelInit();
-  result ? $userAuthStatus = false : $userAuthStatus = true;
+  loginComplete().then($userAuthStatus = true);
   $authInProgress = false;
 };
 
 const login = async () => {
   $authInProgress = true;
   await openAuthWindow();
-  checkAuthStatus();
+  await checkAuthStatus();
   $authInProgress = false;
 };
 
@@ -30,8 +31,12 @@ setContext("skynetContext", {
 })
 </script>
 
-{#if userAuthStatus}
-  <div>The application is loading.</div>
+{#if !$userAuthStatus}
+  {#if $authInProgress}
+    <div>The application is loading.</div>
+  {:else}
+    <button on:click={login}>Authenticate With Skynet Kernel</button>
+  {/if}
 {:else}
   <slot />
 {/if}
