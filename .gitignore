@@ -30,3 +30,4 @@ SKYNET_API_KEY.json
 # Modules
 build/
 dist-build/
+.module-salt
