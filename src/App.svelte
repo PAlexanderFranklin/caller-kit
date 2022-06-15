@@ -3,19 +3,10 @@
 
 	import { Router, Route, createHistory } from "svelte-navigator";
   import createHashSource from "./lib/utils/hashHistory.js";
-  // import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
   // import Login from "./lib/Components/Login.svelte";
-  import {
-    IdentityDAC,
-    ProfileDAC,
-    SocialDAC,
-    FeedDAC,
-  } from "skynet-dacs-library";
 
   import * as kernel from "libkernel";
   import CreateCall from "./lib/Components/CreateCall.svelte";
-
-  const identityDAC = new IdentityDAC();
   
   const hash = createHistory(createHashSource());
 
@@ -35,7 +26,7 @@
 
       <Route>
         <p>All content created using this application is published in the public domain under the <a rel="license"
-          href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a>.</p>
+          href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.</p>
         <CreateCall />
       </Route>
     <!-- </SkynetContextProvider> -->
