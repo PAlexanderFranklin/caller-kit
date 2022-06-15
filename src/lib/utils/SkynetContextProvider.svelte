@@ -30,5 +30,8 @@ setContext("skynetContext", {
 })
 </script>
 
-
-<slot />
+{#if userAuthStatus}
+  <div>The application is loading.</div>
+{:else}
+  <slot />
+{/if}

@@ -1,27 +1,15 @@
 <script>
-// @ts-nocheck
-
-	import { Router, Route, createHistory } from "svelte-navigator";
-  import createHashSource from "./lib/utils/hashHistory.js";
-  // import Login from "./lib/Components/Login.svelte";
-
-  import * as kernel from "libkernel";
-  import CreateCall from "./lib/Components/CreateCall.svelte";
+import { Router, Route, createHistory } from "svelte-navigator";
+import createHashSource from "./lib/utils/hashHistory.js";
+import CreateCall from "./lib/Components/CreateCall.svelte";
+import SkynetContextProvider from "./lib/utils/skynetContextProvider.svelte";
   
-  const hash = createHistory(createHashSource());
-
-  let loading = true
-  kernel.init().then(
-    loading = false
-  );
+const hash = createHistory(createHashSource());
 
 </script>
 
-{#if loading}
-  <div>The application is loading.</div>
-{:else}
-  <Router history={hash}>
-    <!-- <SkynetContextProvider> -->
+<SkynetContextProvider>
+    <Router history={hash}>
       <!-- <Route path="login" component={Login} /> -->
 
       <Route>
@@ -29,9 +17,8 @@
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.</p>
         <CreateCall />
       </Route>
-    <!-- </SkynetContextProvider> -->
-  </Router>
-{/if}
+    </Router>
+</SkynetContextProvider>
 
 <style>
   :root {
