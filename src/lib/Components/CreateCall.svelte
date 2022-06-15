@@ -1,5 +1,6 @@
 <script>
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
+import { createCall } from '../utils/danceModule';
 
 let call = writable({
   title: "",
@@ -26,7 +27,7 @@ let call = writable({
     type="number"
     bind:value={$call.duration}
   />
-  <button on:click={() => {console.log($call)}}>Create Call</button>
+  <button on:click={() => {createCall($call)}}>Create Call</button>
 </div>
 
 <style>

@@ -33,7 +33,7 @@ setContext("skynetContext", {
 
 {#if !$userAuthStatus}
   {#if $authInProgress}
-    <div>The application is loading.</div>
+    <div>Authenticating...</div>
   {:else}
     <button on:click={login}>Authenticate With Skynet Kernel</button>
   {/if}
