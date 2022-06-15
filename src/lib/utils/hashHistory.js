@@ -1,4 +1,3 @@
-// @ts-nocheck
 import "./shimProcess";
 import { createHashHistory } from "history";
 
