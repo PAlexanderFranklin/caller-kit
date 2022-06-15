@@ -53,6 +53,10 @@ const handleDeleteCall = (aq: activeQuery) => {
 const handleCreateCall = (aq: activeQuery) => {
   if ('call' in aq.callerInput) {
     const call:any = aq.callerInput.call
+    if (!call.title) {
+      aq.reject('No title found, call not created.');
+      return
+    }
     const newCall:Call = {
       id: uuid(),
       title: call.title,
