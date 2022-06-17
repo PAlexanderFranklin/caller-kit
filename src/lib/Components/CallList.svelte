@@ -11,7 +11,7 @@
     <button on:click={() => {hidden = false}}>New Call</button>
   {:else}
     <div use:clickOutside on:click_outside={() => {hidden = true}}>
-      <CreateCall />
+      <CreateCall on:closeModal={() => {hidden = true}} />
     </div>
   {/if}
   {#each $calls as call}

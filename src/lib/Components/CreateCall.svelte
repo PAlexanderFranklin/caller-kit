@@ -1,6 +1,9 @@
 <script>
+import { createEventDispatcher } from 'svelte';
 import { writable } from 'svelte/store';
 import { createCall } from '../utils/danceModule';
+
+const dispatch = createEventDispatcher();
 
 let call = writable({
   title: "",
@@ -8,9 +11,17 @@ let call = writable({
   duration: 8
 })
 
+let creating = false;
+
 function handleCreateCall() {
+  creating = true;
   createCall($call).then(() => {
     $call = {};
+    dispatch('closeModal', {});
+    creating = false;
+  }).catch((err) => {
+    console.error(err);
+    creating = false;
   });
 }
 </script>
@@ -33,7 +44,11 @@ function handleCreateCall() {
     type="number"
     bind:value={$call.beats}
   />
-  <button on:click={handleCreateCall}>Create Call</button>
+  {#if creating}
+    <button>Creating Call...</button>
+  {:else}
+    <button on:click={handleCreateCall}>Create Call</button>
+  {/if}
 </div>
 
 <style>
