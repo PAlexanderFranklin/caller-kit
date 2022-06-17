@@ -18,6 +18,7 @@
     "libkernel": "^0.1.22",
     "skynet-dacs-library": "^0.1.1",
     "skynet-js": "^4.1.0",
+    "svelte-material-icons": "^2.0.2",
     "svelte-navigator": "^3.1.5"
   }
 }
