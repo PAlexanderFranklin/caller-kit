@@ -2,6 +2,7 @@
 import { createEventDispatcher } from 'svelte';
 // import {clickOutside} from "../../utils/clickOutside.js";
 import { calls } from "../../utils/danceModule";
+import Call from './Call.svelte';
 import CreateCall from "./CreateCall.svelte";
 
 const dispatch = createEventDispatcher();
@@ -16,16 +17,6 @@ let hidden = true;
     <CreateCall on:closeModal={() => {hidden = true}} />
   {/if}
   {#each $calls as call}
-    <div on:click={() => {dispatch('selectCall', { call })}}>
-      <h1>
-        Name: {call.title}
-      </h1>
-      <p>
-        Description: {call.text}
-      </p>
-      <span>
-        Duration in Beats: {call.beats}
-      </span>
-    </div>
+      <Call call={call} on:selectCall={() => {dispatch('selectCall', { call })}} />
   {/each}
 </div>

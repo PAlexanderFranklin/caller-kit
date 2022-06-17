@@ -7,7 +7,7 @@ const mainCall = writable({});
 </script>
 
 <p>
-  Title: {$mainCall.beats}
+  Title: {$mainCall.title}
 </p>
 <CallList on:selectCall={(event) => {$mainCall = event.detail.call}} />
 <!-- <CallList on:selectCall={(data) => {console.log(data)}} /> -->
