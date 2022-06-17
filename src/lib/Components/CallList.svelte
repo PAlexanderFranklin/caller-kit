@@ -1,4 +1,5 @@
 <script>
+  import {clickOutside} from "../utils/clickOutside.js";
   import { calls } from "../utils/danceModule";
   import CreateCall from "./CreateCall.svelte";
 
@@ -9,7 +10,9 @@
   {#if hidden}
     <button on:click={() => {hidden = false}}>New Call</button>
   {:else}
-    <CreateCall />
+    <div use:clickOutside on:click_outside={() => {hidden = true}}>
+      <CreateCall />
+    </div>
   {/if}
   {#each $calls as call}
     <h1>
