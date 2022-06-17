@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 import { writable } from 'svelte/store';
-import { createCall } from '../utils/danceModule';
+import { createCall } from '../../utils/danceModule';
 
 const dispatch = createEventDispatcher();
 
@@ -27,6 +27,7 @@ function handleCreateCall() {
 </script>
 
 <div class="CreateCall">
+  <button on:click={() => {dispatch('closeModal', {})}}>X</button>
   <label for="title">Name: </label>
   <input
     id="title"

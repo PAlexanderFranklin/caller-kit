@@ -1,5 +1,5 @@
 <script>
-import CallList from "./CallList.svelte";
+import CallList from "./Calls/CallList.svelte";
 
 
 </script>
