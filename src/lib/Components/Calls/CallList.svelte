@@ -1,9 +1,12 @@
 <script>
-  import {clickOutside} from "../../utils/clickOutside.js";
-  import { calls } from "../../utils/danceModule";
-  import CreateCall from "./CreateCall.svelte";
+import { createEventDispatcher } from 'svelte';
+// import {clickOutside} from "../../utils/clickOutside.js";
+import { calls } from "../../utils/danceModule";
+import CreateCall from "./CreateCall.svelte";
 
-  let hidden = true;
+const dispatch = createEventDispatcher();
+
+let hidden = true;
 </script>
 
 <div>
@@ -13,14 +16,16 @@
     <CreateCall on:closeModal={() => {hidden = true}} />
   {/if}
   {#each $calls as call}
-    <h1>
-      Name: {call.title}
-    </h1>
-    <p>
-      Description: {call.text}
-    </p>
-    <span>
-      Duration in Beats: {call.beats}
-    </span>
+    <div on:click={() => {dispatch('selectCall', { call })}}>
+      <h1>
+        Name: {call.title}
+      </h1>
+      <p>
+        Description: {call.text}
+      </p>
+      <span>
+        Duration in Beats: {call.beats}
+      </span>
+    </div>
   {/each}
 </div>
