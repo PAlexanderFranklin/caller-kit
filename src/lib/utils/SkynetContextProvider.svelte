@@ -2,6 +2,7 @@
 import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 import { init as kernelInit, loginComplete, openAuthWindow } from 'libkernel';
+import { calls, subscribeCalls } from "./danceModule";
 
 let userAuthStatus = writable(false);
 let authInProgress = writable(false);
@@ -29,6 +30,13 @@ setContext("skynetContext", {
   login,
   authInProgress,
 })
+
+let subscribed = false;
+
+$: $userAuthStatus && !subscribed ? subscribeCalls( (data) => {
+  $calls = data?.calls;
+  subscribed = true;
+}) : "";
 </script>
 
 {#if !$userAuthStatus}

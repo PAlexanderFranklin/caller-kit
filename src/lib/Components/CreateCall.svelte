@@ -7,10 +7,16 @@ let call = writable({
   text: "",
   duration: 8
 })
+
+function handleCreateCall() {
+  createCall($call).then(() => {
+    $call = {};
+  });
+}
 </script>
 
 <div class="CreateCall">
-  <label for="title">Title: </label>
+  <label for="title">Name: </label>
   <input
     id="title"
     type="text"
@@ -25,9 +31,9 @@ let call = writable({
   <input
     id="duration"
     type="number"
-    bind:value={$call.duration}
+    bind:value={$call.beats}
   />
-  <button on:click={() => {createCall($call)}}>Create Call</button>
+  <button on:click={handleCreateCall}>Create Call</button>
 </div>
 
 <style>

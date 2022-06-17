@@ -6,25 +6,36 @@ import type { Call, CallRef, Dancer, Formation, Dance } from './danceTypes';
 // Sets up managing postMessage handling.
 onmessage = handleMessage;
 
+// Initialize array to hold `setUpdate` functions, one for each subscribed caller
+let subscriptionUpdatesCalls: Array<(updateData: any) => void> = [];
+
 let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
 let formations: Array<Formation> = [];
 
 const setCalls = (newCalls: Array<Call>) => {
   calls = newCalls;
+  pushCalls();
 }
 
 const handleGetCalls = (aq: activeQuery) => {
   aq.respond({calls});
 }
 
-const setDances = (newDances: Array<Dance>) => {
-  dances = newDances;
-}
+const pushCalls = () => {
+  // for each sendUpdate function, send latest list
+  subscriptionUpdatesCalls.forEach((sendUpdate) => {
+    sendUpdate({ calls });
+  });
+};
 
-const setFormations = (newFormations: Array<Formation>) => {
-  formations = newFormations;
-}
+const handleSubscribeCalls = (aq: activeQuery) => {
+  // add sendUpdate method to list of subscriptions
+  subscriptionUpdatesCalls.push(aq.sendUpdate);
+
+  // do initial responseUpdate for this caller
+  aq.sendUpdate({ calls });
+};
 
 const handleDeleteCall = (aq: activeQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
@@ -75,6 +86,15 @@ const handleCreateCall = (aq: activeQuery) => {
   }
 }
 
+const setDances = (newDances: Array<Dance>) => {
+  dances = newDances;
+}
+
+const setFormations = (newFormations: Array<Formation>) => {
+  formations = newFormations;
+}
+
 addHandler('createCall', handleCreateCall);
 addHandler('getCalls', handleGetCalls)
+addHandler('subscribeCalls', handleSubscribeCalls)
 addHandler('deleteCall', handleDeleteCall)
