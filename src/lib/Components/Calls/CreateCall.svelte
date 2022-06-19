@@ -2,13 +2,18 @@
 import { createEventDispatcher } from 'svelte';
 import { writable } from 'svelte/store';
 import { createCall } from '../../utils/danceModule';
+import CallList from './CallList.svelte';
+import CheckboxMarked from "svelte-material-icons/CheckboxMarked.svelte";
+import CheckboxMarkedOutline from "svelte-material-icons/CheckboxMarkedOutline.svelte";
 
 const dispatch = createEventDispatcher();
 
 let call = writable({
   title: "",
   text: "",
-  duration: 8
+  duration: 8,
+  isFootwork: false,
+  isHold: false,
 })
 
 let creating = false;
@@ -45,6 +50,27 @@ function handleCreateCall() {
     type="number"
     bind:value={$call.beats}
   />
+  <CallList />
+  <div class="CreateCallToggle">
+    This call is footwork:
+    <button on:click={() => {call.isFootwork = !call.isFootwork}}>
+      {#if call.isFootwork}
+        <CheckboxMarked size="1.5rem" color="green" />
+      {:else}
+        <CheckboxMarkedOutline size="1.5rem" />
+      {/if}
+    </button>
+  </div>
+  <div class="CreateCallToggle">
+    This call is a hold:
+    <button on:click={() => {call.isHold = !call.isHold}}>
+      {#if call.isHold}
+        <CheckboxMarked size="1.5rem" color="green" />
+      {:else}
+        <CheckboxMarkedOutline size="1.5rem" />
+      {/if}
+    </button>
+  </div>
   {#if creating}
     <button>Creating Call...</button>
   {:else}
@@ -59,4 +85,10 @@ function handleCreateCall() {
     gap: 1rem;
     width: 20rem;
   }
+
+  .CreateCallToggle {
+    display: flex;
+    gap: 0.5rem;
+  }
+
 </style>

@@ -10,7 +10,7 @@ const dispatch = createEventDispatcher();
 let hidden = true;
 </script>
 
-<div>
+<div class="CallList">
   {#if hidden}
     <button on:click={() => {hidden = false}}>New Call</button>
   {:else}
@@ -20,3 +20,11 @@ let hidden = true;
       <Call call={call} on:selectCall={() => {dispatch('selectCall', { call })}} />
   {/each}
 </div>
+
+<style>
+  .CallList {
+    border: 2px;
+    padding: 3rem;
+    border-color: black;
+  }
+</style>
