@@ -41,6 +41,7 @@ const dispatch = createEventDispatcher();
     </div>
   {/if}
 </div>
+<hr>
 
 <style>
   .Call {
@@ -57,5 +58,10 @@ const dispatch = createEventDispatcher();
   }
   .deleteButton {
     color: red;
+  }
+  hr {
+    background: green;
+    height: 1px;
+    width: 100%;
   }
 </style>

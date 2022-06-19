@@ -24,6 +24,9 @@ let hidden = true;
 
 <style>
   .CallList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     padding: 3rem;
     width: 20rem;
     background-color: white;
