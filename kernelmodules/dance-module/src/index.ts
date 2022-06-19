@@ -69,14 +69,9 @@ const handleCreateCall = (aq: activeQuery) => {
       return
     }
     const newCall:Call = {
+      ...call,
       id: uuid(),
-      title: call.title,
-      text: call.text,
-      beats: call.beats,
       license: call.license || "CC0",
-      dependencies: call.dependencies,
-      footwork: call.footwork,
-      hold: call.hold,
     };
     setCalls([...calls, newCall]);
     aq.respond({call: newCall});

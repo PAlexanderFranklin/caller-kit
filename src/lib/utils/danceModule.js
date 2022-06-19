@@ -15,6 +15,16 @@ export const createCall = async (call) => {
   }
 }
 
+export const deleteCall = async (id) => {
+  const [result, err] = await callModule(danceModule, 'deleteCall', {id});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const subscribeCalls = async (update) => {
   //we won't handle sending updates to module, or dealing with closing response
   connectModule(danceModule, 'subscribeCalls', {}, update);

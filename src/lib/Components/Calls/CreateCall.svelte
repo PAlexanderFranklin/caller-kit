@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 import { writable } from 'svelte/store';
-import { createCall } from '../../utils/danceModule';
+import { calls, createCall } from '../../utils/danceModule';
 import CallList from './CallList.svelte';
 import CheckboxMarked from "svelte-material-icons/CheckboxMarked.svelte";
 import CheckboxMarkedOutline from "svelte-material-icons/CheckboxMarkedOutline.svelte";
@@ -15,6 +15,9 @@ let call = writable({
   isFootwork: false,
   isHold: false,
 })
+
+let selectingFootwork = false;
+let selectingHold = false;
 
 let creating = false;
 
@@ -50,11 +53,46 @@ function handleCreateCall() {
     type="number"
     bind:value={$call.beats}
   />
-  <CallList />
+  <div on:click={() => {selectingFootwork = !selectingFootwork}}>
+    Footwork: {$call.footwork ? $call.footwork.title : "Select Footwork (optional)"}
+  </div>
+  {#if selectingFootwork}
+    <button on:click={() => {
+      selectingFootwork = false;
+      $call.footwork = undefined;
+    }}>
+      Deselect Footwork
+    </button>
+    <CallList
+      calls={$calls.filter(call => call.isFootwork)}
+      on:selectCall={(event) => {
+        selectingFootwork = false;
+        $call.footwork = event.detail.call;
+      }}
+    />
+  {/if}
+  <div on:click={() => {selectingHold = !selectingHold}}>
+    Hold: {$call.hold ? $call.hold.title : "Select Hold (optional)"}
+  </div>
+  {#if selectingHold}
+    <button on:click={() => {
+      selectingHold = false;
+      $call.hold = undefined;
+    }}>
+      Deselect Hold
+    </button>
+    <CallList
+      calls={$calls.filter(call => call.isHold)}
+      on:selectCall={(event) => {
+        selectingHold = false;
+        $call.hold = event.detail.call;
+      }}
+    />
+  {/if}
   <div class="CreateCallToggle">
     This call is footwork:
-    <button on:click={() => {call.isFootwork = !call.isFootwork}}>
-      {#if call.isFootwork}
+    <button on:click={() => {$call.isFootwork = !$call.isFootwork}}>
+      {#if $call.isFootwork}
         <CheckboxMarked size="1.5rem" color="green" />
       {:else}
         <CheckboxMarkedOutline size="1.5rem" />
@@ -63,8 +101,8 @@ function handleCreateCall() {
   </div>
   <div class="CreateCallToggle">
     This call is a hold:
-    <button on:click={() => {call.isHold = !call.isHold}}>
-      {#if call.isHold}
+    <button on:click={() => {$call.isHold = !$call.isHold}}>
+      {#if $call.isHold}
         <CheckboxMarked size="1.5rem" color="green" />
       {:else}
         <CheckboxMarkedOutline size="1.5rem" />
@@ -83,7 +121,6 @@ function handleCreateCall() {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 20rem;
   }
 
   .CreateCallToggle {

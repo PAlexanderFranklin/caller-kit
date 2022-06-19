@@ -1,7 +1,8 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 import { clickOutside } from '../../utils/clickOutside';
-import CheckBold from "svelte-material-icons/CheckBold.svelte";
+import { deleteCall } from '../../utils/danceModule';
+import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
@@ -13,16 +14,16 @@ let hiddenDelete = true;
 const dispatch = createEventDispatcher();
 </script>
 
-<div>
-  <div class="Call Header">
-    Name: {call.title}
-    <button on:click={() => {dispatch('selectCall', { call })}}><CheckBold color={"green"} /></button>
+<div class="Call">
+  <div class="Header">
+    <span class="HeaderTitle">{call.title}</span>
     <button on:click={() => {hiddenDelete = !hiddenDelete}}><Delete color={"red"} /></button>
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronUp color={"blue"} /></button>
     {/if}
+    <button on:click={() => {dispatch('selectCall', {call})}}><ArrowRight color={"green"} /></button>
   </div>
   {#if !hiddenDetails}
     <p>
@@ -33,11 +34,27 @@ const dispatch = createEventDispatcher();
     </span>
   {/if}
   {#if !hiddenDelete}
-    <div use:clickOutside on:clickOutside={() => {hiddenDelete = true}}>Are you sure you want to delete? <button class="deleteButton">Delete</button></div>
+    <div use:clickOutside on:clickOutside={() => {hiddenDelete = true}}>
+      Are you sure you want to delete?
+      <button class="deleteButton" on:click={() => {deleteCall(call.id)}}>Delete</button>
+      <button>Cancel</button>
+    </div>
   {/if}
 </div>
 
 <style>
+  .Call {
+    width: 100%;
+  }
+  .Header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .HeaderTitle {
+    width: 50%;
+  }
   .deleteButton {
     color: red;
   }
