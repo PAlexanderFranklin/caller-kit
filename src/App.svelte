@@ -14,7 +14,8 @@ const hash = createHistory(createHashSource());
 
       <Route>
         <p>All content created using this application is published in the public domain under the <a rel="license"
-          href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.</p>
+          href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
+        </p>
         <DanceCreator />
       </Route>
     </Router>

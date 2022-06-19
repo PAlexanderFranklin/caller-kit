@@ -7,7 +7,22 @@ export const calls = writable([]);
 
 export const createCall = async (call) => {
   const [result, err] = await callModule(danceModule, 'createCall', {call});
-  err ? console.error({ err }) : console.log(result);
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
+export const deleteCall = async (id) => {
+  const [result, err] = await callModule(danceModule, 'deleteCall', {id});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
 }
 
 export const subscribeCalls = async (update) => {
