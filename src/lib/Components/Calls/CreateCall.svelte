@@ -11,7 +11,7 @@ const dispatch = createEventDispatcher();
 let call = writable({
   title: "",
   text: "",
-  duration: 8,
+  beats: 8,
   isFootwork: false,
   isHold: false,
 })
@@ -67,7 +67,12 @@ function handleCreateCall() {
       calls={$calls.filter(call => call.isFootwork)}
       on:selectCall={(event) => {
         selectingFootwork = false;
-        $call.footwork = event.detail.call;
+        let newFootwork = event.detail.call
+        $call.footwork = {
+          id: newFootwork.id,
+          skyfeed: newFootwork.skyfeed,
+          beats: $call.footwork?.beats || newFootwork.beats
+        };
       }}
     />
   {/if}
@@ -85,12 +90,17 @@ function handleCreateCall() {
       calls={$calls.filter(call => call.isHold)}
       on:selectCall={(event) => {
         selectingHold = false;
-        $call.hold = event.detail.call;
+        let newHold = event.detail.call
+        $call.hold = {
+          id: newHold.id,
+          skyfeed: newHold.skyfeed,
+          beats: $call.hold?.beats || newHold.beats
+        };
       }}
     />
   {/if}
   <div class="CreateCallToggle">
-    This call is footwork:
+    Is this call footwork?
     <button on:click={() => {$call.isFootwork = !$call.isFootwork}}>
       {#if $call.isFootwork}
         <CheckboxMarked size="1.5rem" color="green" />
@@ -100,7 +110,7 @@ function handleCreateCall() {
     </button>
   </div>
   <div class="CreateCallToggle">
-    This call is a hold:
+    Is this call a hold?
     <button on:click={() => {$call.isHold = !$call.isHold}}>
       {#if $call.isHold}
         <CheckboxMarked size="1.5rem" color="green" />
