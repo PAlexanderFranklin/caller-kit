@@ -8,6 +8,8 @@ export interface Call {
   dependencies?: Array<CallRef>,
   footwork?: CallRef,
   hold?: CallRef,
+  isFootwork?: Boolean,
+  isHold?: Boolean,
 }
 
 export interface CallRef {
