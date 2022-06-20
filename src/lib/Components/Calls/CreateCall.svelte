@@ -59,7 +59,7 @@ function handleCreateCall() {
   {#if selectingFootwork}
     <button on:click={() => {
       selectingFootwork = false;
-      $call.footwork = undefined;
+      delete $call.footwork;
     }}>
       Deselect Footwork
     </button>
@@ -82,7 +82,7 @@ function handleCreateCall() {
   {#if selectingHold}
     <button on:click={() => {
       selectingHold = false;
-      $call.hold = undefined;
+      delete $call.hold;
     }}>
       Deselect Hold
     </button>

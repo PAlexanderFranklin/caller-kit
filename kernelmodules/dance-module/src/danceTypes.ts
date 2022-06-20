@@ -20,7 +20,7 @@ export interface CallRef {
 
 export interface Dancer {
   gender: String,
-  group: String,
+  group: Number,
   position: {x: Number, y: Number},
 }
 
@@ -43,7 +43,7 @@ export interface Dance {
   title: String,
   text?: String,
   formation?: FormationRef,
-  instructions: Array<CallRef>
+  instructions: Array<Array<CallRef>>
   variantOf?: DanceRef,
   footwork?: CallRef,
   hold?: CallRef,
