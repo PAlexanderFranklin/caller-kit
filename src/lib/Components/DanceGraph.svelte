@@ -15,22 +15,35 @@ function findDuration() {
     })
   );
 }
-$: findDuration(), console.log($duration);
+$: $newDance.dance.instructions, findDuration();
 </script>
 
-<div>
+<div class="danceGraph">
   <button on:click={() => {
-    $newDance.dance.instructions.push([{beats: Math.ceil(Math.random() * 100)}]);
-    findDuration();
+    $newDance.dance.instructions = [...$newDance.dance.instructions, [{beats: Math.ceil(Math.random() * 100)}]];
   }}>
     a
   </button>
   {#each $newDance.dance.instructions as group}
-    <div class="dancePart"></div>
+    <div class="danceGroup" style="width: {$duration + 4}rem;">
+      {#each group as call}
+        <div class="call" style="width: {call.beats}rem;"></div>
+      {/each}
+    </div>
   {/each}
 </div>
 
 <style>
-  .dancePart {
+  .danceGraph {
+    display: flex;
+    flex-direction: column;
+  }
+  .danceGroup {
+    display: flex;
+    height: 2rem;
+    border: black solid 1px;
+  }
+  .call {
+    border: grey solid 2px;
   }
 </style>
