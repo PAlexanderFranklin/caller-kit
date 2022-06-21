@@ -17,7 +17,7 @@ let hidden = true;
   {:else}
     <CreateCall on:closeModal={() => {hidden = true}} />
   {/if}
-  {#each calls as call}
+  {#each calls as call (call.id)}
       <Call call={call} on:selectCall={() => {dispatch('selectCall', { call })}} />
   {/each}
 </div>

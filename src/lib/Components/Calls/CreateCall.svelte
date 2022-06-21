@@ -53,9 +53,16 @@ function handleCreateCall() {
     type="number"
     bind:value={$call.beats}
   />
-  <div on:click={() => {selectingFootwork = !selectingFootwork}}>
-    Footwork: {$call.footwork ? $call.footwork.title : "Select Footwork (optional)"}
-  </div>
+  Footwork:
+  {#if $call.footwork}
+  <button on:click={() => {selectingFootwork = !selectingFootwork}}>
+    {$call.footwork.title}
+  </button>
+  {:else if !selectingFootwork}
+  <button on:click={() => {selectingFootwork = !selectingFootwork}}>
+    Select Footwork (optional)
+  </button>
+  {/if}
   {#if selectingFootwork}
     <button on:click={() => {
       selectingFootwork = false;
@@ -77,9 +84,16 @@ function handleCreateCall() {
       }}
     />
   {/if}
-  <div on:click={() => {selectingHold = !selectingHold}}>
-    Hold: {$call.hold ? $call.hold.title : "Select Hold (optional)"}
-  </div>
+  Hold:
+  {#if $call.hold}
+  <button on:click={() => {selectingHold = !selectingHold}}>
+    {$call.hold.title}
+  </button>
+  {:else if !selectingHold}
+  <button on:click={() => {selectingHold = !selectingHold}}>
+    Select Hold (optional)
+  </button>
+  {/if}
   {#if selectingHold}
     <button on:click={() => {
       selectingHold = false;
@@ -136,6 +150,7 @@ function handleCreateCall() {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    width: 20rem;
     background-color: white;
     border: 2px black solid;
   }
