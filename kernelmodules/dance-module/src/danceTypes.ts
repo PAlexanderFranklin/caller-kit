@@ -14,6 +14,7 @@ export interface Call {
 
 export interface CallRef {
   id: String,
+  title: String,
   skyfeed?: String,
   beats?: Number,
 }
@@ -34,6 +35,7 @@ export interface Formation {
 
 export interface FormationRef {
   id: String,
+  title: String,
   skyfeed?: String,
 }
 
@@ -51,5 +53,6 @@ export interface Dance {
 
 export interface DanceRef {
   id: String,
+  title: String,
   skyfeed?: String,
 }

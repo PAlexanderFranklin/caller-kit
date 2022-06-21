@@ -24,13 +24,14 @@ $: $newDance.dance.instructions, findDuration();
   }}>
     a
   </button>
-  {#each $newDance.dance.instructions as group}
+  {#each $newDance.dance.instructions as group (group)}
     <div class="danceGroup" style="width: {$duration + 4}rem;">
-      {#each group as call}
-        <div class="call" style="width: {call.beats}rem;"></div>
+      {#each group as call (call)}
+        <div class="call" style="width: {call.beats}rem;">{call.title}</div>
       {/each}
     </div>
   {/each}
+  <div class="danceGroup" style="width: {$duration + 4}rem;" />
 </div>
 
 <style>
@@ -41,9 +42,18 @@ $: $newDance.dance.instructions, findDuration();
   .danceGroup {
     display: flex;
     height: 2rem;
+    background-color: lightgrey;
     border: black solid 1px;
   }
+  .selectedGroup {
+    background-color: grey;
+  }
   .call {
+    overflow: hidden;
+    background-color: greenyellow;
     border: grey solid 2px;
+  }
+  .selectedCall {
+    background-color: forestgreen;
   }
 </style>

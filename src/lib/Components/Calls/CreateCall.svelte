@@ -70,6 +70,7 @@ function handleCreateCall() {
         let newFootwork = event.detail.call
         $call.footwork = {
           id: newFootwork.id,
+          title: newFootwork.title,
           skyfeed: newFootwork.skyfeed,
           beats: $call.footwork?.beats || newFootwork.beats
         };
@@ -93,6 +94,7 @@ function handleCreateCall() {
         let newHold = event.detail.call
         $call.hold = {
           id: newHold.id,
+          title: newHold.title,
           skyfeed: newHold.skyfeed,
           beats: $call.hold?.beats || newHold.beats
         };
@@ -128,9 +130,14 @@ function handleCreateCall() {
 
 <style>
   .CreateCall {
+    position: absolute;
+    z-index: 5;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 1rem;
+    background-color: white;
+    border: 2px black solid;
   }
 
   .CreateCallToggle {

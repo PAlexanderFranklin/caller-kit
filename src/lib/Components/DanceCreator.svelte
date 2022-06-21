@@ -13,10 +13,14 @@ setContext("newDance", {newDance})
 
 </script>
 
-<p>
-  Title: {$mainCall.title}
-</p>
 <button on:click={console.log($calls)}>Log Calls</button>
-<CallList calls={$calls} on:selectCall={(event) => {$mainCall = event.detail.call}} />
-<!-- <CallList on:selectCall={(data) => {console.log(data)}} /> -->
-<DanceGraph />
+<div class="DanceCreator">
+  <CallList calls={$calls} on:selectCall={(event) => {$mainCall = event.detail.call}} />
+  <DanceGraph />
+</div>
+
+<style>
+  .DanceCreator {
+    display: flex;
+  }
+</style>
