@@ -2,7 +2,7 @@
 import { Router, Route, createHistory } from "svelte-navigator";
 import createHashSource from "./lib/utils/hashHistory.js";
 import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
-import DanceCreator from "./lib/Components/DanceCreator.svelte";
+import DanceCreator from "./lib/Components/DanceCreator/DanceCreator.svelte";
   
 const hash = createHistory(createHashSource());
 
