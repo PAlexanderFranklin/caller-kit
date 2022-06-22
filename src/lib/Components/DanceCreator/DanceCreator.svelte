@@ -8,13 +8,17 @@ import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 
 const newDance = writable({
   dance: {instructions: [[{beats: 2}, {beats: 4, delay: 4}, {beats: 20}], [{beats: 3}, {beats: 4}]]},
-  selection: {group: 1, callIndex: 0, delay: false},
+  selection: {group: 0, callIndex: 0, delay: false},
   duration: 0,
 });
 setContext("newDance", {newDance})
 
 function addCall(call) {
-  return call;
+  console.log(call);
+  $newDance.dance.instructions[$newDance.selection.group].splice(
+    $newDance.selection.callIndex, 0, call
+  );
+  $newDance.dance.instructions = [...$newDance.dance.instructions];
 }
 
 </script>

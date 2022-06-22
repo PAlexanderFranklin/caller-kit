@@ -8,7 +8,7 @@ let groupIndex = 0;
 </script>
 
 <div class="danceGroup" style="width: {$newDance.duration + 4}rem;">
-  {#each group as call (call)}
+  {#each group as call}
     <div class="wait" style="width: {call.delay}rem;"></div>
     <div class="call" style="width: {call.beats}rem;">{call.title}</div>
   {/each}
