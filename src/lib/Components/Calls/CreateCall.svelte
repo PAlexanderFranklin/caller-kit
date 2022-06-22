@@ -53,13 +53,20 @@ function handleCreateCall() {
     type="number"
     bind:value={$call.beats}
   />
-  <div on:click={() => {selectingFootwork = !selectingFootwork}}>
-    Footwork: {$call.footwork ? $call.footwork.title : "Select Footwork (optional)"}
-  </div>
+  Footwork:
+  {#if $call.footwork}
+  <button on:click={() => {selectingFootwork = !selectingFootwork}}>
+    {$call.footwork.title}
+  </button>
+  {:else if !selectingFootwork}
+  <button on:click={() => {selectingFootwork = !selectingFootwork}}>
+    Select Footwork (optional)
+  </button>
+  {/if}
   {#if selectingFootwork}
     <button on:click={() => {
       selectingFootwork = false;
-      $call.footwork = undefined;
+      delete $call.footwork;
     }}>
       Deselect Footwork
     </button>
@@ -70,19 +77,27 @@ function handleCreateCall() {
         let newFootwork = event.detail.call
         $call.footwork = {
           id: newFootwork.id,
+          title: newFootwork.title,
           skyfeed: newFootwork.skyfeed,
           beats: $call.footwork?.beats || newFootwork.beats
         };
       }}
     />
   {/if}
-  <div on:click={() => {selectingHold = !selectingHold}}>
-    Hold: {$call.hold ? $call.hold.title : "Select Hold (optional)"}
-  </div>
+  Hold:
+  {#if $call.hold}
+  <button on:click={() => {selectingHold = !selectingHold}}>
+    {$call.hold.title}
+  </button>
+  {:else if !selectingHold}
+  <button on:click={() => {selectingHold = !selectingHold}}>
+    Select Hold (optional)
+  </button>
+  {/if}
   {#if selectingHold}
     <button on:click={() => {
       selectingHold = false;
-      $call.hold = undefined;
+      delete $call.hold;
     }}>
       Deselect Hold
     </button>
@@ -93,6 +108,7 @@ function handleCreateCall() {
         let newHold = event.detail.call
         $call.hold = {
           id: newHold.id,
+          title: newHold.title,
           skyfeed: newHold.skyfeed,
           beats: $call.hold?.beats || newHold.beats
         };
@@ -128,9 +144,15 @@ function handleCreateCall() {
 
 <style>
   .CreateCall {
+    position: absolute;
+    z-index: 5;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 1rem;
+    width: 20rem;
+    background-color: white;
+    border: 2px black solid;
   }
 
   .CreateCallToggle {
