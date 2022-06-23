@@ -18,7 +18,6 @@ onMount(() => {
 </script>
 
 <div class="danceGroup" style="width: {$newDance.duration + 4}rem;">
-  {$groupIndex}
   {#each group as call}
   <Call call={call} groupIndex={$groupIndex} />
   {/each}
