@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte';
-import { clickOutside } from '../../utils/clickOutside';
-import { deleteCall } from '../../utils/danceModule';
+import { clickOutside } from '/src/lib/utils/clickOutside';
+import { deleteCall } from '/src/lib/utils/danceModule';
 import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";

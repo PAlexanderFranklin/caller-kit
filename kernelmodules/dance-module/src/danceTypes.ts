@@ -17,6 +17,7 @@ export interface CallRef {
   title: String,
   skyfeed?: String,
   beats?: Number,
+  delay?: number,
 }
 
 export interface Dancer {

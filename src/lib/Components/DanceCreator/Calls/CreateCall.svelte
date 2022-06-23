@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 import { writable } from 'svelte/store';
-import { calls, createCall } from '../../utils/danceModule';
+import { calls, createCall } from '/src/lib/utils/danceModule';
 import CallList from './CallList.svelte';
 import CheckboxMarked from "svelte-material-icons/CheckboxMarked.svelte";
 import CheckboxMarkedOutline from "svelte-material-icons/CheckboxMarkedOutline.svelte";
