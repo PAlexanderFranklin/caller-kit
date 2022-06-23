@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "history": "^5.3.0",
-    "libkernel": "^0.1.22",
+    "libkernel": "^0.1.38",
     "skynet-dacs-library": "^0.1.1",
     "skynet-js": "^4.1.0",
     "svelte-material-icons": "^2.0.2",
