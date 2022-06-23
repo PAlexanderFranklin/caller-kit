@@ -1,16 +1,26 @@
 <script>
-import { getContext } from "svelte";
+import { getContext, onMount, setContext } from "svelte";
+import { writable } from "svelte/store";
+import Call from "./Call.svelte";
+
 export let group
 
 const {newDance} = getContext("newDance");
-let groupIndex = 0;
+const groupIndex = writable(0);
+const groupCallIndex = writable(0);
+setContext('groupCallIndex', groupCallIndex);
+
+onMount(() => {
+  $groupIndex = $newDance.indexing.group;
+  $newDance.indexing.group = $newDance.indexing.group + 1;
+})
 
 </script>
 
 <div class="danceGroup" style="width: {$newDance.duration + 4}rem;">
+  {$groupIndex}
   {#each group as call}
-    <div class="wait" style="width: {call.delay}rem;"></div>
-    <div class="call" style="width: {call.beats}rem;">{call.title}</div>
+  <Call call={call} groupIndex={$groupIndex} />
   {/each}
 </div>
 

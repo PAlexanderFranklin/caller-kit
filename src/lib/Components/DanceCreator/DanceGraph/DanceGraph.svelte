@@ -33,5 +33,6 @@ $: $newDance.dance.instructions, findDuration();
   .danceGraph {
     display: flex;
     flex-direction: column;
+    overflow: scroll;
   }
 </style>

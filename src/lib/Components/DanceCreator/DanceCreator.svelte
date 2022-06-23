@@ -10,6 +10,7 @@ const newDance = writable({
   dance: {instructions: [[{beats: 2}, {beats: 4, delay: 4}, {beats: 20}], [{beats: 3}, {beats: 4}]]},
   selection: {group: 0, callIndex: 0, delay: false},
   duration: 0,
+  indexing: {group: 0},
 });
 setContext("newDance", {newDance})
 
@@ -20,6 +21,8 @@ function addCall(call) {
   );
   $newDance.dance.instructions = [...$newDance.dance.instructions];
 }
+
+$: $newDance.indexing = {group: 0};
 
 </script>
 
