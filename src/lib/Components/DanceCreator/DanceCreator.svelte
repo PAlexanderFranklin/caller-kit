@@ -5,6 +5,7 @@ import { writable } from "svelte/store";
 import { calls } from '/src/lib/utils/danceModule';
 import CallList from "./Calls/CallList.svelte";
 import DanceGraph from "./DanceGraph/DanceGraph.svelte";
+import SelectedCall from "./Dance/SelectedCall.svelte";
 
 const newDance = writable({
   dance: {instructions: [[{beats: 2}, {beats: 4, delay: 4}, {beats: 20}], [{beats: 3}, {beats: 4}]]},
@@ -16,7 +17,7 @@ setContext("newDance", {newDance})
 
 function addCall(call) {
   $newDance.dance.instructions[$newDance.selection.group].splice(
-    $newDance.selection.call, 0, call
+    $newDance.selection.call + 1, 0, {...call}
   );
   $newDance.dance.instructions = [...$newDance.dance.instructions];
   $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + 1, delay: false};
@@ -30,6 +31,7 @@ $: $newDance.indexing = {group: 0};
 <div class="DanceCreator">
   <CallList calls={$calls} on:selectCall={(event) => {addCall(event.detail.call)}} />
   <DanceGraph />
+  <SelectedCall />
 </div>
 
 <style>

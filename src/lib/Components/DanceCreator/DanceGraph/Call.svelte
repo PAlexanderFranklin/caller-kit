@@ -18,10 +18,8 @@ onMount(() => {
   
 <div
   class="wait"
-  style="width: {call.delay}rem;"
->
-  {$callIndex}
-</div>
+  style="min-width: {call.delay}rem; max-width: {call.beats}rem;"
+/>
 <div
   class="call {
     $newDance.selection.group == groupIndex &&
@@ -29,13 +27,13 @@ onMount(() => {
     $newDance.selection.delay == false
     ? "selectedCall" : ""
   }"
-  on:click={() => {$newDance.selection = {
+  style="min-width: {call.beats}rem; max-width: {call.beats}rem;"
+  on:click|stopPropagation={() => {$newDance.selection = {
     group: groupIndex,
     call: $callIndex,
     delay: false
     };
   }}
-  style="width: {call.beats}rem;"
 >
   {call.title}
 </div>
