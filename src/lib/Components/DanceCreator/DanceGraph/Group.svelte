@@ -17,7 +17,14 @@ onMount(() => {
 
 </script>
 
-<div class="danceGroup" style="width: {$newDance.duration + 4}rem;">
+<div class="danceGroup" style="min-width: {$newDance.duration + 4}rem; max-width: {$newDance.duration + 4}rem;"
+  on:click|stopPropagation={() => {$newDance.selection = {
+    group: $groupIndex,
+    call: $newDance.dance.instructions[$groupIndex].length,
+    delay: false
+    };
+  }}
+>
   {#each group as call}
   <Call call={call} groupIndex={$groupIndex} />
   {/each}
@@ -26,22 +33,12 @@ onMount(() => {
 <style>
   .danceGroup {
     display: flex;
+    padding-right: 4rem;
     height: 2rem;
     background-color: lightgrey;
     border: black solid 1px;
   }
   .selectedGroup {
     background-color: grey;
-  }
-  .wait {
-    height: 100%;
-  }
-  .call {
-    overflow: hidden;
-    background-color: greenyellow;
-    border: grey solid 1px;
-  }
-  .selectedCall {
-    background-color: forestgreen;
   }
 </style>
