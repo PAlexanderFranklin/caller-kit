@@ -17,8 +17,19 @@ onMount(() => {
 </script>
   
 <div
-  class="wait"
-  style="min-width: {call.delay}rem; max-width: {call.beats}rem;"
+  class="delay {
+    $newDance.selection.group == groupIndex &&
+    $newDance.selection.call == $callIndex &&
+    $newDance.selection.delay == true
+    ? "selectedDelay" : ""
+  }"
+  style="min-width: {call.delay | 0}rem; max-width: {call.delay | 0}rem;"
+  on:click|stopPropagation={() => {$newDance.selection = {
+    group: groupIndex,
+    call: $callIndex,
+    delay: true
+    };
+  }}
 />
 <div
   class="call {
@@ -39,8 +50,12 @@ onMount(() => {
 </div>
   
 <style>
-  .wait {
+  .delay {
     height: 100%;
+    background-color: lightgrey;
+  }
+  .selectedDelay {
+    background-color: grey;
   }
   .call {
     overflow: hidden;

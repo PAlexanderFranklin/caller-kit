@@ -11,13 +11,19 @@ const groupCallIndex = writable(0);
 setContext('groupCallIndex', groupCallIndex);
 
 onMount(() => {
-  $groupIndex = $newDance.indexing.group;
-  $newDance.indexing.group = $newDance.indexing.group + 1;
-})
+  $groupIndex = $newDance.groupIndex;
+  $newDance.groupIndex = $newDance.groupIndex + 1;
+});
 
 </script>
 
-<div class="danceGroup" style="min-width: {$newDance.duration + 4}rem; max-width: {$newDance.duration + 4}rem;"
+<div class="danceGroup {
+  $newDance.selection.group == $groupIndex &&
+  $newDance.selection.call == $newDance.dance.instructions[$groupIndex].length &&
+  $newDance.selection.delay == false
+  ? "selectedGroup" : ""
+}"
+  style="min-width: {$newDance.duration + 6}rem; max-width: {$newDance.duration + 6}rem;"
   on:click|stopPropagation={() => {$newDance.selection = {
     group: $groupIndex,
     call: $newDance.dance.instructions[$groupIndex].length,
@@ -25,6 +31,19 @@ onMount(() => {
     };
   }}
 >
+  <button class="start {
+      $newDance.selection.group == $groupIndex &&
+      $newDance.selection.call == 0 &&
+      $newDance.selection.delay == true
+      ? "selectedStart" : ""
+    }"
+    on:click|stopPropagation={() => {$newDance.selection = {
+      group: $groupIndex,
+      call: 0,
+      delay: true
+      };
+    }}
+  />
   {#each group as call}
   <Call call={call} groupIndex={$groupIndex} />
   {/each}
@@ -33,12 +52,17 @@ onMount(() => {
 <style>
   .danceGroup {
     display: flex;
-    padding-right: 4rem;
     height: 2rem;
     background-color: lightgrey;
     border: black solid 1px;
   }
   .selectedGroup {
+    background-color: grey;
+  }
+  .start {
+    background-color: lightgrey;
+  }
+  .selectedStart {
     background-color: grey;
   }
 </style>

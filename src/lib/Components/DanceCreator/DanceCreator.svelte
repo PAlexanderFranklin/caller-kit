@@ -9,21 +9,21 @@ import SelectedCall from "./Dance/SelectedCall.svelte";
 
 const newDance = writable({
   dance: {instructions: [[{beats: 2}, {beats: 4, delay: 4}, {beats: 20}], [{beats: 3}, {beats: 4}]]},
-  selection: {group: 0, call: 0, delay: false},
+  selection: {group: 0, call: 0, delay: true},
   duration: 0,
-  indexing: {group: 0},
+  groupIndex: 0,
 });
 setContext("newDance", {newDance})
 
 function addCall(call) {
   $newDance.dance.instructions[$newDance.selection.group].splice(
-    $newDance.selection.call + 1, 0, {...call}
+    $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), 0, {...call}
   );
   $newDance.dance.instructions = [...$newDance.dance.instructions];
-  $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + 1, delay: false};
+  $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), delay: false};
 }
 
-$: $newDance.indexing = {group: 0};
+$: $newDance.groupIndex = 0;
 
 </script>
 
