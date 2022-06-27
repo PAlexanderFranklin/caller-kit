@@ -24,8 +24,8 @@ function addGroup() {
   <button on:click={addGroup}>
     Add Group
   </button>
-  {#each $newDance.dance.instructions as group (group)}
-  <Group group={group} />
+  {#each $newDance.dance.instructions as group, i}
+  <Group group={group} index={i} />
   {/each}
 </div>
 

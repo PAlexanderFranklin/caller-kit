@@ -26,7 +26,6 @@ const newDance = writable({
   },
   selection: {group: 0, call: 0, delay: true},
   duration: 0,
-  groupIndex: 0,
 });
 setContext("newDance", {newDance})
 
@@ -37,8 +36,6 @@ function addCall(call) {
   $newDance.dance.instructions = [...$newDance.dance.instructions];
   $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), delay: false};
 }
-
-$: $newDance.groupIndex = 0;
 
 </script>
 
