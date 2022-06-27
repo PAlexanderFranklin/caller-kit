@@ -10,7 +10,7 @@ import SelectedCall from "./Dance/SelectedCall.svelte";
 const newDance = writable({
   dance: {
     instructions: [
-      // Each of these arrays need to be a component that can tell the parent to delete itself.
+      // Each of these arrays need to be a component that can tell the parent to do stuff to the component.
       [
         // Each of these objects needs to be a component that can be told it is selected (for styling)
         // and can tell the parent component it is selected (by being clicked on)
