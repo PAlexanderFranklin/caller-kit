@@ -7,13 +7,18 @@ let checkCall = {};
 let selectedCall = {};
 
 $: {
-  checkCall = $newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call];
+  try {
+    checkCall = $newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call];
+  }
+  catch {}
   selectedCall = checkCall ? checkCall : {};
 }
 
 </script>
 
 <div class="SelectedCall">
+  {#if selectedCall.beats && !$newDance.selection.delay}
+  <h4>Name: {selectedCall.title}</h4>
   <label for="beatsInSelection">Duration in Beats: </label>
   <input
     id="beatsInSelection"
@@ -28,6 +33,9 @@ $: {
     bind:value={selectedCall.delay}
     on:keyup={() => {$newDance.duration = $newDance.duration}}
   />
+  {:else}
+  No Call Selected
+  {/if}
 </div>
 
 <style>
@@ -35,7 +43,7 @@ $: {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 3rem;
+    padding: 0rem 3rem 3rem 3rem;
     width: 20rem;
     background-color: white;
     border: 2px solid;

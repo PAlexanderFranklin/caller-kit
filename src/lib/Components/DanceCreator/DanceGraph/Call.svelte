@@ -1,36 +1,40 @@
 <script>
-import { getContext, onMount } from "svelte";
-import { writable } from "svelte/store";
+import { getContext } from "svelte";
 
 export let call;
 export let groupIndex;
+export let index;
 
 const {newDance} = getContext("newDance");
-const groupCallIndex = getContext('groupCallIndex');
-const callIndex = writable(0);
-
-onMount(() => {
-  $callIndex = $groupCallIndex;
-  $groupCallIndex = $groupCallIndex + 1;
-})
 
 </script>
   
 <div
-  class="wait"
-  style="min-width: {call.delay}rem; max-width: {call.beats}rem;"
+  class="delay {
+    $newDance.selection.group == groupIndex &&
+    $newDance.selection.call == index &&
+    $newDance.selection.delay == true
+    ? "selectedDelay" : ""
+  }"
+  style="min-width: {call.delay | 0}rem; max-width: {call.delay | 0}rem;"
+  on:click|stopPropagation={() => {$newDance.selection = {
+    group: groupIndex,
+    call: index,
+    delay: true
+    };
+  }}
 />
 <div
   class="call {
     $newDance.selection.group == groupIndex &&
-    $newDance.selection.call == $callIndex &&
+    $newDance.selection.call == index &&
     $newDance.selection.delay == false
     ? "selectedCall" : ""
   }"
   style="min-width: {call.beats}rem; max-width: {call.beats}rem;"
   on:click|stopPropagation={() => {$newDance.selection = {
     group: groupIndex,
-    call: $callIndex,
+    call: index,
     delay: false
     };
   }}
@@ -39,8 +43,12 @@ onMount(() => {
 </div>
   
 <style>
-  .wait {
+  .delay {
     height: 100%;
+    background-color: lightgrey;
+  }
+  .selectedDelay {
+    background-color: grey;
   }
   .call {
     overflow: hidden;
