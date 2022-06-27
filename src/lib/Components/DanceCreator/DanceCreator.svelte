@@ -8,7 +8,22 @@ import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./Dance/SelectedCall.svelte";
 
 const newDance = writable({
-  dance: {instructions: [[{beats: 2}, {beats: 4, delay: 4}, {beats: 20}], [{beats: 3}, {beats: 4}]]},
+  dance: {
+    instructions: [
+      // Each of these arrays need to be a component that can tell the parent to delete itself.
+      [
+        // Each of these objects needs to be a component that can be told it is selected (for styling)
+        // and can tell the parent component it is selected (by being clicked on)
+        {id: 123, title: "polka", beats: 2},
+        {id: 123, title: "polka", beats: 4, delay: 4},
+        {id: 123, title: "polka", beats: 4, delay: 4},
+        {beats: 20}
+      ],
+      [
+        {beats: 3}, {beats: 4}
+      ]
+    ]
+  },
   selection: {group: 0, call: 0, delay: true},
   duration: 0,
   groupIndex: 0,

@@ -14,18 +14,19 @@ function findDuration() {
   );
 }
 $: $newDance.dance.instructions, findDuration();
+
+function addGroup() {
+  $newDance.dance.instructions = [...$newDance.dance.instructions, []];
+}
 </script>
 
 <div class="danceGraph">
-  <button on:click={() => {
-    $newDance.dance.instructions = [...$newDance.dance.instructions, [{beats: Math.ceil(Math.random() * 100)}]];
-  }}>
-    a
+  <button on:click={addGroup}>
+    Add Group
   </button>
   {#each $newDance.dance.instructions as group (group)}
   <Group group={group} />
   {/each}
-  <div class="danceGroup" style="min-width: {$newDance.duration + 4}rem; max-width: {$newDance.duration + 4}rem;" />
 </div>
 
 <style>

@@ -1,6 +1,7 @@
 <script>
 import { getContext, onMount, setContext } from "svelte";
 import { writable } from "svelte/store";
+import Delete from "svelte-material-icons/Delete.svelte";
 import Call from "./Call.svelte";
 
 export let group
@@ -9,6 +10,14 @@ const {newDance} = getContext("newDance");
 const groupIndex = writable(0);
 const groupCallIndex = writable(0);
 setContext('groupCallIndex', groupCallIndex);
+
+async function deleteGroup() {
+  if ($newDance.selection.group == $groupIndex) {
+    $newDance.selection = {group: 0, call: 0, delay: true};
+  }
+  $newDance.dance.instructions.splice($groupIndex, 1);
+  $newDance.dance.instructions = [...$newDance.dance.instructions];
+}
 
 onMount(() => {
   $groupIndex = $newDance.groupIndex;
@@ -23,7 +32,7 @@ onMount(() => {
   $newDance.selection.delay == false
   ? "selectedGroup" : ""
 }"
-  style="min-width: {$newDance.duration + 6}rem; max-width: {$newDance.duration + 6}rem;"
+  style="min-width: {$newDance.duration + 8}rem; max-width: {$newDance.duration + 8}rem;"
   on:click|stopPropagation={() => {$newDance.selection = {
     group: $groupIndex,
     call: $newDance.dance.instructions[$groupIndex].length,
@@ -31,6 +40,7 @@ onMount(() => {
     };
   }}
 >
+  <button class="delete" on:click|stopPropagation={deleteGroup}><Delete color={"white"} /></button>
   <button class="start {
       $newDance.selection.group == $groupIndex &&
       $newDance.selection.call == 0 &&
@@ -59,7 +69,12 @@ onMount(() => {
   .selectedGroup {
     background-color: grey;
   }
+  .delete {
+    width: 2rem;
+    background-color: red;
+  }
   .start {
+    width: 2rem;
     background-color: lightgrey;
   }
   .selectedStart {
