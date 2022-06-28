@@ -13,6 +13,7 @@ const hash = createHistory(createHashSource());
       <!-- <Route path="login" component={Login} /> -->
 
       <Route>
+        <h1>Dance Creator</h1>
         <p>All content created using this application is published in the public domain under the <a rel="license"
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
         </p>
