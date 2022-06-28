@@ -22,11 +22,11 @@ async function deleteGroup() {
 </script>
 
 <div class="danceGroup {
-  $newDance.selection.group == index &&
-  $newDance.selection.call == $newDance.dance.instructions[index].length &&
-  $newDance.selection.delay == false
-  ? "selectedGroup" : ""
-}"
+    $newDance.selection.group == index &&
+    $newDance.selection.call == $newDance.dance.instructions[index].length &&
+    $newDance.selection.delay == false
+    ? "selectedGroup" : ""
+  }"
   style="min-width: {$newDance.duration + 8}rem; max-width: {$newDance.duration + 8}rem;"
   on:click|stopPropagation={() => {$newDance.selection = {
     group: index,

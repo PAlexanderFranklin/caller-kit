@@ -68,13 +68,20 @@ function addCall(call) {
   $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), delay: false};
 }
 
+function removeCall(group, callIndex) {
+  $newDance.dance.instructions[group].splice(
+    callIndex, 1
+  );
+  $newDance.dance.instructions = [...$newDance.dance.instructions];
+}
+
 </script>
 
 <button on:click={console.log($calls)}>Log Calls</button>
 <div class="DanceCreator">
   <CallList calls={$calls} on:selectCall={(event) => {addCall(event.detail.call)}} />
-  <DanceGraph />
-  <SelectedCall />
+  <DanceGraph on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
+  <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
 </div>
 {#if showModal}
 <ConfirmModal
