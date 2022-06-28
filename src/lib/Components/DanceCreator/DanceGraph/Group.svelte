@@ -1,10 +1,12 @@
 <script>
-import { getContext } from "svelte";
+import { createEventDispatcher, getContext } from "svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import Call from "./Call.svelte";
 
 export let group;
 export let index;
+
+const dispatch = createEventDispatcher();
 
 const {newDance} = getContext("newDance");
 
@@ -50,7 +52,9 @@ async function deleteGroup() {
     }}
   />
   {#each group as call, i}
-  <Call call={call} groupIndex={index} index={i} />
+  <Call call={call} groupIndex={index} index={i}
+    on:removeCall={(event) => {dispatch('removeCall', event.detail)}}
+  />
   {/each}
 </div>
 

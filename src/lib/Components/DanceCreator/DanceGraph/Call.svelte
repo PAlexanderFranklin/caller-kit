@@ -10,12 +10,12 @@ export let index;
 const {newDance} = getContext("newDance");
 
 function selectCall(delay) {
-  // try {
-  //   if (!$newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call].beats) {
-  //     dispatch('removeCall', {groupIndex: $newDance.selection.group, callIndex: $newDance.selection.call})
-  //   }
-  // }
-  // catch {}
+  try {
+    if (!$newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call].beats) {
+      dispatch('removeCall', {groupIndex: $newDance.selection.group, callIndex: $newDance.selection.call})
+    }
+  }
+  catch {}
   $newDance.selection = {
     group: groupIndex,
     call: index,
@@ -42,7 +42,7 @@ function selectCall(delay) {
     $newDance.selection.delay == false
     ? "selectedCall" : ""
   }"
-  style="min-width: {call.beats}rem; max-width: {call.beats}rem;"
+  style="min-width: {call.beats - 0.1}rem; max-width: {call.beats}rem;"
   on:click|stopPropagation={() => {selectCall(false)}}
 >
   {call.title}
