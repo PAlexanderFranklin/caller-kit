@@ -18,10 +18,10 @@ function confirm() {
 <div on:click|stopPropagation={closeModal} class="background"></div>
 <div class="modal">
     <p>Are you sure you want to {$modalDetails.action || "delete"} this {$modalDetails.noun || "item"}?</p>
-    <h3>{$modalDetails.item || "Item"}</h3>
+    <h3>{$modalDetails.item || ""}</h3>
     <div class="buttons">
         <button on:click|stopPropagation={closeModal}>Cancel</button>
-        <button on:click|stopPropagation={confirm} class="confirm" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">Yes</button>
+        <button on:click|stopPropagation={confirm} class="confirm" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.action || "Yes"}</button>
     </div>
 </div>
 

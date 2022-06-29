@@ -18,7 +18,19 @@ $: {
 }
 
 let sourceCall = {};
-$: sourceCall = selectedCall.id ? getCallById(selectedCall.id) : {};
+async function getCall() {
+  try {
+    const res = await getCallById(selectedCall.id);
+    if (res.call) {
+      sourceCall = res.call;
+    }
+  }
+  catch (err) {
+    console.log(err);
+    sourceCall = {}
+  }
+}
+$: selectedCall, getCall();
 
 function removeCall(groupIndex, callIndex) {
   dispatch('removeCall', {groupIndex: groupIndex, callIndex: callIndex});
@@ -29,7 +41,7 @@ function removeCall(groupIndex, callIndex) {
 <div class="SelectedCall">
   {#if $newDance.selection.call != $newDance.dance.instructions[$newDance.selection.group].length && !$newDance.selection.delay}
   <h4>Name: {selectedCall.title}</h4>
-  <p>Description: {sourceCall.text || ""}</p>
+  <p>Description: {sourceCall?.text || ""}</p>
   <label for="beatsInSelection">Duration in Beats: </label>
   <input
     id="beatsInSelection"

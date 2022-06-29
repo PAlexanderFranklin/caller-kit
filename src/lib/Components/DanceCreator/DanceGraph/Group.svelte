@@ -10,15 +10,28 @@ const dispatch = createEventDispatcher();
 
 const {newDance} = getContext("newDance");
 
+const openModal = getContext('openModal');
+
 async function deleteGroup() {
-  if ($newDance.selection.group == index) {
-    $newDance.selection = {group: 0, call: 0, delay: true};
-  }
-  else {
-    $newDance.selection.group = $newDance.selection.group - 1;
-  }
-  $newDance.dance.instructions.splice(index, 1);
-  $newDance.dance.instructions = [...$newDance.dance.instructions];
+  openModal(
+    () => {
+      if ($newDance.selection.group == index) {
+        $newDance.selection = {group: 0, call: 0, delay: true};
+      }
+      else {
+        $newDance.selection.group = $newDance.selection.group - 1;
+      }
+      $newDance.dance.instructions.splice(index, 1);
+      $newDance.dance.instructions = [...$newDance.dance.instructions];
+    },
+    () => {},
+    {
+      action: "remove",
+      noun: "group",
+      item: `group ${index + 1}`,
+      confirmColor: "red",
+    }
+  )
 }
 
 </script>

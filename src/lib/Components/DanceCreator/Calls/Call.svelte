@@ -23,7 +23,7 @@ function handleDeleteCall() {
       action: "delete",
       noun: "call",
       item: call.title,
-      confirmColor: "green",
+      confirmColor: "red",
     }
   );
 }
