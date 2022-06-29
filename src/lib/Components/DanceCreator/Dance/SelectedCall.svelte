@@ -1,5 +1,6 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
+import { getCallById } from '/src/lib/utils/danceModule';
 
 const dispatch = createEventDispatcher();
 
@@ -16,6 +17,9 @@ $: {
   selectedCall = checkCall ? checkCall : {};
 }
 
+let sourceCall = {};
+$: sourceCall = selectedCall.id ? getCallById(selectedCall.id) : {};
+
 function removeCall(groupIndex, callIndex) {
   dispatch('removeCall', {groupIndex: groupIndex, callIndex: callIndex});
 }
@@ -25,6 +29,7 @@ function removeCall(groupIndex, callIndex) {
 <div class="SelectedCall">
   {#if $newDance.selection.call != $newDance.dance.instructions[$newDance.selection.group].length && !$newDance.selection.delay}
   <h4>Name: {selectedCall.title}</h4>
+  <p>Description: {sourceCall.text || ""}</p>
   <label for="beatsInSelection">Duration in Beats: </label>
   <input
     id="beatsInSelection"
@@ -36,9 +41,9 @@ function removeCall(groupIndex, callIndex) {
       }
     }}
   />
-  <label for="beatsIndelay">Delay in Beats: </label>
+  <label for="beatsInDelay">Delay in Beats: </label>
   <input
-    id="beatsIndelay"
+    id="beatsInDelay"
     type="number"
     bind:value={selectedCall.delay}
     on:keyup={() => {$newDance.duration = $newDance.duration}}

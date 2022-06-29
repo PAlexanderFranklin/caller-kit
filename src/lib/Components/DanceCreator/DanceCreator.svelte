@@ -7,6 +7,7 @@ import CallList from "./Calls/CallList.svelte";
 import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./Dance/SelectedCall.svelte";
 import ConfirmModal from "./ConfirmModal.svelte";
+import DanceOptions from "./Dance/DanceOptions.svelte";
 
 let showModal = false;
 
@@ -86,7 +87,10 @@ function removeCall(group, callIndex) {
   <DanceGraph
     on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}}
   />
-  <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
+  <div>
+    <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
+    <DanceOptions />
+  </div>
 </div>
 {#if showModal}
 <ConfirmModal
