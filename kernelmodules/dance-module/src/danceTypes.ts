@@ -45,6 +45,7 @@ export interface Dance {
   skyfeed?: String,
   title: String,
   text?: String,
+  license?: String,
   formation?: FormationRef,
   instructions: Array<Array<CallRef>>
   variantOf?: DanceRef,

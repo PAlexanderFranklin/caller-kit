@@ -1,32 +1,47 @@
 <script>
-import { getContext } from "svelte";
+import { createEventDispatcher, getContext } from "svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import Call from "./Call.svelte";
 
 export let group;
 export let index;
 
+const dispatch = createEventDispatcher();
+
 const {newDance} = getContext("newDance");
 
+const openModal = getContext('openModal');
+
 async function deleteGroup() {
-  if ($newDance.selection.group == index) {
-    $newDance.selection = {group: 0, call: 0, delay: true};
-  }
-  else {
-    $newDance.selection.group = $newDance.selection.group - 1;
-  }
-  $newDance.dance.instructions.splice(index, 1);
-  $newDance.dance.instructions = [...$newDance.dance.instructions];
+  openModal(
+    () => {
+      if ($newDance.selection.group == index) {
+        $newDance.selection = {group: 0, call: 0, delay: true};
+      }
+      else {
+        $newDance.selection.group = $newDance.selection.group - 1;
+      }
+      $newDance.dance.instructions.splice(index, 1);
+      $newDance.dance.instructions = [...$newDance.dance.instructions];
+    },
+    () => {},
+    {
+      action: "remove",
+      noun: "group",
+      item: `group ${index + 1}`,
+      confirmColor: "red",
+    }
+  )
 }
 
 </script>
 
 <div class="danceGroup {
-  $newDance.selection.group == index &&
-  $newDance.selection.call == $newDance.dance.instructions[index].length &&
-  $newDance.selection.delay == false
-  ? "selectedGroup" : ""
-}"
+    $newDance.selection.group == index &&
+    $newDance.selection.call == $newDance.dance.instructions[index].length &&
+    $newDance.selection.delay == false
+    ? "selectedGroup" : ""
+  }"
   style="min-width: {$newDance.duration + 8}rem; max-width: {$newDance.duration + 8}rem;"
   on:click|stopPropagation={() => {$newDance.selection = {
     group: index,
@@ -50,7 +65,9 @@ async function deleteGroup() {
     }}
   />
   {#each group as call, i}
-  <Call call={call} groupIndex={index} index={i} />
+  <Call call={call} groupIndex={index} index={i}
+    on:removeCall={(event) => {dispatch('removeCall', event.detail)}}
+  />
   {/each}
 </div>
 

@@ -1,6 +1,5 @@
 <script>
 import { createEventDispatcher } from 'svelte';
-// import {clickOutside} from "../../utils/clickOutside.js";
 import Call from './Call.svelte';
 import CreateCall from "./CreateCall.svelte";
 

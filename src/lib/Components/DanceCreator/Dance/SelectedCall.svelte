@@ -1,5 +1,8 @@
 <script>
-import { getContext } from "svelte";
+import { createEventDispatcher, getContext } from "svelte";
+import { getCallById } from '/src/lib/utils/danceModule';
+
+const dispatch = createEventDispatcher();
 
 const {newDance} = getContext("newDance");
 
@@ -14,25 +17,50 @@ $: {
   selectedCall = checkCall ? checkCall : {};
 }
 
+let sourceCall = {};
+async function getCall() {
+  try {
+    const res = await getCallById(selectedCall.id);
+    if (res.call) {
+      sourceCall = res.call;
+    }
+  }
+  catch (err) {
+    console.log(err);
+    sourceCall = {}
+  }
+}
+$: selectedCall, getCall();
+
+function removeCall(groupIndex, callIndex) {
+  dispatch('removeCall', {groupIndex: groupIndex, callIndex: callIndex});
+}
+
 </script>
 
 <div class="SelectedCall">
-  {#if selectedCall.beats && !$newDance.selection.delay}
+  {#if $newDance.selection.call != $newDance.dance.instructions[$newDance.selection.group].length && !$newDance.selection.delay}
   <h4>Name: {selectedCall.title}</h4>
+  <p>Description: {sourceCall?.text || ""}</p>
   <label for="beatsInSelection">Duration in Beats: </label>
   <input
     id="beatsInSelection"
     type="number"
     bind:value={selectedCall.beats}
-    on:keyup={() => {$newDance.duration = $newDance.duration}}
+    on:keyup={() => {
+      if (selectedCall.beats) {
+        $newDance.duration = $newDance.duration;
+      }
+    }}
   />
-  <label for="beatsIndelay">Delay in Beats: </label>
+  <label for="beatsInDelay">Delay in Beats: </label>
   <input
-    id="beatsIndelay"
+    id="beatsInDelay"
     type="number"
     bind:value={selectedCall.delay}
     on:keyup={() => {$newDance.duration = $newDance.duration}}
   />
+  <button on:click={() => {removeCall($newDance.selection.group, $newDance.selection.call)}}>Remove</button>
   {:else}
   No Call Selected
   {/if}

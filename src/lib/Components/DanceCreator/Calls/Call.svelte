@@ -1,6 +1,5 @@
 <script>
-import { createEventDispatcher } from 'svelte';
-import { clickOutside } from '/src/lib/utils/clickOutside';
+import { createEventDispatcher, getContext } from 'svelte';
 import { deleteCall } from '/src/lib/utils/danceModule';
 import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
@@ -9,15 +8,32 @@ import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 
 export let call;
 let hiddenDetails = true;
-let hiddenDelete = true;
   
 const dispatch = createEventDispatcher();
+
+let openModal = getContext("openModal");
+
+function handleDeleteCall() {
+  openModal(
+    () => {
+      deleteCall(call.id);
+    },
+    () => {},
+    {
+      action: "delete",
+      noun: "call",
+      item: call.title,
+      confirmColor: "red",
+    }
+  );
+}
+
 </script>
 
 <div class="Call">
   <div class="Header">
     <span class="HeaderTitle">{call.title}</span>
-    <button on:click={() => {hiddenDelete = !hiddenDelete}}><Delete color={"red"} /></button>
+    <button on:click={handleDeleteCall}><Delete color={"red"} /></button>
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
@@ -32,13 +48,6 @@ const dispatch = createEventDispatcher();
     <span>
       Duration in Beats: {call.beats}
     </span>
-  {/if}
-  {#if !hiddenDelete}
-    <div use:clickOutside on:clickOutside={() => {hiddenDelete = true}}>
-      Are you sure you want to delete?
-      <button class="deleteButton" on:click={() => {deleteCall(call.id)}}>Delete</button>
-      <button>Cancel</button>
-    </div>
   {/if}
 </div>
 <hr>

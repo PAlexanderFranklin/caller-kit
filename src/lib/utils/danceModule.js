@@ -5,6 +5,16 @@ const danceModule = 'AQDnT1ZRZO4zXffZAkqWJszR7GfRl1f4AlCde1Kti18c5w';
 
 export const calls = writable([]);
 
+export const getCallById = async (id) => {
+  const [result, err] = await callModule(danceModule, 'getCallById', {id});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const createCall = async (call) => {
   const [result, err] = await callModule(danceModule, 'createCall', {call});
   if (err) {

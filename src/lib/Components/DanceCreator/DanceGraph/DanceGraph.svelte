@@ -1,6 +1,8 @@
 <script>
-import { getContext } from "svelte";
+import { createEventDispatcher, getContext } from "svelte";
 import Group from "./Group.svelte";
+
+const dispatch = createEventDispatcher();
 
 const {newDance} = getContext("newDance");
 
@@ -25,7 +27,9 @@ function addGroup() {
     Add Group
   </button>
   {#each $newDance.dance.instructions as group, i}
-  <Group group={group} index={i} />
+  <Group group={group} index={i}
+    on:removeCall={(event) => {dispatch('removeCall', event.detail)}}
+  />
   {/each}
 </div>
 
