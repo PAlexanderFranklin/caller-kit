@@ -5,6 +5,7 @@ import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
+import CallDependencies from '../../Common/Calls/CallDependencies.svelte';
 
 export let call;
 let hiddenDetails = true;
@@ -48,6 +49,7 @@ function handleDeleteCall() {
     <span>
       Duration in Beats: {call.beats}
     </span>
+    <CallDependencies sourceCall={call} />
   {/if}
 </div>
 <hr>
@@ -64,9 +66,6 @@ function handleDeleteCall() {
 
   .HeaderTitle {
     width: 50%;
-  }
-  .deleteButton {
-    color: red;
   }
   hr {
     background: green;
