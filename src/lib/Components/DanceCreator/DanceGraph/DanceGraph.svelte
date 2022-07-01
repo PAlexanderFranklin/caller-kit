@@ -18,13 +18,14 @@ function findDuration() {
 $: $newDance.dance.instructions, findDuration();
 
 function addGroup() {
+  $newDance.selection = {group: $newDance.dance.instructions.length, call: 0, delay: true};
   $newDance.dance.instructions = [...$newDance.dance.instructions, []];
 }
 </script>
 
 <div class="danceGraph">
   <button on:click={addGroup}>
-    Add Group
+    Add Group of Dancers
   </button>
   {#each $newDance.dance.instructions as group, i}
   <Group group={group} index={i}

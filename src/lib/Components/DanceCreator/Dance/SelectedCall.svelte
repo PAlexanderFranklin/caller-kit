@@ -1,6 +1,7 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
 import { getCallById } from '/src/lib/utils/danceModule';
+import CallDependencies from "/src/lib/Components/Common/Calls/CallDependencies.svelte";
 
 const dispatch = createEventDispatcher();
 
@@ -8,6 +9,9 @@ const {newDance} = getContext("newDance");
 
 let checkCall = {};
 let selectedCall = {};
+
+let showFootwork = false;
+let showHold = false;
 
 $: {
   try {
@@ -19,15 +23,17 @@ $: {
 
 let sourceCall = {};
 async function getCall() {
-  try {
-    const res = await getCallById(selectedCall.id);
-    if (res.call) {
-      sourceCall = res.call;
+  if (selectedCall.id) {
+    try {
+      const res = await getCallById(selectedCall.id);
+      if (res.call) {
+        sourceCall = res.call;
+      }
     }
-  }
-  catch (err) {
-    console.log(err);
-    sourceCall = {}
+    catch (err) {
+      console.log(err);
+      sourceCall = {}
+    }
   }
 }
 $: selectedCall, getCall();
@@ -39,28 +45,31 @@ function removeCall(groupIndex, callIndex) {
 </script>
 
 <div class="SelectedCall">
-  {#if $newDance.selection.call != $newDance.dance.instructions[$newDance.selection.group].length && !$newDance.selection.delay}
-  <h4>Name: {selectedCall.title}</h4>
-  <p>Description: {sourceCall?.text || ""}</p>
-  <label for="beatsInSelection">Duration in Beats: </label>
-  <input
-    id="beatsInSelection"
-    type="number"
-    bind:value={selectedCall.beats}
-    on:keyup={() => {
-      if (selectedCall.beats) {
-        $newDance.duration = $newDance.duration;
-      }
-    }}
-  />
-  <label for="beatsInDelay">Delay in Beats: </label>
-  <input
-    id="beatsInDelay"
-    type="number"
-    bind:value={selectedCall.delay}
-    on:keyup={() => {$newDance.duration = $newDance.duration}}
-  />
-  <button on:click={() => {removeCall($newDance.selection.group, $newDance.selection.call)}}>Remove</button>
+  {#if Object.keys(selectedCall).length !== 0}
+    <h4>Name: {selectedCall.title || "N/A"}</h4>
+    <label for="beatsInDelay">Delay in Beats: </label>
+    <input
+      id="beatsInDelay"
+      type="number"
+      bind:value={selectedCall.delay}
+      on:keyup={() => {$newDance.duration = $newDance.duration}}
+    />
+    {#if !$newDance.selection.delay}
+      <label for="beatsInSelection">Duration in Beats: </label>
+      <input
+        id="beatsInSelection"
+        type="number"
+        bind:value={selectedCall.beats}
+        on:keyup={() => {
+          if (selectedCall.beats) {
+            $newDance.duration = $newDance.duration;
+          }
+        }}
+      />
+      <p>Description: {sourceCall?.text || ""}</p>
+      <CallDependencies sourceCall={sourceCall} />
+      <button on:click={() => {removeCall($newDance.selection.group, $newDance.selection.call)}}>Remove</button>
+    {/if}
   {:else}
   No Call Selected
   {/if}
