@@ -45,7 +45,7 @@ setContext('openModal', openModal);
 const newDance = writable({
   dance: {
     instructions: [
-      [{beats: 4}]
+      []
     ]
   },
   selection: {group: 0, call: 0, delay: true},

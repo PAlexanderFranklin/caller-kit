@@ -1,27 +1,28 @@
 <script>
-import { createEventDispatcher, setContext } from 'svelte';
+import { createEventDispatcher, onMount, setContext } from 'svelte';
 import { writable } from 'svelte/store';
-import { createCall } from '/src/lib/utils/danceModule';
+import { updateCall } from '/src/lib/utils/danceModule';
 import CallEditor from './CallEditor.svelte';
-  
+
 const dispatch = createEventDispatcher();
 
-const call = writable({
+export let call = {};
+
+const updatedCall = writable({
   title: "",
   text: "",
   beats: 8,
   isFootwork: false,
   isHold: false,
 })
-
-setContext("call", call)
+setContext("call", updatedCall)
 
 const callingModule = writable(false);
 setContext("callingModule", callingModule);
 
-function handleCreateCall() {
+function handleUpdateCall() {
   $callingModule = true;
-  createCall($call).then(() => {
+  updateCall($updatedCall).then(() => {
     dispatch('closeModal', {});
     $callingModule = false;
   }).catch((err) => {
@@ -29,6 +30,11 @@ function handleCreateCall() {
     $callingModule = false;
   });
 }
+
+onMount(() => {
+  $updatedCall = {...call};
+})
+
 </script>
 
-<CallEditor verb="Creat" on:callModule={handleCreateCall} on:closeModal={() => {dispatch('closeModal', {})}} />
+<CallEditor verb="Updat" on:callModule={handleUpdateCall} on:closeModal={() => {dispatch('closeModal', {})}} />

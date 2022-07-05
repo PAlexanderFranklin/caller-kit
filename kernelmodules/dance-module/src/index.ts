@@ -83,6 +83,10 @@ const handleUpdateCall = (aq: activeQuery) => {
       ...aq.callerInput.call,
       modifiedAt: new Date(),
     };
+    if (!updatedCall.title) {
+      aq.reject('No title found, call not updated.');
+      return
+    }
     if (typeof updatedCall.id === 'string') {
       // create list of just call to update.
       const callToUpdate = calls.filter(({ id }) => {
@@ -203,6 +207,10 @@ const handleUpdateDance = (aq: activeQuery) => {
       ...aq.callerInput.dance,
       modifiedAt: new Date(),
     };
+    if (!updatedDance.title) {
+      aq.reject('No title found, dance not updated.');
+      return
+    }
     if (typeof updatedDance.id === 'string') {
       // create list of just dance to update.
       const danceToUpdate = dances.filter(({ id }) => {

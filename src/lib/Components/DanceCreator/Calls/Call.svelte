@@ -5,10 +5,13 @@ import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
+import Pencil from "svelte-material-icons/Pencil.svelte";
 import CallDependencies from '../../Common/Calls/CallDependencies.svelte';
+import UpdateCall from './UpdateCall.svelte';
 
 export let call;
 let hiddenDetails = true;
+let editing = false;
   
 const dispatch = createEventDispatcher();
 
@@ -35,6 +38,7 @@ function handleDeleteCall() {
   <div class="Header">
     <span class="HeaderTitle">{call.title}</span>
     <button on:click={handleDeleteCall}><Delete color={"red"} /></button>
+    <button on:click={() => {editing = !editing}}><Pencil color={"yellow"} /></button>
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
@@ -42,6 +46,9 @@ function handleDeleteCall() {
     {/if}
     <button on:click={() => {dispatch('selectCall', {call})}}><ArrowRight color={"green"} /></button>
   </div>
+  {#if editing}
+    <UpdateCall on:closeModal={() => {editing = false}} call={call} />
+  {/if}
   {#if !hiddenDetails}
     <p>
       Description: {call.text}
