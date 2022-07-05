@@ -56,6 +56,60 @@ const handleSubscribeCalls = (aq: activeQuery) => {
   aq.sendUpdate({ calls });
 };
 
+const handleCreateCall = (aq: activeQuery) => {
+  if ('call' in aq.callerInput) {
+    const call:any = aq.callerInput.call
+    if (!call.title) {
+      aq.reject('No title found, call not created.');
+      return
+    }
+    const newCall:Call = {
+      ...call,
+      id: uuid(),
+      license: call.license || "CC0",
+      modifiedAt: new Date(),
+    };
+    setCalls([...calls, newCall]);
+    aq.respond({call: newCall});
+  }
+  else {
+    aq.reject('callerinput.call must be defined for "createCall"');
+  }
+}
+
+const handleUpdateCall = (aq: activeQuery) => {
+  if ('call' in aq.callerInput) {
+    const updatedCall:Call = {
+      ...aq.callerInput.call,
+      modifiedAt: new Date(),
+    };
+    if (typeof updatedCall.id === 'string') {
+      // create list of just call to update.
+      const callToUpdate = calls.filter(({ id }) => {
+        return id === updatedCall.id;
+      });
+
+      // if call to update found, update state, otherwise reject.
+      if (callToUpdate.length) {
+        const remainingCalls = calls.filter(({ id }) => {
+          return id !== updatedCall.id;
+        });
+        setCalls([...remainingCalls, updatedCall]);
+
+        aq.respond({ call: callToUpdate[0] });
+      } else {
+        aq.reject(`No call found with id ${updatedCall.id}`);
+      }
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('updateCall requires field `call` with property `id`.');
+    }
+  }
+  else {
+    aq.reject('callerinput.call must be defined for "updateCall"');
+  }
+};
+
 const handleDeleteCall = (aq: activeQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
     // create list of just removed call.
@@ -79,26 +133,6 @@ const handleDeleteCall = (aq: activeQuery) => {
     aq.reject('deleteCall requires field `id`.');
   }
 };
-
-const handleCreateCall = (aq: activeQuery) => {
-  if ('call' in aq.callerInput) {
-    const call:any = aq.callerInput.call
-    if (!call.title) {
-      aq.reject('No title found, call not created.');
-      return
-    }
-    const newCall:Call = {
-      ...call,
-      id: uuid(),
-      license: call.license || "CC0",
-    };
-    setCalls([...calls, newCall]);
-    aq.respond({call: newCall});
-  }
-  else {
-    aq.reject('callerinput.call must be defined for "createCall"');
-  }
-}
 
 const setDances = (newDances: Array<Dance>) => {
   dances = newDances;
@@ -142,6 +176,60 @@ const handleSubscribeDances = (aq: activeQuery) => {
   aq.sendUpdate({ dances });
 };
 
+const handleCreateDance = (aq: activeQuery) => {
+  if ('dance' in aq.callerInput) {
+    const dance:any = aq.callerInput.dance
+    if (!dance.title) {
+      aq.reject('No title found, dance not created.');
+      return
+    }
+    const newDance:Dance = {
+      ...dance,
+      id: uuid(),
+      license: dance.license || "CC0",
+      modifiedAt: new Date(),
+    };
+    setDances([...dances, newDance]);
+    aq.respond({dance: newDance});
+  }
+  else {
+    aq.reject('callerinput.dance must be defined for "createDance"');
+  }
+}
+
+const handleUpdateDance = (aq: activeQuery) => {
+  if ('dance' in aq.callerInput) {
+    const updatedDance:Dance = {
+      ...aq.callerInput.dance,
+      modifiedAt: new Date(),
+    };
+    if (typeof updatedDance.id === 'string') {
+      // create list of just dance to update.
+      const danceToUpdate = dances.filter(({ id }) => {
+        return id === updatedDance.id;
+      });
+
+      // if dance to update found, update state, otherwise reject.
+      if (danceToUpdate.length) {
+        const remainingDances = dances.filter(({ id }) => {
+          return id !== updatedDance.id;
+        });
+        setDances([...remainingDances, updatedDance]);
+
+        aq.respond({ dance: danceToUpdate[0] });
+      } else {
+        aq.reject(`No dance found with id ${updatedDance.id}`);
+      }
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('updateDance requires field `dance` with property `id`.');
+    }
+  }
+  else {
+    aq.reject('callerinput.dance must be defined for "updateDance"');
+  }
+};
+
 const handleDeleteDance = (aq: activeQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
     // create list of just removed dance.
@@ -166,26 +254,6 @@ const handleDeleteDance = (aq: activeQuery) => {
   }
 };
 
-const handleCreateDance = (aq: activeQuery) => {
-  if ('dance' in aq.callerInput) {
-    const dance:any = aq.callerInput.dance
-    if (!dance.title) {
-      aq.reject('No title found, dance not created.');
-      return
-    }
-    const newDance:Dance = {
-      ...dance,
-      id: uuid(),
-      license: dance.license || "CC0",
-    };
-    setDances([...dances, newDance]);
-    aq.respond({dance: newDance});
-  }
-  else {
-    aq.reject('callerinput.dance must be defined for "createDance"');
-  }
-}
-
 const setFormations = (newFormations: Array<Formation>) => {
   formations = newFormations;
 }
@@ -194,10 +262,12 @@ addHandler('createCall', handleCreateCall);
 addHandler('getCalls', handleGetCalls)
 addHandler('getCallById', handleGetCallById)
 addHandler('subscribeCalls', handleSubscribeCalls)
+addHandler('updateCall', handleUpdateCall)
 addHandler('deleteCall', handleDeleteCall)
 
 addHandler('createDance', handleCreateDance);
 addHandler('getDances', handleGetDances)
 addHandler('getDanceById', handleGetDanceById)
 addHandler('subscribeDances', handleSubscribeDances)
+addHandler('updateDance', handleUpdateDance)
 addHandler('deleteDance', handleDeleteDance)

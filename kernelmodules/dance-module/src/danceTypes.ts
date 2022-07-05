@@ -10,6 +10,7 @@ export interface Call {
   hold?: CallRef,
   isFootwork?: Boolean,
   isHold?: Boolean,
+  modifiedAt?: Date
 }
 
 export interface CallRef {
@@ -51,6 +52,7 @@ export interface Dance {
   variantOf?: DanceRef,
   footwork?: CallRef,
   hold?: CallRef,
+  modifiedAt?: Date
 }
 
 export interface DanceRef {
