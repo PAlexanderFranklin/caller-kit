@@ -39,6 +39,6 @@ function addGroup() {
     display: flex;
     flex-direction: column;
     overflow: scroll;
-    width: 40rem;
+    min-width: 20rem;
   }
 </style>

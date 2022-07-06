@@ -2,7 +2,7 @@
 import { setContext } from "svelte";
 
 import { writable } from "svelte/store";
-import { calls } from '/src/lib/utils/danceModule';
+import { calls, createDance } from '/src/lib/utils/danceModule';
 import CallList from "./Calls/CallList.svelte";
 import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./Dance/SelectedCall.svelte";
@@ -68,6 +68,23 @@ function removeCall(group, callIndex) {
   $newDance.dance.instructions = [...$newDance.dance.instructions];
 }
 
+function handleCreateDance() {
+  createDance($newDance.dance).then((res) => {
+    console.log(res);
+    $newDance = {
+      dance: {
+        instructions: [
+          []
+        ]
+      },
+      selection: {group: 0, call: 0, delay: true},
+      duration: 0,
+    }
+  }).catch((err) => {
+    console.error(err);
+  })
+}
+
 </script>
 
 <button on:click={console.log($calls)}>Log Calls</button>
@@ -81,7 +98,7 @@ function removeCall(group, callIndex) {
   />
   <div>
     <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
-    <DanceOptions />
+    <DanceOptions on:createDance={handleCreateDance} />
   </div>
 </div>
 {#if showModal}
