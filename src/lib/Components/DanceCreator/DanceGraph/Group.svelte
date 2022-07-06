@@ -8,7 +8,7 @@ export let index;
 
 const dispatch = createEventDispatcher();
 
-const {newDance} = getContext("newDance");
+const newDance = getContext("newDance");
 
 const openModal = getContext('openModal');
 

@@ -4,7 +4,7 @@ import Group from "./Group.svelte";
 
 const dispatch = createEventDispatcher();
 
-const {newDance} = getContext("newDance");
+const newDance = getContext("newDance");
 
 function findDuration() {
   $newDance.duration = Math.max(

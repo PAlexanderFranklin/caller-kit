@@ -1,8 +1,8 @@
 <script>
-import { setContext } from "svelte";
+import { onMount, setContext } from "svelte";
 
 import { writable } from "svelte/store";
-import { calls, createDance } from '/src/lib/utils/danceModule';
+import { calls, createDance, updateDance } from '/src/lib/utils/danceModule';
 import CallList from "./Calls/CallList.svelte";
 import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./Dance/SelectedCall.svelte";
@@ -10,6 +10,8 @@ import ConfirmModal from "./ConfirmModal.svelte";
 import DanceOptions from "./Dance/DanceOptions.svelte";
 
 let showModal = false;
+
+export let dance = false;
 
 let closeModal = () => {
   showModal = false;
@@ -50,8 +52,9 @@ const newDance = writable({
   },
   selection: {group: 0, call: 0, delay: true},
   duration: 0,
+  saving: false,
 });
-setContext("newDance", {newDance})
+setContext("newDance", newDance)
 
 function addCall(call) {
   $newDance.dance.instructions[$newDance.selection.group].splice(
@@ -69,21 +72,35 @@ function removeCall(group, callIndex) {
 }
 
 function handleCreateDance() {
-  createDance($newDance.dance).then((res) => {
-    console.log(res);
-    $newDance = {
-      dance: {
-        instructions: [
-          []
-        ]
-      },
-      selection: {group: 0, call: 0, delay: true},
-      duration: 0,
-    }
-  }).catch((err) => {
-    console.error(err);
-  })
+  $newDance.saving = true
+  if ($newDance.dance.id) {
+    updateDance($newDance.dance).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.error(err);
+    }).finally(() => {
+      $newDance.saving = false;
+    })
+  }
+  else {
+    createDance($newDance.dance).then((res) => {
+      console.log(res);
+      $newDance.dance = {
+        ...$newDance.dance, id: res.dance.id
+      };
+    }).catch((err) => {
+      console.error(err);
+    }).finally(() => {
+      $newDance.saving = false;
+    })
+  }
 }
+
+onMount(() => {
+  if (dance) {
+    $newDance.dance = {...dance};
+  }
+})
 
 </script>
 

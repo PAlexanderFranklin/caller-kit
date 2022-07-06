@@ -5,7 +5,7 @@ import CallDependencies from "/src/lib/Components/Common/Calls/CallDependencies.
 
 const dispatch = createEventDispatcher();
 
-const {newDance} = getContext("newDance");
+const newDance = getContext("newDance");
 
 let checkCall = {};
 let selectedCall = {};
