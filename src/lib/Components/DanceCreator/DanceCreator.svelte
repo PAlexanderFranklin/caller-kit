@@ -58,7 +58,14 @@ setContext("newDance", newDance)
 
 function addCall(call) {
   $newDance.dance.instructions[$newDance.selection.group].splice(
-    $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), 0, {...call}
+    $newDance.selection.call + ($newDance.selection.delay ? 0 : 1),
+    0,
+    {
+      id: call.id,
+      title: call.title,
+      skyfeed: call.skyfeed,
+      beats: call.beats,
+    }
   );
   $newDance.dance.instructions = [...$newDance.dance.instructions];
   $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), delay: false};
