@@ -1,6 +1,6 @@
 import { addHandler, handleMessage, log } from 'libkmodule';
 import {v4 as uuid} from 'uuid';
-import type { activeQuery } from 'libkmodule';
+import type { ActiveQuery } from 'libkmodule';
 import type { Call, CallRef, Dancer, Formation, Dance } from './danceTypes';
 
 // Sets up managing postMessage handling.
@@ -19,11 +19,11 @@ const setCalls = (newCalls: Array<Call>) => {
   pushCalls();
 }
 
-const handleGetCalls = (aq: activeQuery) => {
+const handleGetCalls = (aq: ActiveQuery) => {
   aq.respond({calls});
 }
 
-const handleGetCallById = (aq: activeQuery) => {
+const handleGetCallById = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
     // create list of just the requested call.
     const matchedCall = calls.filter(({ id }) => {
@@ -48,7 +48,7 @@ const pushCalls = () => {
   });
 };
 
-const handleSubscribeCalls = (aq: activeQuery) => {
+const handleSubscribeCalls = (aq: ActiveQuery) => {
   // add sendUpdate method to list of subscriptions
   subscriptionUpdatesCalls.push(aq.sendUpdate);
 
@@ -56,7 +56,7 @@ const handleSubscribeCalls = (aq: activeQuery) => {
   aq.sendUpdate({ calls });
 };
 
-const handleCreateCall = (aq: activeQuery) => {
+const handleCreateCall = (aq: ActiveQuery) => {
   if ('call' in aq.callerInput) {
     const call:any = aq.callerInput.call
     if (!call.title) {
@@ -77,7 +77,7 @@ const handleCreateCall = (aq: activeQuery) => {
   }
 }
 
-const handleUpdateCall = (aq: activeQuery) => {
+const handleUpdateCall = (aq: ActiveQuery) => {
   if ('call' in aq.callerInput) {
     const updatedCall:Call = {
       ...aq.callerInput.call,
@@ -114,7 +114,7 @@ const handleUpdateCall = (aq: activeQuery) => {
   }
 };
 
-const handleDeleteCall = (aq: activeQuery) => {
+const handleDeleteCall = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
     // create list of just removed call.
     const removedCall = calls.filter(({ id }) => {
@@ -143,11 +143,11 @@ const setDances = (newDances: Array<Dance>) => {
   pushDances();
 }
 
-const handleGetDances = (aq: activeQuery) => {
+const handleGetDances = (aq: ActiveQuery) => {
   aq.respond({dances});
 }
 
-const handleGetDanceById = (aq: activeQuery) => {
+const handleGetDanceById = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
     // create list of just the requested dance.
     const matchedDance = dances.filter(({ id }) => {
@@ -172,7 +172,7 @@ const pushDances = () => {
   });
 };
 
-const handleSubscribeDances = (aq: activeQuery) => {
+const handleSubscribeDances = (aq: ActiveQuery) => {
   // add sendUpdate method to list of subscriptions
   subscriptionUpdatesDances.push(aq.sendUpdate);
 
@@ -180,7 +180,7 @@ const handleSubscribeDances = (aq: activeQuery) => {
   aq.sendUpdate({ dances });
 };
 
-const handleCreateDance = (aq: activeQuery) => {
+const handleCreateDance = (aq: ActiveQuery) => {
   if ('dance' in aq.callerInput) {
     const dance:any = aq.callerInput.dance
     if (!dance.title) {
@@ -201,7 +201,7 @@ const handleCreateDance = (aq: activeQuery) => {
   }
 }
 
-const handleUpdateDance = (aq: activeQuery) => {
+const handleUpdateDance = (aq: ActiveQuery) => {
   if ('dance' in aq.callerInput) {
     const updatedDance:Dance = {
       ...aq.callerInput.dance,
@@ -238,7 +238,7 @@ const handleUpdateDance = (aq: activeQuery) => {
   }
 };
 
-const handleDeleteDance = (aq: activeQuery) => {
+const handleDeleteDance = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.id === 'string') {
     // create list of just removed dance.
     const removedDance = dances.filter(({ id }) => {
