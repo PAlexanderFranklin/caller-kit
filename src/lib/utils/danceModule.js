@@ -12,8 +12,6 @@ export const getState = async () => {
     throw err;
   }
   else {
-    $calls = result.calls;
-    $dances = result.dances;
     return result;
   }
 }
@@ -34,7 +32,6 @@ export const createCall = async (call) => {
     throw err;
   }
   else {
-    $calls = [...$calls, result.call];
     return result;
   }
 }

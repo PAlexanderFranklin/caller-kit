@@ -1,15 +1,15 @@
-import { addHandler, handleMessage, log, createIndependentFileSmall, openIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
+import { addHandler, handleMessage, log, createIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
 import {v4 as uuid} from 'uuid';
 import type { ActiveQuery } from 'libkmodule';
 import type { Call, CallRef, Dancer, Formation, Dance } from './danceTypes';
 
-import {jsonToArray, arrayToJson} from './helpers';
+import {jsonToArray, arrayToJson, openFile, readData} from './helpers';
 
 // Sets up managing postMessage handling.
 onmessage = handleMessage;
 
 let moduleSeed: Uint8Array;
-let moduleData: any;
+let moduleDataFile: any;
 
 let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
@@ -17,14 +17,18 @@ let dances: Array<Dance> = [];
 const initializeModule = async () => {
   moduleSeed = await getSeed();
   try {
-    moduleData = await openIndependentFileSmall(moduleSeed, "moduleData");
-    ({calls, dances} = arrayToJson(moduleData.readData()));
-    return moduleData;
+    moduleDataFile = await openFile(moduleSeed, "moduleData");
+    ({calls, dances} = await readData(moduleDataFile));
+    return moduleDataFile;
   } catch (error) {
     if (error === ERR_NOT_EXISTS) {
       let dataFile = jsonToArray({calls, dances});
-      moduleData = await createIndependentFileSmall(moduleSeed, "moduleData", dataFile);
-      return moduleData;
+      let [res, error] = await createIndependentFileSmall(moduleSeed, "moduleData", dataFile);
+      if (error) {
+        throw error;
+      }
+      moduleDataFile = res;
+      return moduleDataFile;
     }
     else {
       throw error;
@@ -32,13 +36,13 @@ const initializeModule = async () => {
   }
 }
 
-const setState = () => {
-  moduleData.overwriteData(jsonToArray({calls, dances}));
+const setState = async () => {
+  return await moduleDataFile.overwriteData(jsonToArray({calls, dances}));
 }
 
-const setCalls = (newCalls: Array<Call>) => {
+const setCalls = async (newCalls: Array<Call>) => {
   calls = newCalls;
-  setState();
+  return await setState();
 }
 
 const handleGetState = (aq: ActiveQuery) => {
@@ -81,8 +85,9 @@ const handleCreateCall = (aq: ActiveQuery) => {
         license: call.license || "CC0",
         modifiedAt: new Date(),
       };
-      setCalls([...calls, newCall]);
-      aq.respond({call: newCall});
+      setCalls([...calls, newCall]).then(() => {
+        aq.respond({call: newCall});
+      })
     }
     else {
       aq.reject('callerinput.call must be defined for "createCall"');
@@ -112,9 +117,9 @@ const handleUpdateCall = (aq: ActiveQuery) => {
           const remainingCalls = calls.filter(({ id }) => {
             return id !== updatedCall.id;
           });
-          setCalls([...remainingCalls, updatedCall]);
-
-          aq.respond({ call: callToUpdate[0] });
+          setCalls([...remainingCalls, updatedCall]).then(() => {
+            aq.respond({call: callToUpdate[0]});
+          })
         } else {
           aq.reject(`No call found with id ${updatedCall.id}`);
         }
@@ -142,9 +147,9 @@ const handleDeleteCall = (aq: ActiveQuery) => {
         const remainingCalls = calls.filter(({ id }) => {
           return id !== aq.callerInput.id;
         });
-        setCalls(remainingCalls);
-
-        aq.respond({ call: removedCall[0] });
+        setCalls(remainingCalls).then(() => {
+          aq.respond({ call: removedCall[0] });
+        })
       } else {
         aq.reject(`No call found with id ${aq.callerInput.id}`);
       }
@@ -155,9 +160,9 @@ const handleDeleteCall = (aq: ActiveQuery) => {
   });
 };
 
-const setDances = (newDances: Array<Dance>) => {
+const setDances = async (newDances: Array<Dance>) => {
   dances = newDances;
-  setState();
+  return await setState();
 }
 
 const handleGetDanceByRef = (aq: ActiveQuery) => {
@@ -194,8 +199,9 @@ const handleCreateDance = (aq: ActiveQuery) => {
         license: dance.license || "CC0",
         modifiedAt: new Date(),
       };
-      setDances([...dances, newDance]);
-      aq.respond({dance: newDance});
+      setDances([...dances, newDance]).then(() => {
+        aq.respond({dance: newDance});
+      })
     }
     else {
       aq.reject('callerinput.dance must be defined for "createDance"');
@@ -225,9 +231,9 @@ const handleUpdateDance = (aq: ActiveQuery) => {
           const remainingDances = dances.filter(({ id }) => {
             return id !== updatedDance.id;
           });
-          setDances([...remainingDances, updatedDance]);
-
-          aq.respond({ dance: danceToUpdate[0] });
+          setDances([...remainingDances, updatedDance]).then(() => {
+            aq.respond({ dance: danceToUpdate[0] });
+          })
         } else {
           aq.reject(`No dance found with id ${updatedDance.id}`);
         }
@@ -255,9 +261,9 @@ const handleDeleteDance = (aq: ActiveQuery) => {
         const remainingDances = dances.filter(({ id }) => {
           return id !== aq.callerInput.id;
         });
-        setDances(remainingDances);
-
-        aq.respond({ dance: removedDance[0] });
+        setDances(remainingDances).then(() => {
+          aq.respond({ dance: removedDance[0] });
+        })
       } else {
         aq.reject(`No dance found with id ${aq.callerInput.id}`);
       }

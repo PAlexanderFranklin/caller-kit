@@ -2,7 +2,7 @@
 import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 import { init as kernelInit, loginComplete, openAuthWindow } from 'libkernel';
-import { getState } from "./danceModule";
+import { getState, calls, dances } from "./danceModule";
 
 let userAuthStatus = writable(false);
 let authInProgress = writable(false);
@@ -34,7 +34,10 @@ setContext("skynetContext", {
 let subscribed = false;
 
 const callGetState = () => {
-  getState();
+  getState().then((result) => {
+    $calls = result.calls;
+    $dances = result.dances;
+  })
   subscribed = true;
 }
 
