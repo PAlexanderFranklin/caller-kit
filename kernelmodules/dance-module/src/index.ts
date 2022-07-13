@@ -88,7 +88,7 @@ const handleCreateCall = (aq: ActiveQuery) => {
         modifiedAt: new Date(),
       };
       setCalls([...calls, newCall]).then(() => {
-        aq.respond({call: newCall});
+        aq.respond({call: newCall, calls});
       })
     }
     else {
@@ -120,7 +120,7 @@ const handleUpdateCall = (aq: ActiveQuery) => {
             return id !== updatedCall.id;
           });
           setCalls([...remainingCalls, updatedCall]).then(() => {
-            aq.respond({call: callToUpdate[0]});
+            aq.respond({call: callToUpdate[0], calls});
           })
         } else {
           aq.reject(`No call found with id ${updatedCall.id}`);
@@ -150,7 +150,7 @@ const handleDeleteCall = (aq: ActiveQuery) => {
           return id !== aq.callerInput.id;
         });
         setCalls(remainingCalls).then(() => {
-          aq.respond({ call: removedCall[0] });
+          aq.respond({ call: removedCall[0], calls });
         })
       } else {
         aq.reject(`No call found with id ${aq.callerInput.id}`);
@@ -234,7 +234,7 @@ const handleUpdateDance = (aq: ActiveQuery) => {
             return id !== updatedDance.id;
           });
           setDances([...remainingDances, updatedDance]).then(() => {
-            aq.respond({ dance: danceToUpdate[0] });
+            aq.respond({ dance: danceToUpdate[0], dances });
           })
         } else {
           aq.reject(`No dance found with id ${updatedDance.id}`);
@@ -264,7 +264,7 @@ const handleDeleteDance = (aq: ActiveQuery) => {
           return id !== aq.callerInput.id;
         });
         setDances(remainingDances).then(() => {
-          aq.respond({ dance: removedDance[0] });
+          aq.respond({ dance: removedDance[0], dances });
         })
       } else {
         aq.reject(`No dance found with id ${aq.callerInput.id}`);

@@ -72,7 +72,6 @@ export const createDance = async (dance) => {
     throw err;
   }
   else {
-    $dances = [...$dances, result.dance];
     return result;
   }
 }

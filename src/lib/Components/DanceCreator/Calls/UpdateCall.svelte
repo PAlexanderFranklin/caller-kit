@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher, onMount, setContext } from 'svelte';
 import { writable } from 'svelte/store';
-import { updateCall } from '/src/lib/utils/danceModule';
+import { updateCall, calls } from '/src/lib/utils/danceModule';
 import CallEditor from './CallEditor.svelte';
 
 const dispatch = createEventDispatcher();
@@ -22,7 +22,8 @@ setContext("callingModule", callingModule);
 
 function handleUpdateCall() {
   $callingModule = true;
-  updateCall($updatedCall).then(() => {
+  updateCall($updatedCall).then((res) => {
+    $calls = res.calls;
     dispatch('closeModal', {});
     $callingModule = false;
   }).catch((err) => {

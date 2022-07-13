@@ -1,54 +1,13 @@
 <script>
-import { onMount, setContext } from "svelte";
-
+import { setContext } from "svelte";
 import { writable } from "svelte/store";
-import { calls, createDance, updateDance } from '/src/lib/utils/danceModule';
+import { calls, dances, createDance, updateDance } from '/src/lib/utils/danceModule';
 import CallList from "./Calls/CallList.svelte";
 import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./Dance/SelectedCall.svelte";
-import ConfirmModal from "./ConfirmModal.svelte";
 import DanceOptions from "./Dance/DanceOptions.svelte";
 
-let showModal = false;
-
 export let dance = false;
-
-let closeModal = () => {
-  showModal = false;
-};
-
-let confirmModal = () => {
-  showModal = false;
-};
-
-const modalDetails = writable({
-    action: "delete",
-    acting: "deleting",
-    noun: "call",
-    item: "a",
-    confirmColor: "blue",
-});
-setContext('modalDetails', modalDetails);
-
-async function openModal(confirm, cancel, details) {
-  $modalDetails = {...details, acting: null};
-  confirmModal = () => {
-    $modalDetails.acting = details.acting;
-    confirm().then(() => {
-      showModal = false
-    }).finally(() => {
-      $modalDetails = {...details, acting: null};
-    })
-  }
-  closeModal = () => {
-    cancel().then(() => {
-      showModal = false
-    })
-  }
-  showModal = true;
-}
-
-setContext('openModal', openModal);
 
 const newDance = writable({
   dance: {
@@ -88,7 +47,7 @@ function handleCreateDance() {
   $newDance.saving = true
   if ($newDance.dance.id) {
     updateDance($newDance.dance).then((res) => {
-      console.log(res);
+      $dances = res.dances;
     }).catch((err) => {
       console.error(err);
     }).finally(() => {
@@ -97,7 +56,7 @@ function handleCreateDance() {
   }
   else {
     createDance($newDance.dance).then((res) => {
-      console.log(res);
+      $dances = [...$dances, res.dance];
       $newDance.dance = {
         ...$newDance.dance, id: res.dance.id
       };
@@ -109,15 +68,15 @@ function handleCreateDance() {
   }
 }
 
-onMount(() => {
+$: {
   if (dance) {
     $newDance.dance = {...dance};
+    $newDance.selection = {group: 0, call: 0, delay: true};
   }
-})
+}
 
 </script>
 
-<button on:click={console.log($calls)}>Log Calls</button>
 <div class="DanceCreator">
   <CallList
     calls={$calls}
@@ -131,12 +90,6 @@ onMount(() => {
     <DanceOptions on:createDance={handleCreateDance} />
   </div>
 </div>
-{#if showModal}
-<ConfirmModal
-  on:closeModal={closeModal}
-  on:confirm={confirmModal}
-/>
-{/if}
 
 <style>
   .DanceCreator {
