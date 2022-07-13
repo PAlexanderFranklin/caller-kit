@@ -15,23 +15,25 @@ let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
 
 const initializeModule = async () => {
-  moduleSeed = await getSeed();
-  try {
-    moduleDataFile = await openFile(moduleSeed, "moduleData");
-    ({calls, dances} = await readData(moduleDataFile));
-    return moduleDataFile;
-  } catch (error) {
-    if (error === ERR_NOT_EXISTS) {
-      let dataFile = jsonToArray({calls, dances});
-      let [res, error] = await createIndependentFileSmall(moduleSeed, "moduleData", dataFile);
-      if (error) {
+  if(!moduleDataFile) {
+    moduleSeed = await getSeed();
+    try {
+      moduleDataFile = await openFile(moduleSeed, "moduleData");
+      ({calls, dances} = await readData(moduleDataFile));
+      return moduleDataFile;
+    } catch (error) {
+      if (error === ERR_NOT_EXISTS) {
+        let dataFile = jsonToArray({calls, dances});
+        let [res, error] = await createIndependentFileSmall(moduleSeed, "moduleData", dataFile);
+        if (error) {
+          throw error;
+        }
+        moduleDataFile = res;
+        return moduleDataFile;
+      }
+      else {
         throw error;
       }
-      moduleDataFile = res;
-      return moduleDataFile;
-    }
-    else {
-      throw error;
     }
   }
 }

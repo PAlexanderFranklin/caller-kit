@@ -19,12 +19,13 @@ let openModal = getContext("openModal");
 
 function handleDeleteCall() {
   openModal(
-    () => {
-      deleteCall(call.id);
+    async () => {
+      return await deleteCall(call.id);
     },
-    () => {},
+    async () => {},
     {
       action: "delete",
+      acting: "deleting",
       noun: "call",
       item: call.title,
       confirmColor: "red",

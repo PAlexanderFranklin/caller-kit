@@ -23,6 +23,7 @@ let confirmModal = () => {
 
 const modalDetails = writable({
     action: "delete",
+    acting: "deleting",
     noun: "call",
     item: "a",
     confirmColor: "blue",
@@ -30,14 +31,19 @@ const modalDetails = writable({
 setContext('modalDetails', modalDetails);
 
 async function openModal(confirm, cancel, details) {
-  $modalDetails = details;
+  $modalDetails = {...details, acting: null};
   confirmModal = () => {
-    confirm()
-    showModal = false
+    $modalDetails.acting = details.acting;
+    confirm().then(() => {
+      showModal = false
+    }).finally(() => {
+      $modalDetails = {...details, acting: null};
+    })
   }
   closeModal = () => {
-    cancel()
-    showModal = false
+    cancel().then(() => {
+      showModal = false
+    })
   }
   showModal = true;
 }

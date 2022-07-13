@@ -21,7 +21,7 @@ function confirm() {
     <h3>{$modalDetails.item || ""}</h3>
     <div class="buttons">
         <button on:click|stopPropagation={closeModal}>Cancel</button>
-        <button on:click|stopPropagation={confirm} class="confirm" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.action || "Yes"}</button>
+        <button on:click|stopPropagation={confirm} class="confirm" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.acting || $modalDetails.action || "Yes"}</button>
     </div>
 </div>
 

@@ -14,7 +14,7 @@ const openModal = getContext('openModal');
 
 async function deleteGroup() {
   openModal(
-    () => {
+    async () => {
       if ($newDance.selection.group == index) {
         $newDance.selection = {group: 0, call: 0, delay: true};
       }
@@ -24,9 +24,10 @@ async function deleteGroup() {
       $newDance.dance.instructions.splice(index, 1);
       $newDance.dance.instructions = [...$newDance.dance.instructions];
     },
-    () => {},
+    async () => {},
     {
       action: "remove",
+      acting: "removing",
       noun: "group",
       item: `group ${index + 1}`,
       confirmColor: "red",
