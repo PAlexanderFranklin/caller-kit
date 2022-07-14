@@ -1,5 +1,5 @@
 <script>
-import { createEventDispatcher, getContext } from "svelte";
+import { getContext } from "svelte";
 
 const viewedDance = getContext("viewedDance")
 

@@ -1,11 +1,11 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
 import { calls } from '/src/lib/utils/danceModule';
-import CallList from "../Calls/CallList.svelte";
+import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 
 const dispatch = createEventDispatcher();
 
-const newDance = getContext("newDance")
+const viewedDance = getContext("viewedDance")
 
 let selectingFootwork = false;
 let selectingHold = false;
@@ -17,18 +17,18 @@ let selectingHold = false;
   <input
     id="title"
     type="text"
-    bind:value={$newDance.dance.title}
+    bind:value={$viewedDance.dance.title}
   />
   <label for="description">Description: </label>
   <textarea
     id="description"
-    bind:value={$newDance.dance.text}
+    bind:value={$viewedDance.dance.text}
   />
-  <div>Duration in Beats: {$newDance.duration}</div>
+  <div>Duration in Beats: {$viewedDance.duration}</div>
   Footwork:
-  {#if $newDance.dance.footwork}
+  {#if $viewedDance.dance.footwork}
   <button on:click={() => {selectingFootwork = !selectingFootwork}}>
-    {$newDance.dance.footwork.title}
+    {$viewedDance.dance.footwork.title}
   </button>
   {:else if !selectingFootwork}
   <button on:click={() => {selectingFootwork = !selectingFootwork}}>
@@ -38,7 +38,7 @@ let selectingHold = false;
   {#if selectingFootwork}
     <button on:click={() => {
       selectingFootwork = false;
-      delete $newDance.dance.footwork;
+      delete $viewedDance.dance.footwork;
     }}>
       Deselect Footwork
     </button>
@@ -47,19 +47,19 @@ let selectingHold = false;
       on:selectCall={(event) => {
         selectingFootwork = false;
         let newFootwork = event.detail.call
-        $newDance.dance.footwork = {
+        $viewedDance.dance.footwork = {
           id: newFootwork.id,
           title: newFootwork.title,
           skyfeed: newFootwork.skyfeed,
-          beats: $newDance.dance.footwork?.beats || newFootwork.beats
+          beats: $viewedDance.dance.footwork?.beats || newFootwork.beats
         };
       }}
     />
   {/if}
   Hold:
-  {#if $newDance.dance.hold}
+  {#if $viewedDance.dance.hold}
   <button on:click={() => {selectingHold = !selectingHold}}>
-    {$newDance.dance.hold.title}
+    {$viewedDance.dance.hold.title}
   </button>
   {:else if !selectingHold}
   <button on:click={() => {selectingHold = !selectingHold}}>
@@ -69,7 +69,7 @@ let selectingHold = false;
   {#if selectingHold}
     <button on:click={() => {
       selectingHold = false;
-      delete $newDance.dance.hold;
+      delete $viewedDance.dance.hold;
     }}>
       Deselect Hold
     </button>
@@ -78,19 +78,19 @@ let selectingHold = false;
       on:selectCall={(event) => {
         selectingHold = false;
         let newHold = event.detail.call
-        $newDance.dance.hold = {
+        $viewedDance.dance.hold = {
           id: newHold.id,
           title: newHold.title,
           skyfeed: newHold.skyfeed,
-          beats: $newDance.dance.hold?.beats || newHold.beats
+          beats: $viewedDance.dance.hold?.beats || newHold.beats
         };
       }}
     />
   {/if}
-  {#if $newDance.saving}
-    <button>{$newDance.dance.id ? "Saving" : "Creating"} Dance...</button>
+  {#if $viewedDance.saving}
+    <button>{$viewedDance.dance.id ? "Saving" : "Creating"} Dance...</button>
   {:else}
-  <button on:click={() => {dispatch("createDance")}}>{$newDance.dance.id ? "Save" : "Create"} Dance</button>
+  <button on:click={() => {dispatch("createDance")}}>{$viewedDance.dance.id ? "Save" : "Create"} Dance</button>
   {/if}
 </div>
 

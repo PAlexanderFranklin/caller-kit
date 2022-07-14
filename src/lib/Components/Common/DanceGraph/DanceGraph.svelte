@@ -1,6 +1,8 @@
 <script>
-import { getContext } from "svelte";
+import { createEventDispatcher, getContext } from "svelte";
 import Group from "./Group.svelte";
+
+const dispatch = createEventDispatcher();
 
 const viewedDance = getContext("viewedDance");
 
@@ -14,11 +16,23 @@ function findDuration() {
   );
 }
 $: $viewedDance.dance.instructions, findDuration();
+
+function addGroup() {
+  $viewedDance.selection = {group: $viewedDance.dance.instructions.length, call: 0, delay: true};
+  $viewedDance.dance.instructions = [...$viewedDance.dance.instructions, []];
+}
 </script>
 
 <div class="danceGraph">
+  {#if $viewedDance.editing}
+  <button on:click={addGroup}>
+    Add Group of Dancers
+  </button>
+  {/if}
   {#each $viewedDance.dance.instructions as group, i}
-  <Group group={group} index={i} />
+  <Group group={group} index={i}
+    on:removeCall={(event) => {dispatch('removeCall', event.detail)}}
+  />
   {/each}
 </div>
 

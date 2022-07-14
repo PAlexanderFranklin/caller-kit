@@ -15,13 +15,17 @@ function confirm() {
 
 </script>
 
-<div on:click|stopPropagation={closeModal} class="background"></div>
+<div on:click|stopPropagation={() => {$modalDetails.acting ? "" : closeModal()}} class="background"></div>
 <div class="modal">
     <p>Are you sure you want to {$modalDetails.action || "delete"} this {$modalDetails.noun || "item"}?</p>
     <h3>{$modalDetails.item || ""}</h3>
     <div class="buttons">
+        {#if $modalDetails.acting}
+        <button class="confirm confirming" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.acting}</button>
+        {:else}
         <button on:click|stopPropagation={closeModal}>Cancel</button>
-        <button on:click|stopPropagation={confirm} class="confirm" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.acting || $modalDetails.action || "Yes"}</button>
+        <button on:click|stopPropagation={confirm} class="confirm" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.action || "Yes"}</button>
+        {/if}
     </div>
 </div>
 
@@ -60,5 +64,8 @@ function confirm() {
         font-weight: 700;
         border: none;
         border-radius: 0.25rem;
+    }
+    .confirming {
+        width: 100%;
     }
 </style>

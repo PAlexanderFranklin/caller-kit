@@ -7,16 +7,16 @@ export let call;
 export let groupIndex;
 export let index;
 
-const newDance = getContext("newDance");
+const viewedDance = getContext("viewedDance");
 
 function selectCall(delay) {
   try {
-    if (!$newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call].beats) {
-      dispatch('removeCall', {groupIndex: $newDance.selection.group, callIndex: $newDance.selection.call})
+    if (!$viewedDance.dance.instructions[$viewedDance.selection.group][$viewedDance.selection.call].beats) {
+      dispatch('removeCall', {groupIndex: $viewedDance.selection.group, callIndex: $viewedDance.selection.call})
     }
   }
   catch {}
-  $newDance.selection = {
+  $viewedDance.selection = {
     group: groupIndex,
     call: index,
     delay
@@ -27,9 +27,9 @@ function selectCall(delay) {
   
 <div
   class="delay {
-    $newDance.selection.group == groupIndex &&
-    $newDance.selection.call == index &&
-    $newDance.selection.delay == true
+    $viewedDance.selection.group == groupIndex &&
+    $viewedDance.selection.call == index &&
+    $viewedDance.selection.delay == true
     ? "selectedDelay" : ""
   }"
   style="min-width: {call.delay | 0}rem; max-width: {call.delay | 0}rem;"
@@ -37,12 +37,12 @@ function selectCall(delay) {
 />
 <div
   class="call {
-    $newDance.selection.group == groupIndex &&
-    $newDance.selection.call == index &&
-    $newDance.selection.delay == false
+    $viewedDance.selection.group == groupIndex &&
+    $viewedDance.selection.call == index &&
+    $viewedDance.selection.delay == false
     ? "selectedCall" : ""
   }"
-  style="min-width: {call.beats - 0.1}rem; max-width: {call.beats}rem;"
+  style="min-width: {call.beats - 0.1}rem; max-width: {call.beats - 0.1}rem;"
   on:click|stopPropagation={() => {selectCall(false)}}
 >
   {call.title}

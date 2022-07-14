@@ -5,21 +5,23 @@ import CallDependencies from "/src/lib/Components/Common/Calls/CallDependencies.
 
 const dispatch = createEventDispatcher();
 
-const newDance = getContext("newDance");
+const viewedDance = getContext("viewedDance");
 
 let checkCall = {};
 let selectedCall = {};
+let sourceCall = {};
+let getting = false;
 
 $: {
   try {
-    checkCall = $newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call];
+    checkCall = $viewedDance.dance.instructions[$viewedDance.selection.group][$viewedDance.selection.call];
   }
   catch {}
   selectedCall = checkCall ? checkCall : {};
 }
 
-let sourceCall = {};
 async function getCall() {
+  getting = true;
   if (selectedCall.id) {
     try {
       const res = await getCallByRef(selectedCall);
@@ -32,6 +34,7 @@ async function getCall() {
       sourceCall = {}
     }
   }
+  getting = false;
 }
 $: selectedCall, getCall();
 
@@ -49,9 +52,9 @@ function removeCall(groupIndex, callIndex) {
       id="beatsInDelay"
       type="number"
       bind:value={selectedCall.delay}
-      on:keyup={() => {$newDance.duration = $newDance.duration}}
+      on:keyup={() => {$viewedDance.duration = $viewedDance.duration}}
     />
-    {#if !$newDance.selection.delay}
+    {#if !$viewedDance.selection.delay}
       <label for="beatsInSelection">Duration in Beats: </label>
       <input
         id="beatsInSelection"
@@ -59,13 +62,15 @@ function removeCall(groupIndex, callIndex) {
         bind:value={selectedCall.beats}
         on:keyup={() => {
           if (selectedCall.beats) {
-            $newDance.duration = $newDance.duration;
+            $viewedDance.duration = $viewedDance.duration;
           }
         }}
       />
-      <p>Description: {sourceCall?.text || ""}</p>
+      <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
+      {#if !getting}
       <CallDependencies sourceCall={sourceCall} />
-      <button on:click={() => {removeCall($newDance.selection.group, $newDance.selection.call)}}>Remove</button>
+      {/if}
+      <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}}>Remove</button>
     {/if}
   {:else}
   No Call Selected
