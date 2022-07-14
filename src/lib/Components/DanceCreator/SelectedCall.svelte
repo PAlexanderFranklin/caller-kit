@@ -9,6 +9,8 @@ const viewedDance = getContext("viewedDance");
 
 let checkCall = {};
 let selectedCall = {};
+let sourceCall = {};
+let getting = false;
 
 $: {
   try {
@@ -18,8 +20,8 @@ $: {
   selectedCall = checkCall ? checkCall : {};
 }
 
-let sourceCall = {};
 async function getCall() {
+  getting = true;
   if (selectedCall.id) {
     try {
       const res = await getCallByRef(selectedCall);
@@ -32,6 +34,7 @@ async function getCall() {
       sourceCall = {}
     }
   }
+  getting = false;
 }
 $: selectedCall, getCall();
 
@@ -63,8 +66,10 @@ function removeCall(groupIndex, callIndex) {
           }
         }}
       />
-      <p>Description: {sourceCall?.text || ""}</p>
+      <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
+      {#if !getting}
       <CallDependencies sourceCall={sourceCall} />
+      {/if}
       <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}}>Remove</button>
     {/if}
   {:else}

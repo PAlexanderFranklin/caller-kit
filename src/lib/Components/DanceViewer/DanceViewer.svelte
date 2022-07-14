@@ -22,7 +22,7 @@ setContext("viewedDance", viewedDance)
 $: {
   if (dance) {
     $viewedDance.dance = {...dance};
-    $viewedDance.selection = {group: 0, call: 0, delay: true};
+    $viewedDance.selection = {group: 0, call: 0, delay: false};
   }
 }
 

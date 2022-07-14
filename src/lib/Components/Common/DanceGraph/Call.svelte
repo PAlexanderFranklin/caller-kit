@@ -42,7 +42,7 @@ function selectCall(delay) {
     $viewedDance.selection.delay == false
     ? "selectedCall" : ""
   }"
-  style="min-width: {call.beats - 0.1}rem; max-width: {call.beats}rem;"
+  style="min-width: {call.beats - 0.1}rem; max-width: {call.beats - 0.1}rem;"
   on:click|stopPropagation={() => {selectCall(false)}}
 >
   {call.title}
