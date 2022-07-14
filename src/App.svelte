@@ -2,18 +2,22 @@
 import { setContext } from "svelte";
 import { writable } from "svelte/store";
 import { Router, Route, createHistory } from "svelte-navigator";
+import { dances } from '/src/lib/utils/danceModule';
 import createHashSource from "./lib/utils/hashHistory.js";
 import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
 import DanceCreator from "./lib/Components/DanceCreator/DanceCreator.svelte";
 import ConfirmModal from "./lib/Components/common/ConfirmModal.svelte";
+import DanceList from "./lib/Components/DanceList/DanceList.svelte";
   
 const hash = createHistory(createHashSource());
 
 let editingDance = {instructions: [[]]};
 let showDanceCreator = false;
+let showDanceList = true;
 
 function hideComponents() {
   showDanceCreator = false;
+  showDanceList = false;
 }
 
 function editDance(dance) {
@@ -71,8 +75,11 @@ setContext('openModal', openModal);
         <p>All content created using this application is published in the public domain under the <a rel="license"
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
         </p>
+        {#if showDanceList}
+        <DanceList dances={$dances} on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}/>
+        {/if}
         {#if showDanceCreator}
-        <button on:click={() => {hideComponents()}}>Close Editor</button>
+        <button on:click={() => {hideComponents(); showDanceList = true}}>Close Editor</button>
         {:else}
         <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
         <button on:click={() => {hideComponents(); editDance({instructions: [[]]})}}>Create a New Dance</button>
