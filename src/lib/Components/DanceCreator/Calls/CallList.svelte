@@ -27,7 +27,7 @@ let hidden = true;
     flex-direction: column;
     gap: 0.75rem;
     padding: 3rem;
-    width: 20rem;
+    min-width: 20rem;
     background-color: white;
     border: 2px solid;
     border-color: black;

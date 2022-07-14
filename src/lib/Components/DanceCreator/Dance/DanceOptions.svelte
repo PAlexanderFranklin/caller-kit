@@ -87,7 +87,11 @@ let selectingHold = false;
       }}
     />
   {/if}
-  <button on:click={() => {dispatch("createDance")}}>{$newDance.dance.id ? "Save" : "Create"}</button>
+  {#if $newDance.saving}
+    <button>{$newDance.dance.id ? "Saving" : "Creating"} Dance...</button>
+  {:else}
+  <button on:click={() => {dispatch("createDance")}}>{$newDance.dance.id ? "Save" : "Create"} Dance</button>
+  {/if}
 </div>
 
 <style>

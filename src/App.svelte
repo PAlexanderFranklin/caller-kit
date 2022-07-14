@@ -8,16 +8,19 @@ import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
 import DanceCreator from "./lib/Components/DanceCreator/DanceCreator.svelte";
 import ConfirmModal from "./lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "./lib/Components/DanceList/DanceList.svelte";
+import DanceViewer from "./lib/Components/DanceViewer/DanceViewer.svelte";
   
 const hash = createHistory(createHashSource());
 
 let editingDance = {instructions: [[]]};
 let showDanceCreator = false;
 let showDanceList = true;
+let selectedDance = null;
 
 function hideComponents() {
   showDanceCreator = false;
   showDanceList = false;
+  selectedDance = null
 }
 
 function editDance(dance) {
@@ -75,17 +78,24 @@ setContext('openModal', openModal);
         <p>All content created using this application is published in the public domain under the <a rel="license"
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
         </p>
-        {#if showDanceList}
-        <DanceList dances={$dances} on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}/>
-        {/if}
         {#if showDanceCreator}
         <button on:click={() => {hideComponents(); showDanceList = true}}>Close Editor</button>
         {:else}
         <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
         <button on:click={() => {hideComponents(); editDance({instructions: [[]]})}}>Create a New Dance</button>
         {/if}
+        {#if showDanceList}
+        <DanceList
+          dances={$dances}
+          on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}
+          on:selectDance={(event) => {selectedDance = event.detail.dance}}
+        />
+        {/if}
+        {#if selectedDance}
+        <DanceViewer dance={selectedDance} />
+        {/if}
         {#if showDanceCreator}
-        <DanceCreator dance={editingDance} />
+        <DanceCreator dance={editingDance} on:save={() => {hideComponents(); showDanceList = true}} />
         {/if}
       </Route>
     </Router>
