@@ -1,11 +1,11 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
-import { getCallById } from '/src/lib/utils/danceModule';
+import { getCallByRef } from '/src/lib/utils/danceModule';
 import CallDependencies from "/src/lib/Components/Common/Calls/CallDependencies.svelte";
 
 const dispatch = createEventDispatcher();
 
-const {newDance} = getContext("newDance");
+const newDance = getContext("newDance");
 
 let checkCall = {};
 let selectedCall = {};
@@ -25,7 +25,7 @@ let sourceCall = {};
 async function getCall() {
   if (selectedCall.id) {
     try {
-      const res = await getCallById(selectedCall.id);
+      const res = await getCallByRef(selectedCall);
       if (res.call) {
         sourceCall = res.call;
       }

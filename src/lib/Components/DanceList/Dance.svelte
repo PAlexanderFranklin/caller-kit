@@ -1,35 +1,32 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
-import { calls, deleteCall } from '/src/lib/utils/danceModule';
+import { dances, deleteDance } from '/src/lib/utils/danceModule';
 import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Pencil from "svelte-material-icons/Pencil.svelte";
-import CallDependencies from '../../Common/Calls/CallDependencies.svelte';
-import UpdateCall from './UpdateCall.svelte';
 
-export let call;
+export let dance;
 let hiddenDetails = true;
-let editing = false;
   
 const dispatch = createEventDispatcher();
 
 let openModal = getContext("openModal");
 
-function handleDeleteCall() {
+function handleDeleteDance() {
   openModal(
     async () => {
-      const res = await deleteCall(call.id);
-      $calls = res.calls;
+      const res = await deleteDance(dance.id);
+      $dances = res.dances;
       return res;
     },
     async () => {},
     {
       action: "delete",
       acting: "deleting",
-      noun: "call",
-      item: call.title,
+      noun: "dance",
+      item: dance.title,
       confirmColor: "red",
     }
   );
@@ -37,35 +34,23 @@ function handleDeleteCall() {
 
 </script>
 
-<div class="Call">
+<div class="Dance">
   <div class="Header">
-    <span class="HeaderTitle">{call.title}</span>
-    <button on:click={handleDeleteCall}><Delete color={"red"} /></button>
-    <button on:click={() => {editing = !editing}}><Pencil color={"yellow"} /></button>
+    <span class="HeaderTitle">{dance.title}</span>
+    <button on:click={handleDeleteDance}><Delete color={"red"} /></button>
+    <button on:click={() => dispatch('editDance', {dance})}><Pencil color={"yellow"} /></button>
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronUp color={"blue"} /></button>
     {/if}
-    <button on:click={() => {dispatch('selectCall', {call})}}><ArrowRight color={"green"} /></button>
+    <button on:click={() => {dispatch('selectDance', {dance})}}><ArrowRight color={"green"} /></button>
   </div>
-  {#if editing}
-    <UpdateCall on:closeModal={() => {editing = false}} call={call} />
-  {/if}
-  {#if !hiddenDetails}
-    <p>
-      Description: {call.text}
-    </p>
-    <span>
-      Duration in Beats: {call.beats}
-    </span>
-    <CallDependencies sourceCall={call} />
-  {/if}
 </div>
 <hr>
 
 <style>
-  .Call {
+  .Dance {
     width: 100%;
   }
   .Header {

@@ -1,6 +1,6 @@
 <script>
 import { onMount } from 'svelte';
-import { getCallById } from '/src/lib/utils/danceModule';
+import { getCallByRef } from '/src/lib/utils/danceModule';
 import CallDependencies from './CallDependencies.svelte';
 
 export let callRef = {};
@@ -9,7 +9,7 @@ let sourceCall = {};
 
 async function getCall() {
   try {
-    const res = await getCallById(callRef.id);
+    const res = await getCallByRef(callRef);
     if (res.call) {
       sourceCall = res.call;
     }

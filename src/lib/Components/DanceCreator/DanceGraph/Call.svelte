@@ -7,7 +7,7 @@ export let call;
 export let groupIndex;
 export let index;
 
-const {newDance} = getContext("newDance");
+const newDance = getContext("newDance");
 
 function selectCall(delay) {
   try {
