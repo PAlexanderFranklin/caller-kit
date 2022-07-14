@@ -8,21 +8,20 @@ export let index;
 
 const dispatch = createEventDispatcher();
 
-const newDance = getContext("newDance");
-
+const viewedDance = getContext("viewedDance");
 const openModal = getContext('openModal');
 
 async function deleteGroup() {
   openModal(
     async () => {
-      if ($newDance.selection.group == index) {
-        $newDance.selection = {group: 0, call: 0, delay: true};
+      if ($viewedDance.selection.group == index) {
+        $viewedDance.selection = {group: 0, call: 0, delay: true};
       }
       else {
-        $newDance.selection.group = $newDance.selection.group - 1;
+        $viewedDance.selection.group = $viewedDance.selection.group - 1;
       }
-      $newDance.dance.instructions.splice(index, 1);
-      $newDance.dance.instructions = [...$newDance.dance.instructions];
+      $viewedDance.dance.instructions.splice(index, 1);
+      $viewedDance.dance.instructions = [...$viewedDance.dance.instructions];
     },
     async () => {},
     {
@@ -38,33 +37,35 @@ async function deleteGroup() {
 </script>
 
 <div class="danceGroup {
-    $newDance.selection.group == index &&
-    $newDance.selection.call == $newDance.dance.instructions[index].length &&
-    $newDance.selection.delay == false
+    $viewedDance.selection.group == index &&
+    $viewedDance.selection.call == $viewedDance.dance.instructions[index].length &&
+    $viewedDance.selection.delay == false
     ? "selectedGroup" : ""
   }"
-  style="min-width: {$newDance.duration + 8}rem; max-width: {$newDance.duration + 8}rem;"
-  on:click|stopPropagation={() => {$newDance.selection = {
+  style="min-width: {$viewedDance.duration + 8}rem; max-width: {$viewedDance.duration + 8}rem;"
+  on:click|stopPropagation={() => {$viewedDance.selection = {
     group: index,
-    call: $newDance.dance.instructions[index].length,
+    call: $viewedDance.dance.instructions[index].length,
     delay: false
     };
   }}
 >
+  {#if $viewedDance.editing}
   <button class="delete" on:click|stopPropagation={deleteGroup}><Delete color={"white"} /></button>
   <button class="start {
-      $newDance.selection.group == index &&
-      $newDance.selection.call == 0 &&
-      $newDance.selection.delay == true
+      $viewedDance.selection.group == index &&
+      $viewedDance.selection.call == 0 &&
+      $viewedDance.selection.delay == true
       ? "selectedStart" : ""
     }"
-    on:click|stopPropagation={() => {$newDance.selection = {
+    on:click|stopPropagation={() => {$viewedDance.selection = {
       group: index,
       call: 0,
       delay: true
       };
     }}
   />
+  {/if}
   {#each group as call, i}
   <Call call={call} groupIndex={index} index={i}
     on:removeCall={(event) => {dispatch('removeCall', event.detail)}}

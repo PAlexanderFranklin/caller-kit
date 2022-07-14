@@ -2,16 +2,16 @@
 import { createEventDispatcher, setContext } from "svelte";
 import { writable } from "svelte/store";
 import { calls, dances, createDance, updateDance } from '/src/lib/utils/danceModule';
-import CallList from "./Calls/CallList.svelte";
-import DanceGraph from "./DanceGraph/DanceGraph.svelte";
-import SelectedCall from "./Dance/SelectedCall.svelte";
-import DanceOptions from "./Dance/DanceOptions.svelte";
+import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
+import DanceGraph from "/src/lib/Components/Common/DanceGraph/DanceGraph.svelte";
+import SelectedCall from "./SelectedCall.svelte";
+import DanceOptions from "./DanceOptions.svelte";
 
 const dispatch = createEventDispatcher();
 
 export let dance = false;
 
-const newDance = writable({
+const viewedDance = writable({
   dance: {
     instructions: [
       []
@@ -20,12 +20,13 @@ const newDance = writable({
   selection: {group: 0, call: 0, delay: true},
   duration: 0,
   saving: false,
+  editing: true,
 });
-setContext("newDance", newDance)
+setContext("viewedDance", viewedDance)
 
 function addCall(call) {
-  $newDance.dance.instructions[$newDance.selection.group].splice(
-    $newDance.selection.call + ($newDance.selection.delay ? 0 : 1),
+  $viewedDance.dance.instructions[$viewedDance.selection.group].splice(
+    $viewedDance.selection.call + ($viewedDance.selection.delay ? 0 : 1),
     0,
     {
       id: call.id,
@@ -34,48 +35,48 @@ function addCall(call) {
       beats: call.beats,
     }
   );
-  $newDance.dance.instructions = [...$newDance.dance.instructions];
-  $newDance.selection = {...$newDance.selection, call: $newDance.selection.call + ($newDance.selection.delay ? 0 : 1), delay: false};
+  $viewedDance.dance.instructions = [...$viewedDance.dance.instructions];
+  $viewedDance.selection = {...$viewedDance.selection, call: $viewedDance.selection.call + ($viewedDance.selection.delay ? 0 : 1), delay: false};
 }
 
 function removeCall(group, callIndex) {
-  $newDance.dance.instructions[group].splice(
+  $viewedDance.dance.instructions[group].splice(
     callIndex, 1
   );
-  $newDance.dance.instructions = [...$newDance.dance.instructions];
+  $viewedDance.dance.instructions = [...$viewedDance.dance.instructions];
 }
 
 function handleCreateDance() {
-  $newDance.saving = true
-  if ($newDance.dance.id) {
-    updateDance($newDance.dance).then((res) => {
+  $viewedDance.saving = true
+  if ($viewedDance.dance.id) {
+    updateDance($viewedDance.dance).then((res) => {
       $dances = res.dances;
       dispatch('save');
     }).catch((err) => {
       console.error(err);
     }).finally(() => {
-      $newDance.saving = false;
+      $viewedDance.saving = false;
     })
   }
   else {
-    createDance($newDance.dance).then((res) => {
+    createDance($viewedDance.dance).then((res) => {
       $dances = [...$dances, res.dance];
-      $newDance.dance = {
-        ...$newDance.dance, id: res.dance.id
+      $viewedDance.dance = {
+        ...$viewedDance.dance, id: res.dance.id
       };
       dispatch('save');
     }).catch((err) => {
       console.error(err);
     }).finally(() => {
-      $newDance.saving = false;
+      $viewedDance.saving = false;
     })
   }
 }
 
 $: {
   if (dance) {
-    $newDance.dance = {...dance};
-    $newDance.selection = {group: 0, call: 0, delay: true};
+    $viewedDance.dance = {...dance};
+    $viewedDance.selection = {group: 0, call: 0, delay: true};
   }
 }
 

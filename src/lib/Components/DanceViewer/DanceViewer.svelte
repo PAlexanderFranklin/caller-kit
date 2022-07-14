@@ -1,9 +1,9 @@
 <script>
 import { setContext } from "svelte";
 import { writable } from "svelte/store";
-import DanceGraph from "./DanceGraph/DanceGraph.svelte";
-import SelectedCall from "./Dance/SelectedCall.svelte";
-import DanceOptions from "./Dance/DanceOptions.svelte";
+import DanceGraph from "/src/lib/Components/Common/DanceGraph/DanceGraph.svelte";
+import SelectedCall from "./SelectedCall.svelte";
+import DanceOptions from "./DanceOptions.svelte";
 
 export let dance = false;
 
@@ -14,6 +14,8 @@ const viewedDance = writable({
     ]
   },
   selection: {group: 0, call: 0, delay: true},
+  duration: 0,
+  editing: false,
 });
 setContext("viewedDance", viewedDance)
 

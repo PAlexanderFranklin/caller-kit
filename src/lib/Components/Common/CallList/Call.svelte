@@ -6,7 +6,7 @@ import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Pencil from "svelte-material-icons/Pencil.svelte";
-import CallDependencies from '../../Common/Calls/CallDependencies.svelte';
+import CallDependencies from '/src/lib/Components/Common/Calls/CallDependencies.svelte';
 import UpdateCall from './UpdateCall.svelte';
 
 export let call;
