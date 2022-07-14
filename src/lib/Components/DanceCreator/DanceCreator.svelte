@@ -1,11 +1,13 @@
 <script>
-import { setContext } from "svelte";
+import { createEventDispatcher, setContext } from "svelte";
 import { writable } from "svelte/store";
 import { calls, dances, createDance, updateDance } from '/src/lib/utils/danceModule';
 import CallList from "./Calls/CallList.svelte";
 import DanceGraph from "./DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./Dance/SelectedCall.svelte";
 import DanceOptions from "./Dance/DanceOptions.svelte";
+
+const dispatch = createEventDispatcher();
 
 export let dance = false;
 
@@ -48,6 +50,7 @@ function handleCreateDance() {
   if ($newDance.dance.id) {
     updateDance($newDance.dance).then((res) => {
       $dances = res.dances;
+      dispatch('save');
     }).catch((err) => {
       console.error(err);
     }).finally(() => {
@@ -60,6 +63,7 @@ function handleCreateDance() {
       $newDance.dance = {
         ...$newDance.dance, id: res.dance.id
       };
+      dispatch('save');
     }).catch((err) => {
       console.error(err);
     }).finally(() => {

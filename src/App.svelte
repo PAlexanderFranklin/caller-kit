@@ -85,7 +85,7 @@ setContext('openModal', openModal);
         <button on:click={() => {hideComponents(); editDance({instructions: [[]]})}}>Create a New Dance</button>
         {/if}
         {#if showDanceCreator}
-        <DanceCreator dance={editingDance} />
+        <DanceCreator dance={editingDance} on:save={() => {hideComponents(); showDanceList = true}} />
         {/if}
       </Route>
     </Router>
