@@ -42,7 +42,9 @@ $: selectedCall, getCall();
 <div class="SelectedCall">
   {#if Object.keys(selectedCall).length !== 0}
     <h4>Name: {selectedCall.title || "N/A"}</h4>
+    {#if selectedCall.delay}
     <div>Delay in Beats: {selectedCall.delay}</div>
+    {/if}
     {#if !$viewedDance.selection.delay}
       <div>Duration in Beats: {selectedCall.beats}</div>
       <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
