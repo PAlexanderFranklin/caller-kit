@@ -15,7 +15,7 @@
       showFootwork = !showFootwork;
       showHold = false;
     }}>
-      Footwork
+      Footwork: {sourceCall.footwork.title}
       {#if showFootwork}
       <ChevronUp color={"blue"} />
       {:else}
@@ -28,7 +28,7 @@
       showHold = !showHold;
       showFootwork = false;
     }}>
-      Hold
+      Hold: {sourceCall.hold.title}
       {#if showHold}
       <ChevronUp color={"blue"} />
       {:else}

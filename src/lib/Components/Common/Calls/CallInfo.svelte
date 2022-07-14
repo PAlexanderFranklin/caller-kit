@@ -6,8 +6,10 @@ import CallDependencies from './CallDependencies.svelte';
 export let callRef = {};
 
 let sourceCall = {};
+let getting = false;
 
 async function getCall() {
+  getting = true;
   try {
     const res = await getCallByRef(callRef);
     if (res.call) {
@@ -18,6 +20,7 @@ async function getCall() {
     console.log(err);
     sourceCall = {}
   }
+  getting = false;
 }
 
 onMount(getCall)
@@ -26,10 +29,12 @@ onMount(getCall)
 
 <div>
   <div class="CallInfo">
-    <h4>Name: {sourceCall.title}</h4>
-    <div>Duration in Beats: {sourceCall.beats}</div>
-    <p>Description: {sourceCall?.text || ""}</p>
+    <h4>Name: {getting ? "Loading..." : sourceCall.title || ""}</h4>
+    <div>Duration in Beats: {getting ? "Loading..." : sourceCall.beats || ""}</div>
+    <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
+    {#if !getting}
     <CallDependencies sourceCall={sourceCall} />
+    {/if}
   </div>
 </div>
 
