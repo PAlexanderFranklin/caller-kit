@@ -10,9 +10,6 @@ const newDance = getContext("newDance");
 let checkCall = {};
 let selectedCall = {};
 
-let showFootwork = false;
-let showHold = false;
-
 $: {
   try {
     checkCall = $newDance.dance.instructions[$newDance.selection.group][$newDance.selection.call];

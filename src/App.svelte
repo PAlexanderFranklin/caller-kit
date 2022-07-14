@@ -8,16 +8,19 @@ import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
 import DanceCreator from "./lib/Components/DanceCreator/DanceCreator.svelte";
 import ConfirmModal from "./lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "./lib/Components/DanceList/DanceList.svelte";
+import DanceViewer from "./lib/Components/DanceViewer/DanceViewer.svelte";
   
 const hash = createHistory(createHashSource());
 
 let editingDance = {instructions: [[]]};
 let showDanceCreator = false;
 let showDanceList = true;
+let selectedDance = null;
 
 function hideComponents() {
   showDanceCreator = false;
   showDanceList = false;
+  selectedDance = null
 }
 
 function editDance(dance) {
@@ -82,7 +85,14 @@ setContext('openModal', openModal);
         <button on:click={() => {hideComponents(); editDance({instructions: [[]]})}}>Create a New Dance</button>
         {/if}
         {#if showDanceList}
-        <DanceList dances={$dances} on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}/>
+        <DanceList
+          dances={$dances}
+          on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}
+          on:selectDance={(event) => {selectedDance = event.detail.dance}}
+        />
+        {/if}
+        {#if selectedDance}
+        <DanceViewer dance={selectedDance} />
         {/if}
         {#if showDanceCreator}
         <DanceCreator dance={editingDance} on:save={() => {hideComponents(); showDanceList = true}} />
