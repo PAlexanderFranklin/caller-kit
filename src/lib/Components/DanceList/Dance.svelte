@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
 import { dances, deleteDance } from '/src/lib/utils/danceModule';
-import ArrowRight from "svelte-material-icons/ArrowRight.svelte";
+import Play from "svelte-material-icons/Play.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
@@ -44,7 +44,7 @@ function handleDeleteDance() {
     {:else}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronUp color={"blue"} /></button>
     {/if}
-    <button on:click={() => {dispatch('selectDance', {dance})}}><ArrowRight color={"green"} /></button>
+    <button on:click={() => {dispatch('selectDance', {dance})}}><Play color={"green"} /></button>
   </div>
 </div>
 <hr>

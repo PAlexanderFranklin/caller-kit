@@ -75,14 +75,14 @@ setContext('openModal', openModal);
         <p>All content created using this application is published in the public domain under the <a rel="license"
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
         </p>
-        {#if showDanceList}
-        <DanceList dances={$dances} on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}/>
-        {/if}
         {#if showDanceCreator}
         <button on:click={() => {hideComponents(); showDanceList = true}}>Close Editor</button>
         {:else}
         <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
         <button on:click={() => {hideComponents(); editDance({instructions: [[]]})}}>Create a New Dance</button>
+        {/if}
+        {#if showDanceList}
+        <DanceList dances={$dances} on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}/>
         {/if}
         {#if showDanceCreator}
         <DanceCreator dance={editingDance} on:save={() => {hideComponents(); showDanceList = true}} />
