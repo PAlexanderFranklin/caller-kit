@@ -6,7 +6,7 @@ import { dances } from '/src/lib/utils/danceModule';
 import createHashSource from "./lib/utils/hashHistory.js";
 import SkynetContextProvider from "./lib/utils/SkynetContextProvider.svelte";
 import DanceCreator from "./lib/Components/DanceCreator/DanceCreator.svelte";
-import ConfirmModal from "./lib/Components/common/ConfirmModal.svelte";
+import ConfirmModal from "./lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "./lib/Components/DanceList/DanceList.svelte";
   
 const hash = createHistory(createHashSource());
