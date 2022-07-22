@@ -2,7 +2,7 @@
 import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 import { init as kernelInit, loginComplete, openAuthWindow } from 'libkernel';
-import { getState, calls, dances } from "./danceModule";
+import { getState, calls, dances, musicList } from "./danceModule";
 
 let userAuthStatus = writable(false);
 let authInProgress = writable(false);
@@ -37,6 +37,7 @@ const callGetState = () => {
   getState().then((result) => {
     $calls = result.calls;
     $dances = result.dances;
+    $musicList = result.musicList;
   })
   subscribed = true;
 }

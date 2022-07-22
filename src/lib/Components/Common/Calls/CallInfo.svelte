@@ -1,7 +1,7 @@
 <script>
 import { onMount } from 'svelte';
 import { getCallByRef } from '/src/lib/utils/danceModule';
-import CallDependencies from './CallDependencies.svelte';
+import CallDependencies from './Dependencies.svelte';
 
 export let callRef = {};
 
@@ -31,7 +31,9 @@ onMount(getCall)
   <div class="CallInfo">
     <h4>Name: {getting ? "Loading..." : sourceCall.title || ""}</h4>
     <div>Duration in Beats: {getting ? "Loading..." : sourceCall.beats || ""}</div>
+    {#if sourceCall?.text || getting}
     <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
+    {/if}
     {#if !getting}
     <CallDependencies sourceCall={sourceCall} />
     {/if}

@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
 import { getCallByRef } from '/src/lib/utils/danceModule';
-import CallDependencies from "/src/lib/Components/Common/Calls/CallDependencies.svelte";
+import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 
 const dispatch = createEventDispatcher();
 
@@ -68,7 +68,7 @@ function removeCall(groupIndex, callIndex) {
       />
       <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
       {#if !getting}
-      <CallDependencies sourceCall={sourceCall} />
+      <Dependencies source={sourceCall} />
       {/if}
       <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}}>Remove</button>
     {/if}

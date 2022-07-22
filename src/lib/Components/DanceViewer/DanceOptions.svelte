@@ -1,5 +1,7 @@
 <script>
 import { getContext } from "svelte";
+import MusicInfo from "../Common/Music/MusicInfo.svelte";
+import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 
 const viewedDance = getContext("viewedDance")
 
@@ -7,20 +9,16 @@ const viewedDance = getContext("viewedDance")
 
 <div class="DanceOptions">
   <div for="title">Name: {$viewedDance.dance.title}</div>
-  <div for="description">Description: {$viewedDance.dance.text}</div>
-  <div>Duration in Beats: {$viewedDance.duration}</div>
-  Footwork:
-  <!-- {#if $viewedDance.dance.footwork}
-  <button on:click={() => {selectingFootwork = !selectingFootwork}}>
-    {$viewedDance.dance.footwork.title}
-  </button>
+  {#if $viewedDance.dance.music}
+  {#each $viewedDance.dance.music as music}
+    <MusicInfo musicRef={music} />
+  {/each}
   {/if}
-  Hold:
-  {#if $viewedDance.dance.hold}
-  <button on:click={() => {selectingHold = !selectingHold}}>
-    {$viewedDance.dance.hold.title}
-  </button>
-  {/if} -->
+  {#if $viewedDance.dance.text}
+    <div for="description">Description: {$viewedDance.dance.text}</div>
+  {/if}
+  <div>Duration in Beats: {$viewedDance.duration}</div>
+  <Dependencies source={$viewedDance.dance} />
 </div>
 
 <style>

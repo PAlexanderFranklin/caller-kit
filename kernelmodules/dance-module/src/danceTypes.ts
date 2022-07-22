@@ -41,6 +41,22 @@ export interface FormationRef {
   skyfeed?: String,
 }
 
+export interface Music {
+  id: String,
+  title?: String,
+  skyfeed?: String,
+  link?: String,
+  modifiedAt?: Date,
+}
+
+export interface MusicRef {
+  id: String,
+  title?: String,
+  skyfeed?: String,
+  delay?: number,
+  beatsPerDanceBeat?: number,
+}
+
 export interface Dance {
   id: String,
   skyfeed?: String,
@@ -48,7 +64,8 @@ export interface Dance {
   text?: String,
   license?: String,
   formation?: FormationRef,
-  instructions: Array<Array<CallRef>>
+  instructions: Array<Array<CallRef>>,
+  music?: Array<MusicRef>,
   variantOf?: DanceRef,
   footwork?: CallRef,
   hold?: CallRef,

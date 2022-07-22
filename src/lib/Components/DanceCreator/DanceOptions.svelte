@@ -1,7 +1,10 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
-import { calls } from '/src/lib/utils/danceModule';
+import { calls, musicList } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
+import MusicList from "/src/lib/Components/Common/MusicList/MusicList.svelte";
+import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
+import Close from "svelte-material-icons/Close.svelte";
 
 const dispatch = createEventDispatcher();
 
@@ -9,6 +12,19 @@ const viewedDance = getContext("viewedDance")
 
 let selectingFootwork = false;
 let selectingHold = false;
+let selectingMusic = false;
+
+function addMusic(music) {
+  $viewedDance.dance.music = [
+    ...$viewedDance.dance.music,
+    {
+      id: music.id,
+      title: music.title,
+      skyfeed: music.skyfeed,
+    }
+  ];
+  selectingMusic = false;
+}
 
 </script>
 
@@ -85,6 +101,31 @@ let selectingHold = false;
           beats: $viewedDance.dance.hold?.beats || newHold.beats
         };
       }}
+    />
+  {/if}
+  Music:
+  {#if selectingMusic === false}
+    <button on:click={() => {selectingMusic = true}}>Add Music</button>
+    {#if $viewedDance.dance.music}
+    {#each $viewedDance.dance.music as music, i}
+      <div style="display: flex; gap: 1rem;">
+        <MusicInfo musicRef={music} />
+        <div
+          on:click={() => {
+            console.log($viewedDance.dance.music.splice(i, 1));
+            $viewedDance.dance.music = $viewedDance.dance.music;
+          }}
+        >
+          <Close color="red"/>
+        </div>
+      </div>
+    {/each}
+    {/if}
+  {:else}
+    <button on:click={() => {selectingMusic = false}}>X</button>
+    <MusicList
+      on:selectMusic={(event) => {addMusic(event.detail.music)}}
+      musicList={$musicList}
     />
   {/if}
   {#if $viewedDance.saving}

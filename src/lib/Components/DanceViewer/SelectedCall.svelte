@@ -1,7 +1,7 @@
 <script>
 import { getContext } from "svelte";
 import { getCallByRef } from '/src/lib/utils/danceModule';
-import CallDependencies from "/src/lib/Components/Common/Calls/CallDependencies.svelte";
+import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 
 const viewedDance = getContext("viewedDance");
 
@@ -51,7 +51,7 @@ $: selectedCall, getCall();
       {#if getting}
       Loading...
       {:else}
-      <CallDependencies sourceCall={sourceCall} />
+      <Dependencies source={sourceCall} />
       {/if}
     {/if}
   {:else}
