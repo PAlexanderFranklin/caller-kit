@@ -1,6 +1,5 @@
 <script>
-import { createEventDispatcher, setContext } from "svelte";
-import { writable } from "svelte/store";
+import { createEventDispatcher, getContext, setContext } from "svelte";
 import { calls, dances, createDance, updateDance } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 import DanceGraph from "/src/lib/Components/Common/DanceGraph/DanceGraph.svelte";
@@ -9,20 +8,9 @@ import DanceOptions from "./DanceOptions.svelte";
 
 const dispatch = createEventDispatcher();
 
-export let dance = false;
-
-const viewedDance = writable({
-  dance: {
-    instructions: [
-      []
-    ]
-  },
-  selection: {group: 0, call: 0, delay: true},
-  duration: 0,
-  saving: false,
-  editing: true,
-});
-setContext("viewedDance", viewedDance)
+const danceToEdit = getContext("danceToEdit");
+const viewedDance = danceToEdit;
+setContext("viewedDance", viewedDance);
 
 function addCall(call) {
   $viewedDance.dance.instructions[$viewedDance.selection.group].splice(
@@ -70,13 +58,6 @@ function handleCreateDance() {
     }).finally(() => {
       $viewedDance.saving = false;
     })
-  }
-}
-
-$: {
-  if (dance) {
-    $viewedDance.dance = {...dance};
-    $viewedDance.selection = {group: 0, call: 0, delay: true};
   }
 }
 

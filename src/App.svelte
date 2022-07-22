@@ -12,10 +12,23 @@ import DanceViewer from "/src/lib/Components/DanceViewer/DanceViewer.svelte";
   
 const hash = createHistory(createHashSource());
 
-let editingDance = {instructions: [[]]};
 let showDanceCreator = false;
 let showDanceList = true;
 let selectedDance = null;
+
+const danceToEdit = writable({
+  dance: {
+    instructions: [
+      []
+    ],
+    music: [],
+  },
+  selection: {group: 0, call: 0, delay: true},
+  duration: 0,
+  saving: false,
+  editing: true,
+});
+setContext("danceToEdit", danceToEdit);
 
 function hideComponents() {
   showDanceCreator = false;
@@ -24,7 +37,19 @@ function hideComponents() {
 }
 
 function editDance(dance) {
-  editingDance = dance;
+  $danceToEdit = {
+    dance: {
+      instructions: [
+        []
+      ],
+      music: [],
+      ...dance
+    },
+    selection: {group: 0, call: 0, delay: true},
+    duration: 0,
+    saving: false,
+    editing: true,
+  };
   showDanceCreator = true;
 }
 
@@ -82,7 +107,7 @@ setContext('openModal', openModal);
         <button on:click={() => {hideComponents(); showDanceList = true}}>Close Editor</button>
         {:else}
         <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
-        <button on:click={() => {hideComponents(); editDance({instructions: [[]]})}}>Create a New Dance</button>
+        <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
         {/if}
         {#if showDanceList}
         <DanceList
@@ -95,7 +120,7 @@ setContext('openModal', openModal);
         <DanceViewer dance={selectedDance} />
         {/if}
         {#if showDanceCreator}
-        <DanceCreator dance={editingDance} on:save={() => {hideComponents(); showDanceList = true}} />
+        <DanceCreator on:save={() => {hideComponents(); showDanceList = true}} />
         {/if}
       </Route>
     </Router>

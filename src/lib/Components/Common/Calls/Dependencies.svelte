@@ -3,19 +3,19 @@
   import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
   import CallInfo from './CallInfo.svelte';
   
-  export let sourceCall = {};
+  export let source = {};
   
   let showFootwork = false;
   let showHold = false;
   
   </script>
   
-  {#if sourceCall?.footwork}
+  {#if source?.footwork}
     <button on:click={() => {
       showFootwork = !showFootwork;
       showHold = false;
     }}>
-      Footwork: {sourceCall.footwork.title}
+      Footwork: {source.footwork.title}
       {#if showFootwork}
       <ChevronUp color={"blue"} />
       {:else}
@@ -23,12 +23,12 @@
       {/if}
     </button>
   {/if}
-  {#if sourceCall?.hold}
+  {#if source?.hold}
     <button on:click={() => {
       showHold = !showHold;
       showFootwork = false;
     }}>
-      Hold: {sourceCall.hold.title}
+      Hold: {source.hold.title}
       {#if showHold}
       <ChevronUp color={"blue"} />
       {:else}
@@ -37,8 +37,8 @@
     </button>
   {/if}
   {#if showFootwork}
-    <CallInfo callRef={sourceCall.footwork} />
+    <CallInfo callRef={source.footwork} />
   {/if}
   {#if showHold}
-    <CallInfo callRef={sourceCall.hold} />
+    <CallInfo callRef={source.hold} />
   {/if}

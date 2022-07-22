@@ -1,7 +1,7 @@
 import { addHandler, handleMessage, log, createIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
 import {v4 as uuid} from 'uuid';
 import type { ActiveQuery } from 'libkmodule';
-import type { Call, CallRef, Dancer, Formation, Dance } from './danceTypes';
+import type { Call, Dancer, Formation, Dance, Music } from './danceTypes';
 
 import {jsonToArray, arrayToJson, openFile, readData} from './helpers';
 
@@ -13,17 +13,27 @@ let moduleDataFile: any;
 
 let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
+let musicList: Array<Music> = [];
 
 const initializeModule = async () => {
   if(!moduleDataFile) {
     moduleSeed = await getSeed();
     try {
       moduleDataFile = await openFile(moduleSeed, "moduleData");
-      ({calls, dances} = await readData(moduleDataFile));
+      ({calls, dances, musicList} = await readData(moduleDataFile));
+      if (!calls) {
+        calls = [];
+      }
+      if (!dances) {
+        dances = [];
+      }
+      if (!musicList) {
+        musicList = [];
+      }
       return moduleDataFile;
     } catch (error) {
       if (error === ERR_NOT_EXISTS) {
-        let dataFile = jsonToArray({calls, dances});
+        let dataFile = jsonToArray({calls, dances, musicList});
         let [res, error] = await createIndependentFileSmall(moduleSeed, "moduleData", dataFile);
         if (error) {
           throw error;
@@ -39,7 +49,7 @@ const initializeModule = async () => {
 }
 
 const setState = async () => {
-  return await moduleDataFile.overwriteData(jsonToArray({calls, dances}));
+  return await moduleDataFile.overwriteData(jsonToArray({calls, dances, musicList}));
 }
 
 const setCalls = async (newCalls: Array<Call>) => {
@@ -49,7 +59,7 @@ const setCalls = async (newCalls: Array<Call>) => {
 
 const handleGetState = (aq: ActiveQuery) => {
   initializeModule().then(() => {
-    aq.respond({calls, dances});
+    aq.respond({calls, dances, musicList});
   });
 }
 
@@ -195,6 +205,10 @@ const handleCreateDance = (aq: ActiveQuery) => {
         aq.reject('No title found, dance not created.');
         return
       }
+      if (!dance.instructions) {
+        aq.reject('No instructions found, dance not created.');
+        return
+      }
       const newDance:Dance = {
         ...dance,
         id: uuid(),
@@ -220,6 +234,10 @@ const handleUpdateDance = (aq: ActiveQuery) => {
       };
       if (!updatedDance.title) {
         aq.reject('No title found, dance not updated.');
+        return
+      }
+      if (!updatedDance.instructions) {
+        aq.reject('No instructions found, dance not updated.');
         return
       }
       if (typeof updatedDance.id === 'string') {
@@ -276,6 +294,119 @@ const handleDeleteDance = (aq: ActiveQuery) => {
   });
 };
 
+const setMusicList = async (newMusicList: Array<Music>) => {
+  musicList = newMusicList;
+  return await setState();
+}
+
+const handleGetMusicByRef = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if (typeof aq.callerInput?.music?.id === 'string') {
+      // create list of just the requested music.
+      const matchedMusic = musicList.filter(({ id }) => {
+        return id === aq.callerInput.music.id;
+      });
+
+      if (matchedMusic.length) {
+        aq.respond({ music: matchedMusic[0] });
+      } else {
+        aq.reject(`No music found with id ${aq.callerInput.music.id}`);
+      }
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('getMusicByRef requires field `id`.');
+    }
+  });
+};
+
+const handleCreateMusic = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if ('music' in aq.callerInput) {
+      const music:any = aq.callerInput.music
+      if (!music.link) {
+        aq.reject('No link found, music not created.');
+        return
+      }
+      const newMusic:Music = {
+        ...music,
+        id: uuid(),
+        modifiedAt: new Date(),
+      };
+      setMusicList([...musicList, newMusic]).then(() => {
+        aq.respond({music: newMusic});
+      })
+    }
+    else {
+      aq.reject('callerinput.music must be defined for "createMusic"');
+    }
+  });
+}
+
+const handleUpdateMusic = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if ('music' in aq.callerInput) {
+      const updatedMusic:Music = {
+        ...aq.callerInput.music,
+        modifiedAt: new Date(),
+      };
+      if (!updatedMusic.link) {
+        aq.reject('No link found, music not created.');
+        return
+      }
+      if (typeof updatedMusic.id === 'string') {
+        // create list of just music to update.
+        const musicToUpdate = musicList.filter(({ id }) => {
+          return id === updatedMusic.id;
+        });
+
+        // if music to update found, update state, otherwise reject.
+        if (musicToUpdate.length) {
+          const remainingMusicList = musicList.filter(({ id }) => {
+            return id !== updatedMusic.id;
+          });
+          setMusicList([...remainingMusicList, updatedMusic]).then(() => {
+            aq.respond({ music: musicToUpdate[0], musicList });
+          })
+        } else {
+          aq.reject(`No music found with id ${updatedMusic.id}`);
+        }
+      } else {
+        // return an error if no id included in callerInput data
+        aq.reject('updateMusic requires field `music` with property `id`.');
+      }
+    }
+    else {
+      aq.reject('callerinput.music must be defined for "updateMusic"');
+    }
+  });
+};
+
+const handleDeleteMusic = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if (typeof aq.callerInput?.id === 'string') {
+      // create list of just removed music.
+      const removedMusic = musicList.filter(({ id }) => {
+        return id === aq.callerInput.id;
+      });
+
+      // if music to remove found, update state, otherwise reject.
+      if (removedMusic.length) {
+        const remainingMusicList = musicList.filter(({ id }) => {
+          return id !== aq.callerInput.id;
+        });
+        setMusicList(remainingMusicList).then(() => {
+          aq.respond({ music: removedMusic[0], musicList });
+        })
+      } else {
+        aq.reject(`No music found with id ${aq.callerInput.id}`);
+      }
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('deleteMusic requires field `id`.');
+    }
+  });
+};
+
 addHandler('getState', handleGetState)
 
 addHandler('createCall', handleCreateCall);
@@ -287,3 +418,8 @@ addHandler('createDance', handleCreateDance);
 addHandler('getDanceByRef', handleGetDanceByRef)
 addHandler('updateDance', handleUpdateDance)
 addHandler('deleteDance', handleDeleteDance)
+
+addHandler('createMusic', handleCreateMusic);
+addHandler('getMusicByRef', handleGetMusicByRef)
+addHandler('updateMusic', handleUpdateMusic)
+addHandler('deleteMusic', handleDeleteMusic)
