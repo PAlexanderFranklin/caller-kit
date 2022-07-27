@@ -1,9 +1,10 @@
 import { addHandler, handleMessage, log, createIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
 import {v4 as uuid} from 'uuid';
-import type { ActiveQuery } from 'libkmodule';
-import type { Call, Dancer, Formation, Dance, Music } from './danceTypes';
-
 import {jsonToArray, arrayToJson, openFile, readData} from './helpers';
+import { FeedDAC } from 'skynet-dacs-library';
+
+import type { ActiveQuery } from 'libkmodule';
+import type { Call, CallRef, Dancer, Formation, Dance, DanceRef, Music, MusicRef } from './danceTypes';
 
 // Sets up managing postMessage handling.
 onmessage = handleMessage;
@@ -172,6 +173,65 @@ const handleDeleteCall = (aq: ActiveQuery) => {
   });
 };
 
+/**
+ * The caller of this function is responsible for setting state!
+ */
+const shareCall = async (callRef: any) => {
+  if (!callRef.id) {
+    throw "attempted to share call with no id";
+  }
+
+  let sharedCall = calls.find(({ id }) => {
+    return id === callRef.id;
+  });
+
+  // if call to share not found, error.
+  if (!sharedCall) {
+    throw `call with id ${callRef.id} not found.`
+  }
+
+  // If no skyfeed address was given but one is found, return the found reference.
+  if (!callRef.skyfeed && sharedCall.skyfeed) {
+    return {
+      ...callRef,
+      skyfeed: sharedCall.skyfeed,
+    }
+  }
+
+  // ensure all dependency calls are shared, and update their references in the call to contain the skyfeed URI
+  if (sharedCall.footwork && !sharedCall.footwork.skyfeed) {
+    sharedCall.footwork = await shareCall(sharedCall.footwork);
+  }
+  if (sharedCall.hold && !sharedCall.hold.skyfeed) {
+    sharedCall.hold = await shareCall(sharedCall.hold);
+  }
+
+  // Need to upload to feed dac here.
+
+  // setState still needs to be called after this function.
+  calls = [...calls, sharedCall];
+  return callRef;
+}
+
+const handleShareCall = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if (typeof aq.callerInput?.id === 'string') {
+      shareCall({id: aq.callerInput?.id}).then((callRef) => {
+        setState().then(() => {
+          aq.respond({callRef})
+        });
+      }).catch((err) => {
+        setState().then(() => {
+          aq.reject(err)
+        });
+      });
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('shareCall requires field `id`.');
+    }
+  });
+};
+
 const setDances = async (newDances: Array<Dance>) => {
   dances = newDances;
   return await setState();
@@ -294,6 +354,90 @@ const handleDeleteDance = (aq: ActiveQuery) => {
   });
 };
 
+/**
+ * The caller of this function is responsible for setting state!
+ */
+const shareDance = async (danceRef: any) => {
+  if (!danceRef.id) {
+    throw "attempted to share dance with no id";
+  }
+
+  let sharedDance = dances.find(({ id }) => {
+    return id === danceRef.id;
+  });
+
+  // if dance to share not found, error.
+  if (!sharedDance) {
+    throw `dance with id ${danceRef.id} not found.`
+  }
+
+  // If no skyfeed address was given but one is found, return the found reference.
+  if (!danceRef.skyfeed && sharedDance.skyfeed) {
+    return {
+      ...danceRef,
+      skyfeed: sharedDance.skyfeed,
+    }
+  }
+
+  // ensure all used calls are shared, and update their references in the dance to contain the skyfeed URI
+  sharedDance.instructions = await sharedDance.instructions.reduce<Promise<any>>(async (previous, group) => {
+    const result = await previous;
+    return [...result, await group.reduce<Promise<any>>(async (previous, call) => {
+      const result = await previous;
+      if (call.skyfeed) {
+        return [...result, call];
+      }
+      else {
+        return [...result, await shareCall(call)];
+      }
+    }, new Promise(() => []))]
+  }, new Promise(() => []))
+  if (sharedDance.footwork && !sharedDance.footwork.skyfeed) {
+    sharedDance.footwork = await shareCall(sharedDance.footwork);
+  }
+  if (sharedDance.hold && !sharedDance.hold.skyfeed) {
+    sharedDance.hold = await shareCall(sharedDance.hold);
+  }
+
+  if (sharedDance.music) {
+    // ensure all used music is shared, and update references in the dance to contain skyfeed URIs
+    sharedDance.music = await sharedDance.music.reduce<Promise<any>>(async (previous, music) => {
+      const result = await previous;
+      if (music.skyfeed) {
+        return [...result, music];
+      }
+      else {
+        return [...result, await shareMusic(music)];
+      }
+    }, new Promise(() => []))
+  }
+
+  // Need to upload to feed dac here, and update sharedDance with a skyfeed URI.
+
+  // setState still needs to be called after this function.
+  dances = [...dances, sharedDance];
+  return danceRef;
+}
+
+const handleShareDance = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if (typeof aq.callerInput?.id === 'string') {
+      shareDance({id: aq.callerInput?.id}).then((danceRef) => {
+        setState().then(() => {
+          aq.respond({danceRef})
+        });
+      }).catch((err) => {
+        setState().then(() => {
+          aq.reject(err)
+        });
+      });
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('shareDance requires field `id`.');
+    }
+  });
+};
+
 const setMusicList = async (newMusicList: Array<Music>) => {
   musicList = newMusicList;
   return await setState();
@@ -407,19 +551,73 @@ const handleDeleteMusic = (aq: ActiveQuery) => {
   });
 };
 
+/**
+ * The caller of this function is responsible for setting state!
+ */
+const shareMusic = async (musicRef: any) => {
+  if (!musicRef.id) {
+    throw "attempted to share music with no id";
+  }
+
+  let sharedMusic = musicList.find(({ id }) => {
+    return id === musicRef.id;
+  });
+
+  // if music to share not found, error.
+  if (!sharedMusic) {
+    throw `music with id ${musicRef.id} not found.`
+  }
+
+  // If no skyfeed address was given but one is found, return the found reference.
+  if (!musicRef.skyfeed && sharedMusic.skyfeed) {
+    return {
+      ...musicRef,
+      skyfeed: sharedMusic.skyfeed,
+    }
+  }
+
+  // Need to upload to feed dac here.
+
+  // setState still needs to be called after this function.
+  musicList = [...musicList, sharedMusic];
+  return musicRef;
+}
+
+const handleShareMusic = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if (typeof aq.callerInput?.id === 'string') {
+      shareMusic({id: aq.callerInput?.id}).then((musicRef) => {
+        setState().then(() => {
+          aq.respond({musicRef})
+        });
+      }).catch((err) => {
+        setState().then(() => {
+          aq.reject(err)
+        });
+      });
+    } else {
+      // return an error if no id included in callerInput data
+      aq.reject('shareMusic requires field `id`.');
+    }
+  });
+};
+
 addHandler('getState', handleGetState)
 
 addHandler('createCall', handleCreateCall);
 addHandler('getCallByRef', handleGetCallByRef)
 addHandler('updateCall', handleUpdateCall)
 addHandler('deleteCall', handleDeleteCall)
+addHandler('shareCall', handleShareCall)
 
 addHandler('createDance', handleCreateDance);
 addHandler('getDanceByRef', handleGetDanceByRef)
 addHandler('updateDance', handleUpdateDance)
 addHandler('deleteDance', handleDeleteDance)
+addHandler('shareDance', handleShareDance)
 
 addHandler('createMusic', handleCreateMusic);
 addHandler('getMusicByRef', handleGetMusicByRef)
 addHandler('updateMusic', handleUpdateMusic)
 addHandler('deleteMusic', handleDeleteMusic)
+addHandler('shareMusic', handleShareMusic)
