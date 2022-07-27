@@ -34,8 +34,8 @@
 		"webpack-cli": "^4.9.2"
 	},
 	"dependencies": {
-		"libkernel": "^0.1.42",
-		"libkmodule": "^0.2.40",
+		"libkernel": "^0.1.43",
+		"libkmodule": "^0.2.44",
 		"skynet-dacs-library": "^0.1.7",
 		"uuid": "^8.3.2"
 	}
