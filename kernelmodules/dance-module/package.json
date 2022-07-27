@@ -36,6 +36,7 @@
 	"dependencies": {
 		"libkernel": "^0.1.42",
 		"libkmodule": "^0.2.40",
+		"skynet-dacs-library": "^0.1.7",
 		"uuid": "^8.3.2"
 	}
 }
