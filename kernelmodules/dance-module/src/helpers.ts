@@ -19,7 +19,7 @@ export const arrayToJson = (arr: Uint8Array) => {
   }
 }
 
-export const openFile = async (seed:Uint8Array, inode:string) => {
+export const openFile: any = async (seed:Uint8Array, inode:string) => {
   let [res, error] = await openIndependentFileSmall(seed, inode);
   if (error) {
     throw error;

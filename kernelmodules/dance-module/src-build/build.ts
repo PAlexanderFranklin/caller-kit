@@ -4,14 +4,15 @@ import * as fs from "fs"
 import {
 	addContextToErr,
 	b64ToBuf,
+	bufToHex,
 	deriveRegistryEntryID,
+	entryIDToSkylink,
 	generateSeedPhraseDeterministic,
-	resolverLink,
+	seedPhraseToSeed,
 	sha512,
 	taggedRegistryEntryKeys,
-	validSeedPhrase,
 } from "libskynet"
-import { generateSeedPhraseRandom, overwriteRegistryEntry, upload } from "libkerneldev"
+import { generateSeedPhraseRandom, overwriteRegistryEntry, upload } from "libskynetnode"
 import read from "read"
 
 // Helper variables to make it easier to return empty values alongside errors.
@@ -54,10 +55,23 @@ function writeFile(fileName: string, fileData: string): string | null {
 	}
 }
 
+// hardenedSeedPhrase will take a password, harden it with 100,000 iterations
+// of hashing, and then turn it into a seed phrase.
+function hardenedSeedPhrase(password: string): [string, string | null] {
+	let pw = password
+	// Add some hashing iterations to the password to make it stronger.
+	for (let i = 0; i < 1000000; i++) {
+		let passU8 = new TextEncoder().encode(password)
+		let hashIter = sha512(passU8)
+		password = bufToHex(hashIter)
+	}
+	return generateSeedPhraseDeterministic(password)
+}
+
 // seedPhraseToRegistryKeys will convert a seed phrase to the set of registry
 // keys that govern the registry entry where the module is published.
 function seedPhraseToRegistryKeys(seedPhrase: string): [any, Uint8Array, string | null] {
-	let [seed, errVSP] = validSeedPhrase(seedPhrase)
+	let [seed, errVSP] = seedPhraseToSeed(seedPhrase)
 	if (errVSP !== null) {
 		return [nkp, nu8, addContextToErr(errVSP, "unable to compute seed phrase")]
 	}
@@ -79,10 +93,7 @@ function seedPhraseToRegistryLink(seedPhrase: string): [string, string | null] {
 	if (errDREID !== null) {
 		return ["", addContextToErr(errDREID, "unable to compute registry entry id")]
 	}
-	let [registryLink, errRL] = resolverLink(entryID)
-	if (errRL !== null) {
-		return ["", addContextToErr(errRL, "unable to compute registry link")]
-	}
+	let registryLink = entryIDToSkylink(entryID)
 	return [registryLink, null]
 }
 
@@ -158,7 +169,7 @@ function handlePassConfirm(password: string) {
 		}
 	} else if (!fs.existsSync(seedFile) && process.argv[2] === "prod") {
 		// Generate the seed phrase.
-		let [seedPhrase, errGSP] = generateSeedPhraseDeterministic(password)
+		let [seedPhrase, errGSP] = hardenedSeedPhrase(password)
 		if (errGSP !== null) {
 			console.error("Unable to generate seed phrase:", errGSP)
 			process.exit(1)
@@ -184,7 +195,7 @@ function handlePassConfirm(password: string) {
 	let registryLink: string
 	if (process.argv[2] === "prod") {
 		// Generate the seed phrase from the password.
-		let [sp, errGSP] = generateSeedPhraseDeterministic(password)
+		let [sp, errGSP] = hardenedSeedPhrase(password)
 		if (errGSP !== null) {
 			console.error("Unable to generate seed phrase: ", errGSP)
 			process.exit(1)
@@ -239,8 +250,6 @@ function handlePassConfirm(password: string) {
 	console.log("Uploading module...")
 	upload(distFile, metadata)
 		.then((result) => {
-			console.log("Immutable Link for Module:", result)
-			console.log("Resolver Link for Module:", registryLink)
 			console.log("Updating module's registry entry...")
 			// Update the v2 skylink.
 			let [keypair, datakey, errSPTRK] = seedPhraseToRegistryKeys(seedPhrase)
@@ -252,8 +261,10 @@ function handlePassConfirm(password: string) {
 				return ["", addContextToErr(errBTB, "unable to decode skylink")]
 			}
 			overwriteRegistryEntry(keypair, datakey, bufLink)
-				.then((result: any) => {
+				.then(() => {
 					console.log("registry entry is updated")
+					console.log("Immutable Link for Module:", result)
+					console.log("Resolver Link for Module:", registryLink)
 				})
 				.catch((err: any) => {
 					console.log("unable to update registry entry:", err)
