@@ -1,7 +1,7 @@
 import { callModule } from 'libkernel';
 import { writable } from 'svelte/store';
 
-const danceModule = 'AQDnT1ZRZO4zXffZAkqWJszR7GfRl1f4AlCde1Kti18c5w';
+const danceModule = 'AQDNxEqS_cO5Qqpy8VXBUBNsDHpRn6nh_RkdNNXX3opE4Q';
 
 export const calls = writable([]);
 export const dances = writable([]);
