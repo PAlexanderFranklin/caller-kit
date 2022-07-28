@@ -16,6 +16,8 @@ let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
 let musicList: Array<Music> = [];
 
+const myFeedDac = new FeedDAC();
+
 const initializeModule = async () => {
   if(!moduleDataFile) {
     moduleSeed = await getSeed();
@@ -206,7 +208,10 @@ const shareCall = async (callRef: any) => {
     sharedCall.hold = await shareCall(sharedCall.hold);
   }
 
-  // Need to upload to feed dac here.
+  // Upload
+  const skyfeedURI = await myFeedDac.createPost(sharedCall, "danceCalls");
+  sharedCall.skyfeed = skyfeedURI;
+  callRef.skyfeed = skyfeedURI;
 
   // setState still needs to be called after this function.
   calls = [...calls, sharedCall];
@@ -412,7 +417,10 @@ const shareDance = async (danceRef: any) => {
     }, new Promise(() => []))
   }
 
-  // Need to upload to feed dac here, and update sharedDance with a skyfeed URI.
+  // Upload
+  const skyfeedURI = await myFeedDac.createPost(sharedDance, "dances");
+  sharedDance.skyfeed = skyfeedURI;
+  danceRef.skyfeed = skyfeedURI;
 
   // setState still needs to be called after this function.
   dances = [...dances, sharedDance];
@@ -576,7 +584,10 @@ const shareMusic = async (musicRef: any) => {
     }
   }
 
-  // Need to upload to feed dac here.
+  // Upload
+  const skyfeedURI = await myFeedDac.createPost(sharedMusic, "danceMusic");
+  sharedMusic.skyfeed = skyfeedURI;
+  musicRef.skyfeed = skyfeedURI;
 
   // setState still needs to be called after this function.
   musicList = [...musicList, sharedMusic];
