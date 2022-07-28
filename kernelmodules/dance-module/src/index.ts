@@ -70,7 +70,13 @@ const handleGetCallByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.call?.id === 'string') {
     if (aq.callerInput.call.skyfeed) {
       myFeedDac.loadPost(aq.callerInput.call.skyfeed).then((post) => {
-        aq.respond({call: {...post, skyfeed: aq.callerInput.call.skyfeed}});
+        const retrievedData = post.content?.ext?.danceCall;
+        if (retrievedData) {
+          aq.respond({call: {...retrievedData, skyfeed: aq.callerInput.call.skyfeed}});
+        }
+        else {
+          throw "Feed data retrieved does not contain the right fields."
+        }
       }).catch((err) => {
         aq.reject(err);
       })
@@ -218,7 +224,12 @@ const shareCall = async (callRef: any) => {
   }
 
   // Upload
-  const skyfeedURI = await myFeedDac.createPost(sharedCall, "danceCalls");
+  const skyfeedURI = await myFeedDac.createPost({
+    title: sharedCall.title,
+    ext: {
+      danceCall: {...sharedCall}
+    }
+  }, "danceCalls");
   sharedCall.skyfeed = skyfeedURI;
   callRef.skyfeed = skyfeedURI;
 
@@ -255,7 +266,13 @@ const handleGetDanceByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.dance?.id === 'string') {
     if (aq.callerInput.dance.skyfeed) {
       myFeedDac.loadPost(aq.callerInput.dance.skyfeed).then((post) => {
-        aq.respond({dance: {...post, skyfeed: aq.callerInput.dance.skyfeed}});
+        const retrievedData = post.content?.ext?.dance;
+        if (retrievedData) {
+          aq.respond({dance: {...retrievedData, skyfeed: aq.callerInput.dance.skyfeed}});
+        }
+        else {
+          throw "Feed data retrieved does not contain the right fields."
+        }
       }).catch((err) => {
         aq.reject(err);
       })
@@ -436,7 +453,12 @@ const shareDance = async (danceRef: any) => {
   }
 
   // Upload
-  const skyfeedURI = await myFeedDac.createPost(sharedDance, "dances");
+  const skyfeedURI = await myFeedDac.createPost({
+    title: sharedDance.title,
+    ext: {
+      dance: {...sharedDance}
+    }
+  }, "dances");
   sharedDance.skyfeed = skyfeedURI;
   danceRef.skyfeed = skyfeedURI;
 
@@ -473,7 +495,13 @@ const handleGetMusicByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.music?.id === 'string') {
     if (aq.callerInput.music.skyfeed) {
       myFeedDac.loadPost(aq.callerInput.music.skyfeed).then((post) => {
-        aq.respond({music: {...post, skyfeed: aq.callerInput.music.skyfeed}});
+        const retrievedData = post.content?.ext?.danceMusic;
+        if (retrievedData) {
+          aq.respond({music: {...retrievedData, skyfeed: aq.callerInput.music.skyfeed}});
+        }
+        else {
+          throw "Feed data retrieved does not contain the right fields."
+        }
       }).catch((err) => {
         aq.reject(err);
       })
@@ -612,7 +640,12 @@ const shareMusic = async (musicRef: any) => {
   }
 
   // Upload
-  const skyfeedURI = await myFeedDac.createPost(sharedMusic, "danceMusic");
+  const skyfeedURI = await myFeedDac.createPost({
+    title: sharedMusic.title,
+    ext: {
+      danceMusic: {...sharedMusic}
+    }
+  }, "danceMusic");
   sharedMusic.skyfeed = skyfeedURI;
   musicRef.skyfeed = skyfeedURI;
 
