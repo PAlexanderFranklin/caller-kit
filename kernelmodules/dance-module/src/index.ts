@@ -67,23 +67,32 @@ const handleGetState = (aq: ActiveQuery) => {
 }
 
 const handleGetCallByRef = (aq: ActiveQuery) => {
-  initializeModule().then(() => {
-    if (typeof aq.callerInput?.call?.id === 'string') {
-      // create list of just the requested call.
-      const matchedCall = calls.filter(({ id }) => {
-        return id === aq.callerInput.call.id;
-      });
-
-      if (matchedCall.length) {
-        aq.respond({ call: matchedCall[0] });
-      } else {
-        aq.reject(`No call found with id ${aq.callerInput.call.id}`);
-      }
-    } else {
-      // return an error if no id included in callerInput data
-      aq.reject('getCallByRef requires field `id`.');
+  if (typeof aq.callerInput?.call?.id === 'string') {
+    if (aq.callerInput.call.skyfeed) {
+      myFeedDac.loadPost(aq.callerInput.call.skyfeed).then((post) => {
+        aq.respond({call: {...post, skyfeed: aq.callerInput.call.skyfeed}});
+      }).catch((err) => {
+        aq.reject(err);
+      })
     }
-  });
+    else {
+      initializeModule().then(() => {
+          // create list of just the requested call.
+          const matchedCall = calls.filter(({ id }) => {
+            return id === aq.callerInput.call.id;
+          });
+
+          if (matchedCall.length) {
+            aq.respond({ call: matchedCall[0] });
+          } else {
+            aq.reject(`No call found with id ${aq.callerInput.call.id}`);
+          }
+      });
+    }
+  } else {
+    // return an error if no id included in callerInput data
+    aq.reject('getCallByRef requires field `id`.');
+  }
 };
 
 const handleCreateCall = (aq: ActiveQuery) => {
@@ -243,23 +252,32 @@ const setDances = async (newDances: Array<Dance>) => {
 }
 
 const handleGetDanceByRef = (aq: ActiveQuery) => {
-  initializeModule().then(() => {
-    if (typeof aq.callerInput?.dance?.id === 'string') {
-      // create list of just the requested dance.
-      const matchedDance = dances.filter(({ id }) => {
-        return id === aq.callerInput.dance.id;
-      });
-
-      if (matchedDance.length) {
-        aq.respond({ dance: matchedDance[0] });
-      } else {
-        aq.reject(`No dance found with id ${aq.callerInput.dance.id}`);
-      }
-    } else {
-      // return an error if no id included in callerInput data
-      aq.reject('getDanceByRef requires field `id`.');
+  if (typeof aq.callerInput?.dance?.id === 'string') {
+    if (aq.callerInput.dance.skyfeed) {
+      myFeedDac.loadPost(aq.callerInput.dance.skyfeed).then((post) => {
+        aq.respond({dance: {...post, skyfeed: aq.callerInput.dance.skyfeed}});
+      }).catch((err) => {
+        aq.reject(err);
+      })
     }
-  });
+    else {
+      initializeModule().then(() => {
+        // create list of just the requested dance.
+        const matchedDance = dances.filter(({ id }) => {
+          return id === aq.callerInput.dance.id;
+        });
+
+        if (matchedDance.length) {
+          aq.respond({ dance: matchedDance[0] });
+        } else {
+          aq.reject(`No dance found with id ${aq.callerInput.dance.id}`);
+        }
+      });
+    }
+  } else {
+    // return an error if no id included in callerInput data
+    aq.reject('getDanceByRef requires field `id`.');
+  }
 };
 
 const handleCreateDance = (aq: ActiveQuery) => {
@@ -452,23 +470,32 @@ const setMusicList = async (newMusicList: Array<Music>) => {
 }
 
 const handleGetMusicByRef = (aq: ActiveQuery) => {
-  initializeModule().then(() => {
-    if (typeof aq.callerInput?.music?.id === 'string') {
-      // create list of just the requested music.
-      const matchedMusic = musicList.filter(({ id }) => {
-        return id === aq.callerInput.music.id;
-      });
-
-      if (matchedMusic.length) {
-        aq.respond({ music: matchedMusic[0] });
-      } else {
-        aq.reject(`No music found with id ${aq.callerInput.music.id}`);
-      }
-    } else {
-      // return an error if no id included in callerInput data
-      aq.reject('getMusicByRef requires field `id`.');
+  if (typeof aq.callerInput?.music?.id === 'string') {
+    if (aq.callerInput.music.skyfeed) {
+      myFeedDac.loadPost(aq.callerInput.music.skyfeed).then((post) => {
+        aq.respond({music: {...post, skyfeed: aq.callerInput.music.skyfeed}});
+      }).catch((err) => {
+        aq.reject(err);
+      })
     }
-  });
+    else {
+      initializeModule().then(() => {
+        // create list of just the requested music.
+        const matchedMusic = musicList.filter(({ id }) => {
+          return id === aq.callerInput.music.id;
+        });
+
+        if (matchedMusic.length) {
+          aq.respond({ music: matchedMusic[0] });
+        } else {
+          aq.reject(`No music found with id ${aq.callerInput.music.id}`);
+        }
+      });
+    }
+  } else {
+    // return an error if no id included in callerInput data
+    aq.reject('getMusicByRef requires field `id`.');
+  }
 };
 
 const handleCreateMusic = (aq: ActiveQuery) => {
