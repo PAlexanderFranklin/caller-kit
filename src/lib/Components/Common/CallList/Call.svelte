@@ -7,7 +7,7 @@ import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Pencil from "svelte-material-icons/Pencil.svelte";
 import Dependencies from '/src/lib/Components/Common/Calls/Dependencies.svelte';
-import UpdateCall from './UpdateCall.svelte';
+import CallEditor from './CallEditor.svelte';
 
 export let call;
 let hiddenDetails = true;
@@ -50,7 +50,7 @@ function handleDeleteCall() {
     <button on:click={() => {dispatch('selectCall', {call})}}><ArrowRight color={"green"} /></button>
   </div>
   {#if editing}
-    <UpdateCall on:closeModal={() => {editing = false}} call={call} />
+    <CallEditor on:closeModal={() => {editing = false}} call={call} />
   {/if}
   {#if !hiddenDetails}
     <p>

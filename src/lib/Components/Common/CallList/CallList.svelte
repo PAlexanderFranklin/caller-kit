@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 import Call from './Call.svelte';
-import CreateCall from "./CreateCall.svelte";
+import CallEditor from "./CallEditor.svelte";
 
 export let calls = [];
 
@@ -14,7 +14,7 @@ let hidden = true;
   {#if hidden}
     <button on:click={() => {hidden = false}}>New Call</button>
   {:else}
-    <CreateCall on:closeModal={() => {hidden = true}} />
+    <CallEditor on:closeModal={() => {hidden = true}} />
   {/if}
   {#each calls as call (call.id)}
       <Call call={call} on:selectCall={() => {dispatch('selectCall', { call })}} />
