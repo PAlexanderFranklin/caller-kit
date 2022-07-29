@@ -3,12 +3,28 @@ import { createEventDispatcher } from 'svelte';
 import Dance from './Dance.svelte';
 
 export let dances = [];
+let filteredDances = dances;
+let filterText = "";
 
 const dispatch = createEventDispatcher();
+
+$: filterText, filteredDances = dances.filter((dance) => {
+  let filter = new RegExp(filterText.toLowerCase());
+  return Boolean(filterText === ""
+    || dance.title?.toLowerCase().match(filter)
+    || dance.text?.toLowerCase().match(filter)
+    || dance.footwork?.title?.toLowerCase().match(filter)
+    || dance.hold?.title?.toLowerCase().match(filter)
+  )
+})
+
 </script>
 
 <div class="DanceList">
-  {#each dances as dance (dance.id)}
+  <div>
+    Search: <input type="text" bind:value={filterText} />
+  </div>
+  {#each filteredDances as dance (dance.id)}
       <Dance
         dance={dance}
         on:selectDance={() => {dispatch('selectDance', { dance })}}

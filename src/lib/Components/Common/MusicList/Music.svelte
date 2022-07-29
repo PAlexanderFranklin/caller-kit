@@ -53,7 +53,7 @@ function handleDeleteMusic() {
   {/if}
   {#if !hiddenDetails}
     <p>
-      Link: {music.link}
+      Link: <a href={music.link}>{music.link}</a>
     </p>
   {/if}
 </div>

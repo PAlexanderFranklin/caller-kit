@@ -53,12 +53,12 @@ function handleDeleteCall() {
     <CallEditor on:closeModal={() => {editing = false}} call={call} />
   {/if}
   {#if !hiddenDetails}
-    <p>
+    <div>
       Description: {call.text}
-    </p>
-    <span>
+    </div>
+    <div>
       Duration in Beats: {call.beats}
-    </span>
+    </div>
     <Dependencies source={call} />
   {/if}
 </div>
