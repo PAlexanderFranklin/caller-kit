@@ -57,6 +57,16 @@ export const deleteCall = async (id) => {
   }
 }
 
+export const shareCall = async (id) => {
+  const [result, err] = await callModule(danceModule, 'shareCall', {id});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const getDanceByRef = async (dance) => {
   const [result, err] = await callModule(danceModule, 'getDanceByRef', {dance});
   if (err) {
@@ -97,6 +107,16 @@ export const deleteDance = async (id) => {
   }
 }
 
+export const shareDance = async (id) => {
+  const [result, err] = await callModule(danceModule, 'shareDance', {id});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const getMusicByRef = async (music) => {
   const [result, err] = await callModule(danceModule, 'getMusicByRef', {music});
   if (err) {
@@ -129,6 +149,16 @@ export const updateMusic = async (music) => {
 
 export const deleteMusic = async (id) => {
   const [result, err] = await callModule(danceModule, 'deleteMusic', {id});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
+export const shareMusic = async (id) => {
+  const [result, err] = await callModule(danceModule, 'shareMusic', {id});
   if (err) {
     throw err;
   }

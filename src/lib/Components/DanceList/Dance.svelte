@@ -1,11 +1,12 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
-import { dances, deleteDance } from '/src/lib/utils/danceModule';
+import { dances, deleteDance, shareDance } from '/src/lib/utils/danceModule';
 import Play from "svelte-material-icons/Play.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Pencil from "svelte-material-icons/Pencil.svelte";
+import Share from "svelte-material-icons/Share.svelte";
 
 export let dance;
 let hiddenDetails = true;
@@ -32,6 +33,24 @@ function handleDeleteDance() {
   );
 }
 
+function handleShareDance() {
+  openModal(
+    async () => {
+      const res = await shareDance(dance.id);
+      console.log(res)
+      return res;
+    },
+    async () => {},
+    {
+      action: "share",
+      acting: "sharing",
+      noun: "dance",
+      item: dance.title,
+      confirmColor: "green",
+    }
+  );
+}
+
 </script>
 
 <div class="Dance">
@@ -39,6 +58,7 @@ function handleDeleteDance() {
     <span class="HeaderTitle">{dance.title}</span>
     <button on:click={handleDeleteDance}><Delete color={"red"} /></button>
     <button on:click={() => dispatch('editDance', {dance})}><Pencil color={"yellow"} /></button>
+    <button on:click={handleShareDance}><Share color={"blue"} /></button>
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
