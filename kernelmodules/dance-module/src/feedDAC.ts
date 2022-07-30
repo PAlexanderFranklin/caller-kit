@@ -2,7 +2,7 @@ import { callModule, connectModule } from "libkmodule"
 
 const MODULE_SKYLINK_FeedDAC = 'AQCSRGL0vey8Nccy_Pqk3fYTMm0y2nE_dK0I8ro8bZyZ3Q';
 /// loadPost
-export const loadPost = async (ref) => {
+export const loadPost = async (ref: any) => {
     let [data, err] = await callModule(MODULE_SKYLINK_FeedDAC, 'loadPost', {
         'ref': ref,
     });
@@ -11,7 +11,7 @@ export const loadPost = async (ref) => {
     return data;
 }
 /// loadPostsForUser
-export const loadPostsForUser = async (userId, feedId, beforeTimestamp) => {
+export const loadPostsForUser = async (userId: any, feedId: any, beforeTimestamp: any) => {
     let [data, err] = await callModule(MODULE_SKYLINK_FeedDAC, 'loadPostsForUser', {
         'userId': userId,
         'feedId': feedId,
@@ -22,7 +22,7 @@ export const loadPostsForUser = async (userId, feedId, beforeTimestamp) => {
     return data;
 }
 /// loadCommentsForPost
-export const loadCommentsForPost = async (ref, onData) => {
+export const loadCommentsForPost = async (ref: any, onData: any) => {
     let [sendUpdate, query] = connectModule(MODULE_SKYLINK_FeedDAC, 'loadCommentsForPost', {
         'ref': ref,
     }, onData);
@@ -32,7 +32,7 @@ export const loadCommentsForPost = async (ref, onData) => {
     return data;
 }
 /// getCommentsCount
-export const getCommentsCount = async (ref, onData) => {
+export const getCommentsCount = async (ref: any, onData: any) => {
     let [sendUpdate, query] = connectModule(MODULE_SKYLINK_FeedDAC, 'getCommentsCount', {
         'ref': ref,
     }, onData);
@@ -42,7 +42,7 @@ export const getCommentsCount = async (ref, onData) => {
     return data;
 }
 /// listenForPosts
-export const listenForPosts = async (userId, feedId, onData) => {
+export const listenForPosts = async (userId: any, feedId: any, onData: any) => {
     let [sendUpdate, query] = connectModule(MODULE_SKYLINK_FeedDAC, 'listenForPosts', {
         'userId': userId,
         'feedId': feedId,
@@ -53,7 +53,7 @@ export const listenForPosts = async (userId, feedId, onData) => {
     return data;
 }
 /// createPost
-export const createPost = async (content, feedId) => {
+export const createPost = async (content: any, feedId: any) => {
     let [data, err] = await callModule(MODULE_SKYLINK_FeedDAC, 'createPost', {
         'content': content,
         'feedId': feedId,
@@ -63,7 +63,7 @@ export const createPost = async (content, feedId) => {
     return data;
 }
 /// createComment
-export const createComment = async (content, commentTo, parent) => {
+export const createComment = async (content: any, commentTo: any, parent: any) => {
     let [data, err] = await callModule(MODULE_SKYLINK_FeedDAC, 'createComment', {
         'content': content,
         'commentTo': commentTo,
@@ -74,7 +74,7 @@ export const createComment = async (content, commentTo, parent) => {
     return data;
 }
 /// createRepost
-export const createRepost = async (repostOf, parent) => {
+export const createRepost = async (repostOf: any, parent: any) => {
     let [data, err] = await callModule(MODULE_SKYLINK_FeedDAC, 'createRepost', {
         'repostOf': repostOf,
         'parent': parent,
@@ -84,7 +84,7 @@ export const createRepost = async (repostOf, parent) => {
     return data;
 }
 /// deletePost
-export const deletePost = async (ref) => {
+export const deletePost = async (ref: any) => {
     let [data, err] = await callModule(MODULE_SKYLINK_FeedDAC, 'deletePost', {
         'ref': ref,
     });
