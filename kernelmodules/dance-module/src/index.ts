@@ -1,7 +1,7 @@
 import { addHandler, handleMessage, log, createIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
-import {v4 as uuid} from 'uuid';
-import {jsonToArray, arrayToJson, openFile, readData} from './helpers';
-import { FeedDAC } from 'skynet-dacs-library';
+import { v4 as uuid } from 'uuid';
+import { jsonToArray, arrayToJson, openFile, readData } from './helpers';
+import * from './feedDAC.js';
 
 import type { ActiveQuery } from 'libkmodule';
 import type { Call, CallRef, Dancer, Formation, Dance, DanceRef, Music, MusicRef } from './danceTypes';
@@ -15,8 +15,6 @@ let moduleDataFile: any;
 let calls: Array<Call> = [];
 let dances: Array<Dance> = [];
 let musicList: Array<Music> = [];
-
-const myFeedDac = new FeedDAC();
 
 const initializeModule = async () => {
   if(!moduleDataFile) {
@@ -69,7 +67,7 @@ const handleGetState = (aq: ActiveQuery) => {
 const handleGetCallByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.call?.id === 'string') {
     if (aq.callerInput.call.skyfeed) {
-      myFeedDac.loadPost(aq.callerInput.call.skyfeed).then((post) => {
+      loadPost(aq.callerInput.call.skyfeed).then((post) => {
         const retrievedData = post.content?.ext?.danceCall;
         if (retrievedData) {
           aq.respond({call: {...retrievedData, skyfeed: aq.callerInput.call.skyfeed}});
@@ -224,7 +222,7 @@ const shareCall = async (callRef: any) => {
   }
 
   // Upload
-  const skyfeedURI = await myFeedDac.createPost({
+  const skyfeedURI = await createPost({
     title: sharedCall.title,
     ext: {
       danceCall: {...sharedCall}
@@ -265,7 +263,7 @@ const setDances = async (newDances: Array<Dance>) => {
 const handleGetDanceByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.dance?.id === 'string') {
     if (aq.callerInput.dance.skyfeed) {
-      myFeedDac.loadPost(aq.callerInput.dance.skyfeed).then((post) => {
+      loadPost(aq.callerInput.dance.skyfeed).then((post) => {
         const retrievedData = post.content?.ext?.dance;
         if (retrievedData) {
           aq.respond({dance: {...retrievedData, skyfeed: aq.callerInput.dance.skyfeed}});
@@ -453,7 +451,7 @@ const shareDance = async (danceRef: any) => {
   }
 
   // Upload
-  const skyfeedURI = await myFeedDac.createPost({
+  const skyfeedURI = await createPost({
     title: sharedDance.title,
     ext: {
       dance: {...sharedDance}
@@ -494,7 +492,7 @@ const setMusicList = async (newMusicList: Array<Music>) => {
 const handleGetMusicByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.music?.id === 'string') {
     if (aq.callerInput.music.skyfeed) {
-      myFeedDac.loadPost(aq.callerInput.music.skyfeed).then((post) => {
+      loadPost(aq.callerInput.music.skyfeed).then((post) => {
         const retrievedData = post.content?.ext?.danceMusic;
         if (retrievedData) {
           aq.respond({music: {...retrievedData, skyfeed: aq.callerInput.music.skyfeed}});
@@ -640,7 +638,7 @@ const shareMusic = async (musicRef: any) => {
   }
 
   // Upload
-  const skyfeedURI = await myFeedDac.createPost({
+  const skyfeedURI = await createPost({
     title: sharedMusic.title,
     ext: {
       danceMusic: {...sharedMusic}
