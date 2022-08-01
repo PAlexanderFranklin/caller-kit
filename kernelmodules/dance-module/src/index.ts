@@ -191,7 +191,7 @@ const handleDeleteCall = (aq: ActiveQuery) => {
 /**
  * The caller of this function is responsible for setting state!
  */
-const shareCall = async (callRef: any) => {
+const shareCall = async (callRef: any, aq: ActiveQuery) => {
   if (!callRef.id) {
     throw "attempted to share call with no id";
   }
@@ -215,10 +215,10 @@ const shareCall = async (callRef: any) => {
 
   // ensure all dependency calls are shared, and update their references in the call to contain the skyfeed URI
   if (sharedCall.footwork && !sharedCall.footwork.skyfeed) {
-    sharedCall.footwork = await shareCall(sharedCall.footwork);
+    sharedCall.footwork = await shareCall(sharedCall.footwork, aq);
   }
   if (sharedCall.hold && !sharedCall.hold.skyfeed) {
-    sharedCall.hold = await shareCall(sharedCall.hold);
+    sharedCall.hold = await shareCall(sharedCall.hold, aq);
   }
 
   // Upload
@@ -231,22 +231,19 @@ const shareCall = async (callRef: any) => {
   sharedCall.skyfeed = skyfeedURI;
   callRef.skyfeed = skyfeedURI;
 
-  // setState still needs to be called after this function.
   calls = [...calls, sharedCall];
+  setState();
+  aq.sendUpdate({callRef});
   return callRef;
 }
 
 const handleShareCall = (aq: ActiveQuery) => {
   initializeModule().then(() => {
     if (typeof aq.callerInput?.id === 'string') {
-      shareCall({id: aq.callerInput?.id}).then((callRef) => {
-        setState().then(() => {
-          aq.respond({callRef})
-        });
+      shareCall({id: aq.callerInput?.id}, aq).then((callRef) => {
+        aq.respond({callRef})
       }).catch((err) => {
-        setState().then(() => {
-          aq.reject(err)
-        });
+        aq.reject(err)
       });
     } else {
       // return an error if no id included in callerInput data
@@ -395,7 +392,7 @@ const handleDeleteDance = (aq: ActiveQuery) => {
 /**
  * The caller of this function is responsible for setting state!
  */
-const shareDance = async (danceRef: any) => {
+const shareDance = async (danceRef: any, aq: ActiveQuery) => {
   if (!danceRef.id) {
     throw "attempted to share dance with no id";
   }
@@ -426,15 +423,15 @@ const shareDance = async (danceRef: any) => {
         return [...result, call];
       }
       else {
-        return [...result, await shareCall(call)];
+        return [...result, await shareCall(call, aq)];
       }
     }, new Promise(() => []))]
   }, new Promise(() => []))
   if (sharedDance.footwork && !sharedDance.footwork.skyfeed) {
-    sharedDance.footwork = await shareCall(sharedDance.footwork);
+    sharedDance.footwork = await shareCall(sharedDance.footwork, aq);
   }
   if (sharedDance.hold && !sharedDance.hold.skyfeed) {
-    sharedDance.hold = await shareCall(sharedDance.hold);
+    sharedDance.hold = await shareCall(sharedDance.hold, aq);
   }
 
   if (sharedDance.music) {
@@ -445,7 +442,7 @@ const shareDance = async (danceRef: any) => {
         return [...result, music];
       }
       else {
-        return [...result, await shareMusic(music)];
+        return [...result, await shareMusic(music, aq)];
       }
     }, new Promise(() => []))
   }
@@ -460,22 +457,19 @@ const shareDance = async (danceRef: any) => {
   sharedDance.skyfeed = skyfeedURI;
   danceRef.skyfeed = skyfeedURI;
 
-  // setState still needs to be called after this function.
   dances = [...dances, sharedDance];
+  setState();
+  aq.sendUpdate({danceRef});
   return danceRef;
 }
 
 const handleShareDance = (aq: ActiveQuery) => {
   initializeModule().then(() => {
     if (typeof aq.callerInput?.id === 'string') {
-      shareDance({id: aq.callerInput?.id}).then((danceRef) => {
-        setState().then(() => {
-          aq.respond({danceRef})
-        });
+      shareDance({id: aq.callerInput?.id}, aq).then((danceRef) => {
+        aq.respond({danceRef})
       }).catch((err) => {
-        setState().then(() => {
-          aq.reject(err)
-        });
+        aq.reject(err)
       });
     } else {
       // return an error if no id included in callerInput data
@@ -615,7 +609,7 @@ const handleDeleteMusic = (aq: ActiveQuery) => {
 /**
  * The caller of this function is responsible for setting state!
  */
-const shareMusic = async (musicRef: any) => {
+const shareMusic = async (musicRef: any, aq: ActiveQuery) => {
   if (!musicRef.id) {
     throw "attempted to share music with no id";
   }
@@ -647,22 +641,19 @@ const shareMusic = async (musicRef: any) => {
   sharedMusic.skyfeed = skyfeedURI;
   musicRef.skyfeed = skyfeedURI;
 
-  // setState still needs to be called after this function.
   musicList = [...musicList, sharedMusic];
+  setState();
+  aq.sendUpdate({musicRef});
   return musicRef;
 }
 
 const handleShareMusic = (aq: ActiveQuery) => {
   initializeModule().then(() => {
     if (typeof aq.callerInput?.id === 'string') {
-      shareMusic({id: aq.callerInput?.id}).then((musicRef) => {
-        setState().then(() => {
-          aq.respond({musicRef})
-        });
+      shareMusic({id: aq.callerInput?.id}, aq).then((musicRef) => {
+        aq.respond({musicRef})
       }).catch((err) => {
-        setState().then(() => {
-          aq.reject(err)
-        });
+        aq.reject(err)
       });
     } else {
       // return an error if no id included in callerInput data
