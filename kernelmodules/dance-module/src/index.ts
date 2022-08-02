@@ -425,8 +425,8 @@ const shareDance = async (danceRef: any, aq: ActiveQuery) => {
       else {
         return [...result, await shareCall(call, aq)];
       }
-    }, new Promise(() => []))]
-  }, new Promise(() => []))
+    }, new Promise((resolve) => resolve([])))]
+  }, new Promise((resolve) => resolve([])))
   if (sharedDance.footwork && !sharedDance.footwork.skyfeed) {
     sharedDance.footwork = await shareCall(sharedDance.footwork, aq);
   }
@@ -444,7 +444,7 @@ const shareDance = async (danceRef: any, aq: ActiveQuery) => {
       else {
         return [...result, await shareMusic(music, aq)];
       }
-    }, new Promise(() => []))
+    }, new Promise((resolve) => resolve([])))
   }
 
   // Upload
