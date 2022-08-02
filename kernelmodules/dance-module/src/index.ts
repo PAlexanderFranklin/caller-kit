@@ -1,5 +1,5 @@
 import { addHandler, handleMessage, log, createIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
-import { v4 as uuid } from 'uuid';
+import { nanoid } from 'nanoid';
 import { jsonToArray, arrayToJson, openFile, readData } from './helpers';
 import * as myFeedDac from './feedDAC';
 
@@ -109,7 +109,7 @@ const handleCreateCall = (aq: ActiveQuery) => {
       }
       const newCall:Call = {
         ...call,
-        id: uuid(),
+        id: nanoid(),
         license: call.license || "CC0",
         modifiedAt: new Date(),
       };
@@ -306,7 +306,7 @@ const handleCreateDance = (aq: ActiveQuery) => {
       }
       const newDance:Dance = {
         ...dance,
-        id: uuid(),
+        id: nanoid(),
         license: dance.license || "CC0",
         modifiedAt: new Date(),
       };
@@ -528,7 +528,7 @@ const handleCreateMusic = (aq: ActiveQuery) => {
       }
       const newMusic:Music = {
         ...music,
-        id: uuid(),
+        id: nanoid(),
         modifiedAt: new Date(),
       };
       setMusicList([...musicList, newMusic]).then(() => {
