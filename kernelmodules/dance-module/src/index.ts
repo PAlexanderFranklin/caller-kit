@@ -111,7 +111,7 @@ const handleCreateCall = (aq: ActiveQuery) => {
         ...call,
         id: nanoid(),
         license: call.license || "CC0",
-        modifiedAt: new Date(),
+        modifiedAt: (Date.now() / 1000),
       };
       setCalls([...calls, newCall]).then(() => {
         aq.respond({call: newCall, calls});
@@ -128,7 +128,7 @@ const handleUpdateCall = (aq: ActiveQuery) => {
     if ('call' in aq.callerInput) {
       const updatedCall:Call = {
         ...aq.callerInput.call,
-        modifiedAt: new Date(),
+        modifiedAt: (Date.now() / 1000),
       };
       if (!updatedCall.title) {
         aq.reject('No title found, call not updated.');
@@ -308,7 +308,7 @@ const handleCreateDance = (aq: ActiveQuery) => {
         ...dance,
         id: nanoid(),
         license: dance.license || "CC0",
-        modifiedAt: new Date(),
+        modifiedAt: (Date.now() / 1000),
       };
       setDances([...dances, newDance]).then(() => {
         aq.respond({dance: newDance});
@@ -325,7 +325,7 @@ const handleUpdateDance = (aq: ActiveQuery) => {
     if ('dance' in aq.callerInput) {
       const updatedDance:Dance = {
         ...aq.callerInput.dance,
-        modifiedAt: new Date(),
+        modifiedAt: (Date.now() / 1000),
       };
       if (!updatedDance.title) {
         aq.reject('No title found, dance not updated.');
@@ -529,7 +529,7 @@ const handleCreateMusic = (aq: ActiveQuery) => {
       const newMusic:Music = {
         ...music,
         id: nanoid(),
-        modifiedAt: new Date(),
+        modifiedAt: (Date.now() / 1000),
       };
       setMusicList([...musicList, newMusic]).then(() => {
         aq.respond({music: newMusic});
@@ -546,7 +546,7 @@ const handleUpdateMusic = (aq: ActiveQuery) => {
     if ('music' in aq.callerInput) {
       const updatedMusic:Music = {
         ...aq.callerInput.music,
-        modifiedAt: new Date(),
+        modifiedAt: (Date.now() / 1000),
       };
       if (!updatedMusic.link) {
         aq.reject('No link found, music not created.');
