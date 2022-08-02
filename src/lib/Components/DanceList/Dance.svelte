@@ -1,6 +1,7 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
-import { dances, deleteDance, shareDance } from '/src/lib/utils/danceModule';
+import { dances, deleteDance } from '/src/lib/utils/danceModule';
+import { shareDance } from '/src/lib/utils/sharing';
 import Play from "svelte-material-icons/Play.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
@@ -36,7 +37,11 @@ function handleDeleteDance() {
 function handleShareDance() {
   openModal(
     async () => {
-      const res = await shareDance(dance.id);
+      const res = await shareDance({
+        id: dance.id,
+        title: dance.title,
+        skyfeed: dance.skyfeed,
+      });
       console.log(res)
       return res;
     },
