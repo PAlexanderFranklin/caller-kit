@@ -72,7 +72,6 @@ export const shareDance = async (danceRef) => {
     const result = await previous;
     return [...result, await group.reduce(async (previous, call) => {
       const result = await previous;
-      console.log(result);
       if (call.skyfeed) {
         return [...result, call];
       }

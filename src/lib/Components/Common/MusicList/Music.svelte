@@ -27,7 +27,7 @@ function handleDeleteMusic() {
     {
       action: "delete",
       acting: "deleting",
-      noun: "music",
+      text: "Are you sure you want to delete this music?",
       item: music.title,
       confirmColor: "red",
     }

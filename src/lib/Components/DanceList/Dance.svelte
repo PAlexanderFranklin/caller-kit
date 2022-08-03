@@ -27,7 +27,7 @@ function handleDeleteDance() {
     {
       action: "delete",
       acting: "deleting",
-      noun: "dance",
+      text: "Are you sure you want to delete this dance?",
       item: dance.title,
       confirmColor: "red",
     }
@@ -49,7 +49,7 @@ function handleShareDance() {
     {
       action: "share",
       acting: "sharing",
-      noun: "dance",
+      text: "Are you sure you want to share this dance? Note that this will also share any dance calls that it uses.",
       item: dance.title,
       confirmColor: "green",
     }
@@ -60,10 +60,14 @@ function handleShareDance() {
 
 <div class="Dance">
   <div class="Header">
-    <span class="HeaderTitle">{dance.title}</span>
+    <div class="HeaderTitle">
+      {dance.title}
+      {#if !dance.skyfeed}
+        <button on:click={handleShareDance}><Share color={"blue"} /></button>
+      {/if}
+    </div>
     <button on:click={handleDeleteDance}><Delete color={"red"} /></button>
     <button on:click={() => dispatch('editDance', {dance})}><Pencil color={"yellow"} /></button>
-    <button on:click={handleShareDance}><Share color={"blue"} /></button>
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
@@ -86,6 +90,8 @@ function handleShareDance() {
 
   .HeaderTitle {
     width: 50%;
+    display: flex;
+    justify-content: space-between;
   }
   hr {
     background: green;

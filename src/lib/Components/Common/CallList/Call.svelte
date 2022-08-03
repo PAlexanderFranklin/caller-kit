@@ -28,7 +28,7 @@ function handleDeleteCall() {
     {
       action: "delete",
       acting: "deleting",
-      noun: "call",
+      text: "Are you sure you want to delete this call?",
       item: call.title,
       confirmColor: "red",
     }

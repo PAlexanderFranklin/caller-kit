@@ -66,8 +66,8 @@ let confirmModal = () => {
 const modalDetails = writable({
     action: "delete",
     acting: "deleting",
-    noun: "call",
-    item: "a",
+    text: "Are you sure you want to delete this item?",
+    item: "Item 1",
     confirmColor: "blue",
 });
 setContext('modalDetails', modalDetails);
