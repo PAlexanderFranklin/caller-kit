@@ -28,16 +28,20 @@ $: {
 
 </script>
 
-<div class="DanceCreator">
+<div class="DanceViewer">
   <DanceGraph />
-  <div>
-    <SelectedCall />
+  <div class="InfoPanel">
     <DanceOptions />
+    <SelectedCall />
   </div>
 </div>
 
 <style>
-  .DanceCreator {
+  .DanceViewer {
     display: flex;
+    width: 100%;
+  }
+  .InfoPanel {
+    width: 40rem;
   }
 </style>

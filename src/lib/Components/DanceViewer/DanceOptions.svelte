@@ -7,15 +7,16 @@ const viewedDance = getContext("viewedDance")
 
 </script>
 
+<div class="sectionLabel">Dance</div>
 <div class="DanceOptions">
-  <div for="title">Name: {$viewedDance.dance.title}</div>
+  <h3>Title: {$viewedDance.dance.title}</h3>
   {#if $viewedDance.dance.music}
   {#each $viewedDance.dance.music as music}
     <MusicInfo musicRef={music} />
   {/each}
   {/if}
   {#if $viewedDance.dance.text}
-    <div for="description">Description: {$viewedDance.dance.text}</div>
+    <div>Description: {$viewedDance.dance.text}</div>
   {/if}
   <div>Duration in Beats: {$viewedDance.duration}</div>
   <Dependencies source={$viewedDance.dance} />
@@ -27,8 +28,13 @@ const viewedDance = getContext("viewedDance")
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
-    width: 20rem;
     background-color: white;
     border: 2px black solid;
+  }
+  .sectionLabel {
+    padding: 0.5rem 5rem;
+    background-color: lightgrey;
+    border: 2px solid black;
+    font-weight: 500;
   }
 </style>
