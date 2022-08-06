@@ -1,6 +1,6 @@
 <script>
 import { getContext } from "svelte";
-import MusicInfo from "../Common/Music/MusicInfo.svelte";
+import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 
 const viewedDance = getContext("viewedDance")
