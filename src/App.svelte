@@ -108,13 +108,13 @@ setContext('openModal', openModal);
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
         </p>
         {#if showDanceCreator}
-        <button on:click={() => {hideComponents(); showDanceList = true}}>Close Editor</button>
+        <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceCreator}>Close Editor</button>
         {:else}
         <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
         <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
         {/if}
-        <button on:click={() => {hideComponents(); showDanceList = true}}>My Dances</button>
-        <button on:click={() => {hideComponents(); showDanceFeed = true}}>Dance Feed</button>
+        <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceList}>My Dances</button>
+        <button on:click={() => {hideComponents(); showDanceFeed = true}} class:selectedPage={showDanceFeed}>Dance Feed</button>
         {#if showDanceList}
         <DanceList
           dances={$dances}
@@ -147,6 +147,9 @@ setContext('openModal', openModal);
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  .selectedPage {
+    background-color: greenyellow;
   }
 
   @media (min-width: 480px) {

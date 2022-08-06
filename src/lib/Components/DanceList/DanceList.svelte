@@ -21,6 +21,7 @@ $: filterText, filteredDances = dances.filter((dance) => {
 </script>
 
 <div class="DanceList">
+  <h1>Dance List</h1>
   <div>
     Search: <input type="text" bind:value={filterText} />
   </div>

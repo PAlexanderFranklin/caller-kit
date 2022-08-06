@@ -2,9 +2,10 @@
 import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 import { init as kernelInit, loginComplete, openAuthWindow } from 'libkernel';
-import { PermissionDAC } from "skynet-dacs-library";
+import { IdentityDAC, PermissionDAC } from "skynet-dacs-library";
 import { getState, calls, dances, musicList } from "./danceModule";
 
+const identityDAC = new IdentityDAC();
 const permissionDAC = new PermissionDAC();
 
 let userAuthStatus = writable(false);
@@ -94,6 +95,13 @@ function grantPermissions() {
       })
     }
   }
+}
+
+const userId = writable("");
+setContext('userId', userId);
+
+$: if (permissionsGranted) {
+  identityDAC.userID().then((id) => {$userId = id})
 }
 
 </script>

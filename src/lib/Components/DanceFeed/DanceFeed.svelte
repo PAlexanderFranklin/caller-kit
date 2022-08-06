@@ -1,11 +1,11 @@
 <script>
-import { IdentityDAC, FeedDAC } from 'skynet-dacs-library';
-import { createEventDispatcher } from 'svelte';
+import { createEventDispatcher, getContext } from 'svelte';
+import { FeedDAC } from 'skynet-dacs-library';
 import Post from './Post.svelte';
 
 export let userId = null;
+const currentUserId = getContext('userId');
 
-const identityDAC = new IdentityDAC();
 const feedDAC = new FeedDAC();
 
 let posts = [];
@@ -23,7 +23,7 @@ $: filterText, filteredPosts = posts.filter((post) => {
 })
 
 $: if (!userId) {
-  identityDAC.userID().then((id) => {userId = id});
+  feedDAC.loadPostsForUser($currentUserId, 'dances').then((res) => {posts = res});
 } else {
   feedDAC.loadPostsForUser(userId, 'dances').then((res) => {posts = res});
 }
@@ -31,6 +31,7 @@ $: if (!userId) {
 </script>
 
 <div class="DanceFeed">
+  <h1>Dance Feed</h1>
   <div>
     Search: <input type="text" bind:value={filterText} />
   </div>

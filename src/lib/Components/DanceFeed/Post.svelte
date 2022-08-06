@@ -1,5 +1,6 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
+import { FeedDAC } from 'skynet-dacs-library';
 // import { downloadDance } from '/src/lib/utils/danceModule';
 import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
@@ -10,34 +11,36 @@ import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Download from "svelte-material-icons/Download.svelte";
 
 export let post;
+console.log(post);
+
+const feedDAC = new FeedDAC();
+
 let content = post.content;
 let hiddenDetails = true;
+
+const userId = getContext('userId');
+const openModal = getContext('openModal');
   
 const dispatch = createEventDispatcher();
 
 // let openModal = getContext("openModal");
 
-// function handleShareDance() {
-//   openModal(
-//     async () => {
-//       const res = await shareDance({
-//         id: dance.id,
-//         title: dance.title,
-//         skyfeed: dance.skyfeed,
-//       });
-//       console.log(res)
-//       return res;
-//     },
-//     async () => {},
-//     {
-//       action: "share",
-//       acting: "sharing",
-//       text: "Are you sure you want to share this dance? Note that this will also share any dance calls that it uses.",
-//       item: dance.title,
-//       confirmColor: "green",
-//     }
-//   );
-// }
+function handleDeletePost() {
+  openModal(
+    async () => {
+      const res = await feedDAC.deletePost(post.ref);
+      return res;
+    },
+    async () => {},
+    {
+      action: "delete",
+      acting: "deleting",
+      text: "Are you sure you want to delete this post? This will not delete it from your module storage if it is stored there, just from your skyfeed.",
+      item: post.content?.title,
+      confirmColor: "red",
+    }
+  );
+}
 
 </script>
 
@@ -47,7 +50,9 @@ const dispatch = createEventDispatcher();
       {content.title}
       <button on:click={() => {}}><Download color={"blue"} /></button>
     </div>
-    <!-- <button on:click={handleDeleteDance}><Delete color={"red"} /></button> -->
+    {#if post.ref?.match($userId)}
+    <!-- <button on:click={handleDeletePost}><Delete color={"red"} /></button> -->
+    {/if}
     {#if hiddenDetails}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronDown color={"blue"} /></button>
     {:else}
@@ -55,6 +60,7 @@ const dispatch = createEventDispatcher();
     {/if}
     <button on:click={() => {dispatch('selectDance', {dance: content.ext?.dance})}}><Play color={"green"} /></button>
   </div>
+  {#if !hiddenDetails}
   <div class="Content">
     {#if content.ext?.dance?.music}
     {#each content.ext?.dance?.music as music}
@@ -64,9 +70,9 @@ const dispatch = createEventDispatcher();
     {#if content.ext?.dance?.text}
       <div for="description">Description: {content.ext?.dance?.text}</div>
     {/if}
-    <div>Duration in Beats: {content.ext?.dance.duration}</div>
     <Dependencies source={content.ext?.dance} />
   </div>
+  {/if}
 </div>
 <hr>
 

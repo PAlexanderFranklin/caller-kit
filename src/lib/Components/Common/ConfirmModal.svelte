@@ -49,6 +49,7 @@ function confirm() {
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 2rem;
+        max-width: 30%;
         border-radius: 1rem;
         background: #fff;
         filter: drop-shadow(0 0 10px #333);
