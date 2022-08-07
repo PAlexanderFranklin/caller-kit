@@ -34,7 +34,7 @@
 	},
 	"dependencies": {
 		"libkmodule": "^0.2.44",
-		"nanoid": "^4.0.0",
-		"skynet-dacs-library": "^0.1.9"
+		"skynet-dacs-library": "^0.1.9",
+		"uuid": "^8.3.2"
 	}
 }
