@@ -33,7 +33,7 @@ async function handleSaveDance() {
   if (userDance) {
     openModal(
       async () => {
-        const res = await updateDance(content?.ext?.dance);
+        const res = await updateDance({...content?.ext?.dance, skyfeed: post.ref});
         $dances = res.dances;
         return res;
       },
@@ -50,7 +50,7 @@ async function handleSaveDance() {
   else {
     openModal(
       async () => {
-        const res = await insertDance(content?.ext?.dance);
+        const res = await insertDance({...content?.ext?.dance, skyfeed: post.ref});
         $dances = res.dances;
         return res;
       },
