@@ -70,7 +70,7 @@ $: checkPermissions();
 function grantPermissions() {
   if (ungrantedPermissions.length > 0) {
     let req = {
-      domain: "localhost", // your app domain
+      domain: "callerkit.hns", // your app domain
       permissions: ungrantedPermissions,
     };
     const w = 640;
