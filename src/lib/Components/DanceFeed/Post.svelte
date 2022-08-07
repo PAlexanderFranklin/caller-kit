@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
 import { FeedDAC } from 'skynet-dacs-library';
-import { getDanceByRef, insertDance, updateDance } from '/src/lib/utils/danceModule';
+import { dances, getDanceByRef, insertDance, updateDance } from '/src/lib/utils/danceModule';
 import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 import Play from "svelte-material-icons/Play.svelte";
@@ -34,6 +34,7 @@ async function handleSaveDance() {
     openModal(
       async () => {
         const res = await updateDance(content?.ext?.dance);
+        $dances = res.dances;
         return res;
       },
       async () => {},
@@ -50,6 +51,7 @@ async function handleSaveDance() {
     openModal(
       async () => {
         const res = await insertDance(content?.ext?.dance);
+        $dances = res.dances;
         return res;
       },
       async () => {},
