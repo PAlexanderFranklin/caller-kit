@@ -1,10 +1,10 @@
 export interface Call {
-  id: String,
-  skyfeed?: String,
-  title: String,
-  text?: String,
-  license?: String,
-  beats?: Number,
+  id: string,
+  skyfeed?: string,
+  title: string,
+  text?: string,
+  license?: string,
+  beats?: number,
   dependencies?: Array<CallRef>,
   footwork?: CallRef,
   hold?: CallRef,
@@ -14,55 +14,55 @@ export interface Call {
 }
 
 export interface CallRef {
-  id: String,
-  title: String,
-  skyfeed?: String,
-  beats?: Number,
+  id: string,
+  title: string,
+  skyfeed?: string,
+  beats?: number,
   delay?: number,
 }
 
 export interface Dancer {
-  gender: String,
-  group: Number,
-  position: {x: Number, y: Number},
+  gender: string,
+  group: number,
+  position: {x: number, y: number},
 }
 
 export interface Formation {
-  id: String,
-  skyfeed?: String,
-  title: String,
-  text?: String,
+  id: string,
+  skyfeed?: string,
+  title: string,
+  text?: string,
   dancers?: Array<Dancer>
 }
 
 export interface FormationRef {
-  id: String,
-  title: String,
-  skyfeed?: String,
+  id: string,
+  title: string,
+  skyfeed?: string,
 }
 
 export interface Music {
-  id: String,
-  title?: String,
-  skyfeed?: String,
-  link?: String,
+  id: string,
+  title?: string,
+  skyfeed?: string,
+  link?: string,
   modifiedAt?: Date,
 }
 
 export interface MusicRef {
-  id: String,
-  title?: String,
-  skyfeed?: String,
+  id: string,
+  title?: string,
+  skyfeed?: string,
   delay?: number,
   beatsPerDanceBeat?: number,
 }
 
 export interface Dance {
-  id: String,
-  skyfeed?: String,
-  title: String,
-  text?: String,
-  license?: String,
+  id: string,
+  skyfeed?: string,
+  title: string,
+  text?: string,
+  license?: string,
   formation?: FormationRef,
   instructions: Array<Array<CallRef>>,
   music?: Array<MusicRef>,
@@ -73,7 +73,7 @@ export interface Dance {
 }
 
 export interface DanceRef {
-  id: String,
-  title: String,
-  skyfeed?: String,
+  id: string,
+  title: string,
+  skyfeed?: string,
 }

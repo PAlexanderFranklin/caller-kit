@@ -35,12 +35,14 @@ function removeCall(group, callIndex) {
 }
 
 function handleCreateDance() {
+  $viewedDance.error = null;
   $viewedDance.saving = true
   if ($viewedDance.dance.id) {
     updateDance($viewedDance.dance).then((res) => {
       $dances = res.dances;
       dispatch('save');
     }).catch((err) => {
+      $viewedDance.error = err;
       console.error(err);
     }).finally(() => {
       $viewedDance.saving = false;
@@ -54,6 +56,7 @@ function handleCreateDance() {
       };
       dispatch('save');
     }).catch((err) => {
+      $viewedDance.error = err;
       console.error(err);
     }).finally(() => {
       $viewedDance.saving = false;

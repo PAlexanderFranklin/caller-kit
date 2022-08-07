@@ -42,5 +42,6 @@ function addGroup() {
     flex-direction: column;
     overflow: scroll;
     min-width: 20rem;
+    width: 50rem;
   }
 </style>

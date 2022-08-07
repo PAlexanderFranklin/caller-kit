@@ -27,7 +27,7 @@ async function deleteGroup() {
     {
       action: "remove",
       acting: "removing",
-      noun: "group",
+      text: "Are you sure you want to remove this group?",
       item: `group ${index + 1}`,
       confirmColor: "red",
     }

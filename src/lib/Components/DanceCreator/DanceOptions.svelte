@@ -128,6 +128,9 @@ function addMusic(music) {
       musicList={$musicList}
     />
   {/if}
+  {#if $viewedDance.error}
+      <p>{$viewedDance.error}</p>
+  {/if}
   {#if $viewedDance.saving}
     <button>{$viewedDance.dance.id ? "Saving" : "Creating"} Dance...</button>
   {:else}

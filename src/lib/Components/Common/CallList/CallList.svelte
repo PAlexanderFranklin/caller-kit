@@ -1,23 +1,39 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 import Call from './Call.svelte';
-import CreateCall from "./CreateCall.svelte";
+import CallEditor from "./CallEditor.svelte";
 
 export let calls = [];
+let filteredCalls = calls;
+let filterText = "";
 
 const dispatch = createEventDispatcher();
 
-let hidden = true;
+let editingCall = false;
+
+$: filterText, filteredCalls = calls.filter((call) => {
+  let filter = new RegExp(filterText.toLowerCase());
+  return Boolean(filterText === ""
+    || call.title?.toLowerCase().match(filter)
+    || call.text?.toLowerCase().match(filter)
+    || call.footwork?.title?.toLowerCase().match(filter)
+    || call.hold?.title?.toLowerCase().match(filter)
+  )
+})
+
 </script>
 
 <div class="CallList">
-  {#if hidden}
-    <button on:click={() => {hidden = false}}>New Call</button>
+  <div>
+    Search: <input type="text" bind:value={filterText} />
+  </div>
+  {#if editingCall}
+    <CallEditor on:closeModal={() => {editingCall = false}} />
   {:else}
-    <CreateCall on:closeModal={() => {hidden = true}} />
+    <button on:click={() => {editingCall = true}}>New Call</button>
   {/if}
-  {#each calls as call (call.id)}
-      <Call call={call} on:selectCall={() => {dispatch('selectCall', { call })}} />
+  {#each filteredCalls as call (call.id)}
+    <Call call={call} on:selectCall={() => {dispatch('selectCall', { call })}} />
   {/each}
 </div>
 

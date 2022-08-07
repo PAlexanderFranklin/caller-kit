@@ -39,6 +39,7 @@ $: selectedCall, getCall();
 
 </script>
 
+<div class="sectionLabel">Call</div>
 <div class="SelectedCall">
   {#if Object.keys(selectedCall).length !== 0}
     <h4>Name: {selectedCall.title || "N/A"}</h4>
@@ -64,10 +65,18 @@ $: selectedCall, getCall();
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 0rem 3rem 3rem 3rem;
-    width: 20rem;
+    padding: 2rem;
     background-color: white;
     border: 2px solid;
     border-color: black;
+  }
+  h4 {
+    margin: 0rem;
+  }
+  .sectionLabel {
+    padding: 0.5rem 5rem;
+    background-color: lightgrey;
+    border: 2px solid black;
+    font-weight: 500;
   }
 </style>

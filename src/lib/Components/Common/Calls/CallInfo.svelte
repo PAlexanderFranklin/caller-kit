@@ -1,12 +1,15 @@
 <script>
-import { onMount } from 'svelte';
+import { createEventDispatcher, onMount } from 'svelte';
+import { clickOutside } from "/src/lib/utils/clickOutside";
 import { getCallByRef } from '/src/lib/utils/danceModule';
-import CallDependencies from './Dependencies.svelte';
+import Dependencies from './Dependencies.svelte';
 
 export let callRef = {};
 
 let sourceCall = {};
 let getting = false;
+
+const dispatch = createEventDispatcher();
 
 async function getCall() {
   getting = true;
@@ -27,15 +30,15 @@ onMount(getCall)
 
 </script>
 
-<div>
-  <div class="CallInfo">
+<div class="CallInfo" use:clickOutside on:clickOutside={() => {dispatch('closeInfo')}}>
+  <div>
     <h4>Name: {getting ? "Loading..." : sourceCall.title || ""}</h4>
     <div>Duration in Beats: {getting ? "Loading..." : sourceCall.beats || ""}</div>
     {#if sourceCall?.text || getting}
     <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
     {/if}
     {#if !getting}
-    <CallDependencies sourceCall={sourceCall} />
+    <Dependencies source={sourceCall} />
     {/if}
   </div>
 </div>

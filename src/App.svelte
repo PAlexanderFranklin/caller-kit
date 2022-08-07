@@ -8,12 +8,14 @@ import SkynetContextProvider from "/src/lib/utils/SkynetContextProvider.svelte";
 import DanceCreator from "/src/lib/Components/DanceCreator/DanceCreator.svelte";
 import ConfirmModal from "/src/lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "/src/lib/Components/DanceList/DanceList.svelte";
+import DanceFeed from "/src/lib/Components/DanceFeed/DanceFeed.svelte";
 import DanceViewer from "/src/lib/Components/DanceViewer/DanceViewer.svelte";
   
 const hash = createHistory(createHashSource());
 
 let showDanceCreator = false;
-let showDanceList = true;
+let showDanceList = false;
+let showDanceFeed = true;
 let selectedDance = null;
 
 const danceToEdit = writable({
@@ -33,6 +35,7 @@ setContext("danceToEdit", danceToEdit);
 function hideComponents() {
   showDanceCreator = false;
   showDanceList = false;
+  showDanceFeed = false;
   selectedDance = null
 }
 
@@ -66,8 +69,8 @@ let confirmModal = () => {
 const modalDetails = writable({
     action: "delete",
     acting: "deleting",
-    noun: "call",
-    item: "a",
+    text: "Are you sure you want to delete this item?",
+    item: "Item 1",
     confirmColor: "blue",
 });
 setContext('modalDetails', modalDetails);
@@ -76,14 +79,15 @@ async function openModal(confirm, cancel, details) {
   $modalDetails = {...details, acting: null};
   confirmModal = () => {
     $modalDetails.acting = details.acting;
-    confirm().then(() => {
-      showModal = false
+    confirm().catch((err) => {
+      console.error(err);
     }).finally(() => {
+      showModal = false
       $modalDetails = {...details, acting: null};
     })
   }
   closeModal = () => {
-    cancel().then(() => {
+    cancel().finally(() => {
       showModal = false
     })
   }
@@ -104,15 +108,22 @@ setContext('openModal', openModal);
           href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
         </p>
         {#if showDanceCreator}
-        <button on:click={() => {hideComponents(); showDanceList = true}}>Close Editor</button>
+        <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceCreator}>Close Editor</button>
         {:else}
         <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
         <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
         {/if}
+        <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceList}>My Dances</button>
+        <button on:click={() => {hideComponents(); showDanceFeed = true}} class:selectedPage={showDanceFeed}>Dance Feed</button>
         {#if showDanceList}
         <DanceList
           dances={$dances}
           on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}
+          on:selectDance={(event) => {selectedDance = event.detail.dance}}
+        />
+        {/if}
+        {#if showDanceFeed}
+        <DanceFeed
           on:selectDance={(event) => {selectedDance = event.detail.dance}}
         />
         {/if}
@@ -136,6 +147,9 @@ setContext('openModal', openModal);
   :root {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  .selectedPage {
+    background-color: greenyellow;
   }
 
   @media (min-width: 480px) {

@@ -1,11 +1,13 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
 import { dances, deleteDance } from '/src/lib/utils/danceModule';
+import { shareDance } from '/src/lib/utils/sharing';
 import Play from "svelte-material-icons/Play.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Pencil from "svelte-material-icons/Pencil.svelte";
+import Share from "svelte-material-icons/Share.svelte";
 
 export let dance;
 let hiddenDetails = true;
@@ -25,9 +27,31 @@ function handleDeleteDance() {
     {
       action: "delete",
       acting: "deleting",
-      noun: "dance",
+      text: "Are you sure you want to delete this dance?",
       item: dance.title,
       confirmColor: "red",
+    }
+  );
+}
+
+function handleShareDance() {
+  openModal(
+    async () => {
+      const res = await shareDance({
+        id: dance.id,
+        title: dance.title,
+        skyfeed: dance.skyfeed,
+      });
+      console.log(res)
+      return res;
+    },
+    async () => {},
+    {
+      action: "share",
+      acting: "sharing",
+      text: "Are you sure you want to share this dance? Note that this will also share any dance calls that it uses.",
+      item: dance.title,
+      confirmColor: "green",
     }
   );
 }
@@ -36,7 +60,12 @@ function handleDeleteDance() {
 
 <div class="Dance">
   <div class="Header">
-    <span class="HeaderTitle">{dance.title}</span>
+    <div class="HeaderTitle">
+      {dance.title}
+      {#if !dance.skyfeed}
+        <button on:click={handleShareDance}><Share color={"blue"} /></button>
+      {/if}
+    </div>
     <button on:click={handleDeleteDance}><Delete color={"red"} /></button>
     <button on:click={() => dispatch('editDance', {dance})}><Pencil color={"yellow"} /></button>
     {#if hiddenDetails}
@@ -61,6 +90,8 @@ function handleDeleteDance() {
 
   .HeaderTitle {
     width: 50%;
+    display: flex;
+    justify-content: space-between;
   }
   hr {
     background: green;

@@ -1,19 +1,53 @@
 <script>
-import { createEventDispatcher, getContext } from "svelte";
-import { calls } from '/src/lib/utils/danceModule';
+import { createEventDispatcher } from "svelte";
+import { createCall, updateCall, calls } from '/src/lib/utils/danceModule';
 import CallList from "./CallList.svelte";
 import CheckboxMarked from "svelte-material-icons/CheckboxMarked.svelte";
 import CheckboxMarkedOutline from "svelte-material-icons/CheckboxMarkedOutline.svelte";
 
 const dispatch = createEventDispatcher();
 
-export let verb = "Creat";
-const call = getContext("call");
+export let call = {
+  title: "",
+  text: "",
+  beats: 8,
+  isFootwork: false,
+  isHold: false,
+}
 
 let selectingFootwork = false;
 let selectingHold = false;
 
-const callingModule = getContext("callingModule");
+let callingModule = false;
+
+let displayedError = null;
+
+function handleCreateCall() {
+  displayedError = null;
+  callingModule = true;
+  if (call.id) {
+    updateCall(call).then((res) => {
+      $calls = res.calls;
+      dispatch('closeModal', {});
+    }).catch((err) => {
+      console.error(err);
+      displayedError = err;
+    }).finally(() => {
+      callingModule = false;
+    });
+  }
+  else {
+    createCall(call).then((result) => {
+      $calls = [...$calls, result.call];
+      dispatch('closeModal', {});
+    }).catch((err) => {
+      console.error(err);
+      displayedError = err;
+    }).finally(() => {
+      callingModule = false;
+    });
+  }
+}
 
 </script>
 
@@ -23,23 +57,23 @@ const callingModule = getContext("callingModule");
   <input
     id="title"
     type="text"
-    bind:value={$call.title}
+    bind:value={call.title}
   />
   <label for="description">Description: </label>
   <textarea
     id="description"
-    bind:value={$call.text}
+    bind:value={call.text}
   />
   <label for="duration">Duration in Beats: </label>
   <input
     id="duration"
     type="number"
-    bind:value={$call.beats}
+    bind:value={call.beats}
   />
   Footwork:
-  {#if $call.footwork}
+  {#if call.footwork}
   <button on:click={() => {selectingFootwork = !selectingFootwork}}>
-    {$call.footwork.title}
+    {call.footwork.title}
   </button>
   {:else if !selectingFootwork}
   <button on:click={() => {selectingFootwork = !selectingFootwork}}>
@@ -49,7 +83,7 @@ const callingModule = getContext("callingModule");
   {#if selectingFootwork}
     <button on:click={() => {
       selectingFootwork = false;
-      delete $call.footwork;
+      delete call.footwork;
     }}>
       Deselect Footwork
     </button>
@@ -58,19 +92,19 @@ const callingModule = getContext("callingModule");
       on:selectCall={(event) => {
         selectingFootwork = false;
         let newFootwork = event.detail.call
-        $call.footwork = {
+        call.footwork = {
           id: newFootwork.id,
           title: newFootwork.title,
           skyfeed: newFootwork.skyfeed,
-          beats: $call.footwork?.beats || newFootwork.beats
+          beats: call.footwork?.beats || newFootwork.beats
         };
       }}
     />
   {/if}
   Hold:
-  {#if $call.hold}
+  {#if call.hold}
   <button on:click={() => {selectingHold = !selectingHold}}>
-    {$call.hold.title}
+    {call.hold.title}
   </button>
   {:else if !selectingHold}
   <button on:click={() => {selectingHold = !selectingHold}}>
@@ -80,7 +114,7 @@ const callingModule = getContext("callingModule");
   {#if selectingHold}
     <button on:click={() => {
       selectingHold = false;
-      delete $call.hold;
+      delete call.hold;
     }}>
       Deselect Hold
     </button>
@@ -89,19 +123,19 @@ const callingModule = getContext("callingModule");
       on:selectCall={(event) => {
         selectingHold = false;
         let newHold = event.detail.call
-        $call.hold = {
+        call.hold = {
           id: newHold.id,
           title: newHold.title,
           skyfeed: newHold.skyfeed,
-          beats: $call.hold?.beats || newHold.beats
+          beats: call.hold?.beats || newHold.beats
         };
       }}
     />
   {/if}
   <div class="EditCallToggle">
     Is this call footwork?
-    <button on:click={() => {$call.isFootwork = !$call.isFootwork}}>
-      {#if $call.isFootwork}
+    <button on:click={() => {call.isFootwork = !call.isFootwork}}>
+      {#if call.isFootwork}
         <CheckboxMarked size="1.5rem" color="green" />
       {:else}
         <CheckboxMarkedOutline size="1.5rem" />
@@ -110,18 +144,21 @@ const callingModule = getContext("callingModule");
   </div>
   <div class="EditCallToggle">
     Is this call a hold?
-    <button on:click={() => {$call.isHold = !$call.isHold}}>
-      {#if $call.isHold}
+    <button on:click={() => {call.isHold = !call.isHold}}>
+      {#if call.isHold}
         <CheckboxMarked size="1.5rem" color="green" />
       {:else}
         <CheckboxMarkedOutline size="1.5rem" />
       {/if}
     </button>
   </div>
-  {#if $callingModule}
-    <button>{verb}ing Call...</button>
+  {#if displayedError}
+    <p>{displayedError}</p>
+  {/if}
+  {#if callingModule}
+    <button>{call.id ? "Saving" : "Creating"} Call...</button>
   {:else}
-    <button on:click={() => {dispatch("callModule")}}>{verb}e Call</button>
+    <button on:click={handleCreateCall}>{call.id ? "Save" : "Create"} Call</button>
   {/if}
 </div>
 
