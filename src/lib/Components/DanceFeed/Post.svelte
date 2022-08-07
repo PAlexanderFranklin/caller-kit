@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
 import { FeedDAC } from 'skynet-dacs-library';
-// import { downloadDance } from '/src/lib/utils/danceModule';
+import { getDanceByRef, insertDance, updateDance } from '/src/lib/utils/danceModule';
 import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 import Play from "svelte-material-icons/Play.svelte";
@@ -23,7 +23,46 @@ const openModal = getContext('openModal');
   
 const dispatch = createEventDispatcher();
 
-// let openModal = getContext("openModal");
+async function handleSaveDance() {
+  let userDance;
+  try {
+    userDance = await getDanceByRef({id: content?.ext?.dance?.id});
+  } catch (error) {
+    userDance = null;
+  }
+  if (userDance) {
+    openModal(
+      async () => {
+        const res = await updateDance(content?.ext?.dance);
+        return res;
+      },
+      async () => {},
+      {
+        action: "overwrite",
+        acting: "overwriting",
+        text: "A dance with the same id was found in your personal storage! If you save this dance, it will overwrite the version in your personal storage, are you sure you want to do that?",
+        item: post.content?.title,
+        confirmColor: "red",
+      }
+    );
+  }
+  else {
+    openModal(
+      async () => {
+        const res = await insertDance(content?.ext?.dance);
+        return res;
+      },
+      async () => {},
+      {
+        action: "save",
+        acting: "saving",
+        text: "Are you sure you want to save this dance to your personal module storage? None of its dependencies will be saved, you will have to save them separately if you want to avoid losing them.",
+        item: post.content?.title,
+        confirmColor: "blue",
+      }
+    );
+  }
+}
 
 function handleDeletePost() {
   openModal(
@@ -48,7 +87,7 @@ function handleDeletePost() {
   <div class="Header">
     <div class="HeaderTitle">
       {content.title}
-      <button on:click={() => {}}><Download color={"blue"} /></button>
+      <button on:click={handleSaveDance}><Download color={"blue"} /></button>
     </div>
     {#if post.ref?.match($userId)}
     <!-- <button on:click={handleDeletePost}><Delete color={"red"} /></button> -->
