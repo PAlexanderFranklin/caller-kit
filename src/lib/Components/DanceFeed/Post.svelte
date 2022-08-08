@@ -26,7 +26,8 @@ const dispatch = createEventDispatcher();
 async function handleSaveDance() {
   let userDance;
   try {
-    userDance = await getDanceByRef({id: content?.ext?.dance?.id});
+    const res = await getDanceByRef({id: content?.ext?.dance?.id});
+    userDance = res.dance;
   } catch (error) {
     userDance = null;
   }
@@ -41,8 +42,8 @@ async function handleSaveDance() {
       {
         action: "overwrite",
         acting: "overwriting",
-        text: "A dance with the same id was found in your personal storage! If you save this dance, it will overwrite the version in your personal storage, are you sure you want to do that?",
-        item: post.content?.title,
+        text: "A dance with the same id was found in your personal storage! \n If you save this dance, it will overwrite the version in your personal storage, are you sure you want to do that?",
+        item: `Title: New: ${content?.ext?.dance?.title}, Old: ${userDance.title} \n Id: ${userDance.id}`,
         confirmColor: "red",
       }
     );

@@ -62,10 +62,8 @@ function handleShareDance() {
   <div class="Header">
     <div class="HeaderTitle">
       {dance.title}
-      {#if !dance.skyfeed}
-        <button on:click={handleShareDance}><Share color={"blue"} /></button>
-      {/if}
     </div>
+    <button on:click={handleShareDance}><Share color={"blue"} /></button>
     <button on:click={handleDeleteDance}><Delete color={"red"} /></button>
     <button on:click={() => dispatch('editDance', {dance})}><Pencil color={"yellow"} /></button>
     {#if hiddenDetails}
@@ -89,7 +87,7 @@ function handleShareDance() {
   }
 
   .HeaderTitle {
-    width: 50%;
+    width: 40%;
     display: flex;
     justify-content: space-between;
   }

@@ -3,6 +3,12 @@ import { createEventDispatcher, getContext } from "svelte";
 
 const modalDetails = getContext('modalDetails');
 
+let text = [];
+let item = [];
+
+$: text = $modalDetails.text.split('\n');
+$: item = $modalDetails.item.split('\n');
+
 const dispatch = createEventDispatcher();
 
 function closeModal() {
@@ -17,8 +23,18 @@ function confirm() {
 
 <div on:click|stopPropagation={() => {$modalDetails.acting ? "" : closeModal()}} class="background"></div>
 <div class="modal">
-    <p>{$modalDetails.text || "Are you sure?"}</p>
-    <h3>{$modalDetails.item || ""}</h3>
+    {#if text}
+    {#each text as p}
+        <p>{p}</p>
+    {/each}
+    {:else}
+        <p>Are you sure?</p>
+    {/if}
+    {#if item}
+    {#each item as h}
+        <h4>{h}</h4>
+    {/each}
+    {/if}
     <div class="buttons">
         {#if $modalDetails.acting}
         <button class="confirm confirming" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.acting}</button>
