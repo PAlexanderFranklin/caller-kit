@@ -3,7 +3,7 @@ import { setContext } from "svelte";
 import { writable } from "svelte/store";
 import DanceGraph from "/src/lib/Components/Common/DanceGraph/DanceGraph.svelte";
 import SelectedCall from "./SelectedCall.svelte";
-import DanceOptions from "./DanceOptions.svelte";
+import DanceOptions from "/src/lib/Components/Common/DanceGraph/DanceOptions.svelte";
 
 export let dance = false;
 
