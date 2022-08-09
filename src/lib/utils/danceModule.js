@@ -17,6 +17,16 @@ export const getState = async () => {
   }
 }
 
+export const createCall = async (call) => {
+  const [result, err] = await callModule(danceModule, 'createCall', {call});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const getCallByRef = async (call) => {
   const [result, err] = await callModule(danceModule, 'getCallByRef', {call});
   if (err) {
@@ -27,8 +37,8 @@ export const getCallByRef = async (call) => {
   }
 }
 
-export const createCall = async (call) => {
-  const [result, err] = await callModule(danceModule, 'createCall', {call});
+export const insertCall = async (call) => {
+  const [result, err] = await callModule(danceModule, 'insertCall', {call});
   if (err) {
     throw err;
   }
@@ -67,6 +77,16 @@ export const shareCall = async (id) => {
   }
 }
 
+export const createDance = async (dance) => {
+  const [result, err] = await callModule(danceModule, 'createDance', {dance});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const getDanceByRef = async (dance) => {
   const [result, err] = await callModule(danceModule, 'getDanceByRef', {dance});
   if (err) {
@@ -77,8 +97,8 @@ export const getDanceByRef = async (dance) => {
   }
 }
 
-export const createDance = async (dance) => {
-  const [result, err] = await callModule(danceModule, 'createDance', {dance});
+export const insertDance = async (dance) => {
+  const [result, err] = await callModule(danceModule, 'insertDance', {dance});
   if (err) {
     throw err;
   }
@@ -117,6 +137,16 @@ export const shareDance = async (id) => {
   }
 }
 
+export const createMusic = async (music) => {
+  const [result, err] = await callModule(danceModule, 'createMusic', {music});
+  if (err) {
+    throw err;
+  }
+  else {
+    return result;
+  }
+}
+
 export const getMusicByRef = async (music) => {
   const [result, err] = await callModule(danceModule, 'getMusicByRef', {music});
   if (err) {
@@ -127,8 +157,8 @@ export const getMusicByRef = async (music) => {
   }
 }
 
-export const createMusic = async (music) => {
-  const [result, err] = await callModule(danceModule, 'createMusic', {music});
+export const insertMusic = async (music) => {
+  const [result, err] = await callModule(danceModule, 'insertMusic', {music});
   if (err) {
     throw err;
   }

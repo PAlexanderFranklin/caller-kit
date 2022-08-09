@@ -13,7 +13,7 @@ export const shareCall = async (callRef) => {
 
   // if call to share not found, error.
   if (!sharedCall) {
-    throw `call with id ${callRef.id} not found.`
+    throw `call with id ${callRef.id} ${callRef.skyfeed ? `and skyfeed URI ${callRef.skyfeed}` : ""} not found.`
   }
 
   // If no skyfeed address was given but one is found, return the found reference.

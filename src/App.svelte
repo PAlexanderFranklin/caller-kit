@@ -5,11 +5,11 @@ import { Router, Route, createHistory } from "svelte-navigator";
 import { dances } from '/src/lib/utils/danceModule';
 import createHashSource from "/src/lib/utils/hashHistory.js";
 import SkynetContextProvider from "/src/lib/utils/SkynetContextProvider.svelte";
-import DanceCreator from "/src/lib/Components/DanceCreator/DanceCreator.svelte";
+import DanceCreator from "/src/lib/Components/DanceCreator.svelte";
 import ConfirmModal from "/src/lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "/src/lib/Components/DanceList/DanceList.svelte";
 import DanceFeed from "/src/lib/Components/DanceFeed/DanceFeed.svelte";
-import DanceViewer from "/src/lib/Components/DanceViewer/DanceViewer.svelte";
+import DanceViewer from "/src/lib/Components/DanceViewer.svelte";
   
 const hash = createHistory(createHashSource());
 
@@ -46,7 +46,7 @@ function editDance(dance) {
         []
       ],
       music: [],
-      ...dance
+      ...JSON.parse(JSON.stringify(dance))
     },
     selection: {group: 0, call: 0, delay: true},
     duration: 0,
@@ -63,7 +63,7 @@ let closeModal = () => {
 };
 
 let confirmModal = () => {
-  showModal = false;
+  closeModal();
 };
 
 const modalDetails = writable({
@@ -75,20 +75,27 @@ const modalDetails = writable({
 });
 setContext('modalDetails', modalDetails);
 
-async function openModal(confirm, cancel, details) {
+async function openModal(confirm, cleanUp, details) {
   $modalDetails = {...details, acting: null};
-  confirmModal = () => {
-    $modalDetails.acting = details.acting;
-    confirm().catch((err) => {
-      console.error(err);
-    }).finally(() => {
+  closeModal = () => {
+    cleanUp().finally(() => {
       showModal = false
-      $modalDetails = {...details, acting: null};
     })
   }
-  closeModal = () => {
-    cancel().finally(() => {
-      showModal = false
+  confirmModal = () => {
+    $modalDetails.acting = details.acting;
+    confirm().then(() => {
+      closeModal();
+    }).catch((err) => {
+      $modalDetails = {
+        ...details,
+        action: "Ok",
+        text: `Something went wrong, here's the error: ${err}`,
+        confirmColor: "blue",
+      };
+      confirmModal = () => {closeModal()};
+    }).finally(() => {
+      $modalDetails = {...$modalDetails, acting: null};
     })
   }
   showModal = true;

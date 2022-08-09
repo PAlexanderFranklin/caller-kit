@@ -3,8 +3,8 @@ import { createEventDispatcher, getContext, setContext } from "svelte";
 import { calls, dances, createDance, updateDance } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 import DanceGraph from "/src/lib/Components/Common/DanceGraph/DanceGraph.svelte";
-import SelectedCall from "./SelectedCall.svelte";
-import DanceOptions from "./DanceOptions.svelte";
+import SelectedCall from "/src/lib/Components/Common/DanceGraph/SelectedCall.svelte";
+import DanceOptions from "/src/lib/Components/Common/DanceGraph/DanceOptions.svelte";
 
 const dispatch = createEventDispatcher();
 
@@ -75,8 +75,8 @@ function handleCreateDance() {
     on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}}
   />
   <div>
-    <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
     <DanceOptions on:createDance={handleCreateDance} />
+    <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
   </div>
 </div>
 

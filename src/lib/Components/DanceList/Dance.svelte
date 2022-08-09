@@ -42,16 +42,16 @@ function handleShareDance() {
         title: dance.title,
         skyfeed: dance.skyfeed,
       });
-      console.log(res)
+      console.log("shared:", res)
       return res;
     },
     async () => {},
     {
       action: "share",
       acting: "sharing",
-      text: "Are you sure you want to share this dance? Note that this will also share any dance calls that it uses.",
+      text: "Are you sure you want to share this dance? \n Note that this will also share any dance calls and music that it uses, and they will be permanently public.",
       item: dance.title,
-      confirmColor: "green",
+      confirmColor: "blue",
     }
   );
 }
@@ -62,10 +62,8 @@ function handleShareDance() {
   <div class="Header">
     <div class="HeaderTitle">
       {dance.title}
-      {#if !dance.skyfeed}
-        <button on:click={handleShareDance}><Share color={"blue"} /></button>
-      {/if}
     </div>
+    <button on:click={handleShareDance}><Share color={"blue"} /></button>
     <button on:click={handleDeleteDance}><Delete color={"red"} /></button>
     <button on:click={() => dispatch('editDance', {dance})}><Pencil color={"yellow"} /></button>
     {#if hiddenDetails}
@@ -89,7 +87,7 @@ function handleShareDance() {
   }
 
   .HeaderTitle {
-    width: 50%;
+    width: 40%;
     display: flex;
     justify-content: space-between;
   }

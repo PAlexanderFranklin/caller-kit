@@ -3,6 +3,12 @@ import { createEventDispatcher, getContext } from "svelte";
 
 const modalDetails = getContext('modalDetails');
 
+let text = [];
+let item = [];
+
+$: text = $modalDetails.text?.split('\n') || null;
+$: item = $modalDetails.item?.split('\n') || null;
+
 const dispatch = createEventDispatcher();
 
 function closeModal() {
@@ -17,8 +23,18 @@ function confirm() {
 
 <div on:click|stopPropagation={() => {$modalDetails.acting ? "" : closeModal()}} class="background"></div>
 <div class="modal">
-    <p>{$modalDetails.text || "Are you sure?"}</p>
-    <h3>{$modalDetails.item || ""}</h3>
+    {#if text}
+    {#each text as p}
+        <p>{p}</p>
+    {/each}
+    {:else}
+        <p>Are you sure?</p>
+    {/if}
+    {#if item}
+    {#each item as h}
+        <h4>{h}</h4>
+    {/each}
+    {/if}
     <div class="buttons">
         {#if $modalDetails.acting}
         <button class="confirm confirming" style="background-color: {$modalDetails.confirmColor ? $modalDetails.confirmColor : "red"};">{$modalDetails.acting}</button>
@@ -32,7 +48,7 @@ function confirm() {
 <style>
     .background {
         position: fixed;
-        z-index: 1;
+        z-index: 6;
         top: 0;
         left: 0;
         width: 100vw;
@@ -44,7 +60,7 @@ function confirm() {
         display: flex;
         flex-direction: column;
         align-items: center;
-        z-index: 2;
+        z-index: 7;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);

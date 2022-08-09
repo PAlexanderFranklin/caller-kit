@@ -1,5 +1,5 @@
 import { addHandler, handleMessage, log, createIndependentFileSmall, getSeed, ERR_NOT_EXISTS} from 'libkmodule';
-import { nanoid } from 'nanoid';
+import { v4 as uuid } from 'uuid';
 import { jsonToArray, arrayToJson, openFile, readData } from './helpers';
 import * as myFeedDac from './feedDAC';
 
@@ -64,6 +64,30 @@ const handleGetState = (aq: ActiveQuery) => {
   });
 }
 
+const handleCreateCall = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if ('call' in aq.callerInput) {
+      const call:any = aq.callerInput.call
+      if (!call.title) {
+        aq.reject('No title found, call not created.');
+        return
+      }
+      const newCall:Call = {
+        ...call,
+        id: uuid(),
+        license: call.license || "CC0",
+        modifiedAt: (Date.now() / 1000),
+      };
+      setCalls([...calls, newCall]).then(() => {
+        aq.respond({call: newCall, calls});
+      })
+    }
+    else {
+      aq.reject('callerinput.call must be defined for "createCall"');
+    }
+  });
+}
+
 const handleGetCallByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.call?.id === 'string') {
     if (aq.callerInput.call.skyfeed) {
@@ -99,26 +123,32 @@ const handleGetCallByRef = (aq: ActiveQuery) => {
   }
 };
 
-const handleCreateCall = (aq: ActiveQuery) => {
+const handleInsertCall = (aq: ActiveQuery) => {
   initializeModule().then(() => {
     if ('call' in aq.callerInput) {
       const call:any = aq.callerInput.call
-      if (!call.title) {
-        aq.reject('No title found, call not created.');
+      if (!call.id) {
+        aq.reject('No id found, call not inserted.');
         return
       }
-      const newCall:Call = {
-        ...call,
-        id: nanoid(),
-        license: call.license || "CC0",
-        modifiedAt: (Date.now() / 1000),
-      };
-      setCalls([...calls, newCall]).then(() => {
-        aq.respond({call: newCall, calls});
-      })
+      if (!call.title) {
+        aq.reject('No title found, call not inserted.');
+        return
+      }
+      const matchedCall = calls.filter(({ id, skyfeed }) => {
+        return id === call.id; // && skyfeed === call.skyfeed;
+      });
+
+      if (matchedCall.length) {
+        aq.reject(`Call already has id ${call.id}, call not inserted.`);
+      } else {
+        setCalls([...calls, call]).then(() => {
+          aq.respond({call, calls});
+        })
+      }
     }
     else {
-      aq.reject('callerinput.call must be defined for "createCall"');
+      aq.reject('callerinput.call must be defined for "insertCall"');
     }
   });
 }
@@ -257,6 +287,34 @@ const setDances = async (newDances: Array<Dance>) => {
   return await setState();
 }
 
+const handleCreateDance = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if ('dance' in aq.callerInput) {
+      const dance:any = aq.callerInput.dance
+      if (!dance.title) {
+        aq.reject('No title found, dance not created.');
+        return
+      }
+      if (!dance.instructions) {
+        aq.reject('No instructions found, dance not created.');
+        return
+      }
+      const newDance:Dance = {
+        ...dance,
+        id: uuid(),
+        license: dance.license || "CC0",
+        modifiedAt: (Date.now() / 1000),
+      };
+      setDances([...dances, newDance]).then(() => {
+        aq.respond({dance: newDance});
+      })
+    }
+    else {
+      aq.reject('callerinput.dance must be defined for "createDance"');
+    }
+  });
+}
+
 const handleGetDanceByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.dance?.id === 'string') {
     if (aq.callerInput.dance.skyfeed) {
@@ -292,30 +350,36 @@ const handleGetDanceByRef = (aq: ActiveQuery) => {
   }
 };
 
-const handleCreateDance = (aq: ActiveQuery) => {
+const handleInsertDance = (aq: ActiveQuery) => {
   initializeModule().then(() => {
     if ('dance' in aq.callerInput) {
       const dance:any = aq.callerInput.dance
+      if (!dance.id) {
+        aq.reject('No id found, dance not inserted.');
+        return
+      }
       if (!dance.title) {
-        aq.reject('No title found, dance not created.');
+        aq.reject('No title found, dance not inserted.');
         return
       }
       if (!dance.instructions) {
-        aq.reject('No instructions found, dance not created.');
+        aq.reject('No instructions found, dance not inserted.');
         return
       }
-      const newDance:Dance = {
-        ...dance,
-        id: nanoid(),
-        license: dance.license || "CC0",
-        modifiedAt: (Date.now() / 1000),
-      };
-      setDances([...dances, newDance]).then(() => {
-        aq.respond({dance: newDance});
-      })
+      const matchedDance = dances.filter(({ id, skyfeed }) => {
+        return id === dance.id; // && skyfeed === dance.skyfeed;
+      });
+
+      if (matchedDance.length) {
+        aq.reject(`Dance already has id ${dance.id}, dance not inserted.`);
+      } else {
+        setDances([...dances, dance]).then(() => {
+          aq.respond({dance, dances});
+        })
+      }
     }
     else {
-      aq.reject('callerinput.dance must be defined for "createDance"');
+      aq.reject('callerinput.dance must be defined for "insertDance"');
     }
   });
 }
@@ -483,6 +547,29 @@ const setMusicList = async (newMusicList: Array<Music>) => {
   return await setState();
 }
 
+const handleCreateMusic = (aq: ActiveQuery) => {
+  initializeModule().then(() => {
+    if ('music' in aq.callerInput) {
+      const music:any = aq.callerInput.music
+      if (!music.title) {
+        aq.reject('No title found, music not created.');
+        return
+      }
+      const newMusic:Music = {
+        ...music,
+        id: uuid(),
+        modifiedAt: (Date.now() / 1000),
+      };
+      setMusicList([...musicList, newMusic]).then(() => {
+        aq.respond({music: newMusic});
+      })
+    }
+    else {
+      aq.reject('callerinput.music must be defined for "createMusic"');
+    }
+  });
+}
+
 const handleGetMusicByRef = (aq: ActiveQuery) => {
   if (typeof aq.callerInput?.music?.id === 'string') {
     if (aq.callerInput.music.skyfeed) {
@@ -518,25 +605,32 @@ const handleGetMusicByRef = (aq: ActiveQuery) => {
   }
 };
 
-const handleCreateMusic = (aq: ActiveQuery) => {
+const handleInsertMusic = (aq: ActiveQuery) => {
   initializeModule().then(() => {
     if ('music' in aq.callerInput) {
       const music:any = aq.callerInput.music
-      if (!music.link) {
-        aq.reject('No link found, music not created.');
+      if (!music.id) {
+        aq.reject('No id found, music not inserted.');
         return
       }
-      const newMusic:Music = {
-        ...music,
-        id: nanoid(),
-        modifiedAt: (Date.now() / 1000),
-      };
-      setMusicList([...musicList, newMusic]).then(() => {
-        aq.respond({music: newMusic});
-      })
+      if (!music.title) {
+        aq.reject('No title found, music not inserted.');
+        return
+      }
+      const matchedMusic = musicList.filter(({ id, skyfeed }) => {
+        return id === music.id; // && skyfeed === music.skyfeed;
+      });
+
+      if (matchedMusic.length) {
+        aq.reject(`Music already has id ${music.id}, music not inserted.`);
+      } else {
+        setMusicList([...musicList, music]).then(() => {
+          aq.respond({music, musicList});
+        })
+      }
     }
     else {
-      aq.reject('callerinput.music must be defined for "createMusic"');
+      aq.reject('callerinput.music must be defined for "insertMusic"');
     }
   });
 }
@@ -666,18 +760,21 @@ addHandler('getState', handleGetState)
 
 addHandler('createCall', handleCreateCall);
 addHandler('getCallByRef', handleGetCallByRef)
+addHandler('insertCall', handleInsertCall);
 addHandler('updateCall', handleUpdateCall)
 addHandler('deleteCall', handleDeleteCall)
 addHandler('shareCall', handleShareCall)
 
 addHandler('createDance', handleCreateDance);
 addHandler('getDanceByRef', handleGetDanceByRef)
+addHandler('insertDance', handleInsertDance);
 addHandler('updateDance', handleUpdateDance)
 addHandler('deleteDance', handleDeleteDance)
 addHandler('shareDance', handleShareDance)
 
 addHandler('createMusic', handleCreateMusic);
 addHandler('getMusicByRef', handleGetMusicByRef)
+addHandler('insertMusic', handleInsertMusic);
 addHandler('updateMusic', handleUpdateMusic)
 addHandler('deleteMusic', handleDeleteMusic)
 addHandler('shareMusic', handleShareMusic)
