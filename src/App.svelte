@@ -5,11 +5,11 @@ import { Router, Route, createHistory } from "svelte-navigator";
 import { dances } from '/src/lib/utils/danceModule';
 import createHashSource from "/src/lib/utils/hashHistory.js";
 import SkynetContextProvider from "/src/lib/utils/SkynetContextProvider.svelte";
-import DanceCreator from "/src/lib/Components/DanceCreator/DanceCreator.svelte";
+import DanceCreator from "/src/lib/Components/DanceCreator.svelte";
 import ConfirmModal from "/src/lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "/src/lib/Components/DanceList/DanceList.svelte";
 import DanceFeed from "/src/lib/Components/DanceFeed/DanceFeed.svelte";
-import DanceViewer from "/src/lib/Components/DanceViewer/DanceViewer.svelte";
+import DanceViewer from "/src/lib/Components/DanceViewer.svelte";
   
 const hash = createHistory(createHashSource());
 

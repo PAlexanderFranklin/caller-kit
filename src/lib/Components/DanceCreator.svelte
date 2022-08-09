@@ -3,7 +3,7 @@ import { createEventDispatcher, getContext, setContext } from "svelte";
 import { calls, dances, createDance, updateDance } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 import DanceGraph from "/src/lib/Components/Common/DanceGraph/DanceGraph.svelte";
-import SelectedCall from "./SelectedCall.svelte";
+import SelectedCall from "/src/lib/Components/Common/DanceGraph/SelectedCall.svelte";
 import DanceOptions from "/src/lib/Components/Common/DanceGraph/DanceOptions.svelte";
 
 const dispatch = createEventDispatcher();

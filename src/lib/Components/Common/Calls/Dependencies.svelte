@@ -26,6 +26,8 @@ let showHold = false;
       <ChevronDown color={"blue"} />
     </button>
   {/if}
+{:else}
+    <button>No Footwork</button>
 {/if}
 {#if source?.hold}
   {#if showHold}
@@ -42,5 +44,7 @@ let showHold = false;
       <ChevronDown color={"blue"} />
     </button>
   {/if}
+{:else}
+    <button>No Hold</button>
 {/if}
 </div>
