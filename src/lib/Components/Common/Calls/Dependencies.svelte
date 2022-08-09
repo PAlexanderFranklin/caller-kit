@@ -1,4 +1,5 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import CallInfo from './CallInfo.svelte';
@@ -7,6 +8,8 @@ export let source = {};
 
 let showFootwork = false;
 let showHold = false;
+
+const dispatch = createEventDispatcher();
 
 </script>
 
@@ -17,7 +20,11 @@ let showHold = false;
       Footwork: {source.footwork.title}
       <ChevronUp color={"blue"} />
     </button>
-    <CallInfo callRef={source.footwork} on:closeInfo={() => {showFootwork = false}} />
+    <CallInfo
+      callRef={source.footwork}
+      on:closeInfo={() => {showFootwork = false; dispatch('setAllowClose', true)}}
+      on:setAllowClose
+    />
   {:else}
     <button on:click|preventDefault={() => {
       showFootwork = !showFootwork;
@@ -35,7 +42,11 @@ let showHold = false;
       Hold: {source.hold.title}
       <ChevronUp color={"blue"} />
     </button>
-    <CallInfo callRef={source.hold} on:closeInfo={() => {showHold = false}} />
+    <CallInfo
+      callRef={source.hold}
+      on:closeInfo={() => {showHold = false; dispatch('setAllowClose', true)}}
+      on:setAllowClose
+    />
   {:else}
     <button on:click|preventDefault={() => {
       showHold = !showHold;

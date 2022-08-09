@@ -63,7 +63,7 @@ let closeModal = () => {
 };
 
 let confirmModal = () => {
-  showModal = false;
+  closeModal();
 };
 
 const modalDetails = writable({
@@ -75,12 +75,17 @@ const modalDetails = writable({
 });
 setContext('modalDetails', modalDetails);
 
-async function openModal(confirm, cancel, details) {
+async function openModal(confirm, cleanUp, details) {
   $modalDetails = {...details, acting: null};
+  closeModal = () => {
+    cleanUp().finally(() => {
+      showModal = false
+    })
+  }
   confirmModal = () => {
     $modalDetails.acting = details.acting;
     confirm().then(() => {
-      showModal = false;
+      closeModal();
     }).catch((err) => {
       $modalDetails = {
         ...details,
@@ -88,15 +93,9 @@ async function openModal(confirm, cancel, details) {
         text: `Something went wrong, here's the error: ${err}`,
         confirmColor: "blue",
       };
-      confirmModal = () => {showModal = false};
-      closeModal = () => {showModal = false};
+      confirmModal = () => {closeModal()};
     }).finally(() => {
       $modalDetails = {...$modalDetails, acting: null};
-    })
-  }
-  closeModal = () => {
-    cancel().finally(() => {
-      showModal = false
     })
   }
   showModal = true;

@@ -12,8 +12,14 @@ const openModal = getContext("openModal");
 let sourceCall = {};
 let getting = false;
 let getError = false;
+let allowClose = true;
 
 const dispatch = createEventDispatcher();
+
+function setAllowClose(allow) {
+  allowClose = allow;
+  dispatch('setAllowClose', allow)
+}
 
 async function getCall() {
   getting = true;
@@ -33,6 +39,7 @@ async function getCall() {
 }
 
 async function handleSaveCall() {
+  setAllowClose(false);
   let userCall;
   try {
     const res = await getCallByRef({id: sourceCall.id});
@@ -47,7 +54,9 @@ async function handleSaveCall() {
         $calls = res.calls;
         return res;
       },
-      async () => {},
+      async () => {
+        setAllowClose(true);
+      },
       {
         action: "overwrite",
         acting: "overwriting",
@@ -64,7 +73,9 @@ async function handleSaveCall() {
         $calls = res.calls;
         return res;
       },
-      async () => {},
+      async () => {
+        setAllowClose(true);
+      },
       {
         action: "save",
         acting: "saving",
@@ -80,8 +91,9 @@ onMount(getCall)
 
 </script>
 
-<div class="CallInfo" use:clickOutside on:clickOutside={() => {dispatch('closeInfo')}}>
-  <div>
+<div class="AbsoluteContainer">
+  <div class="CallInfo" use:clickOutside on:clickOutside={() => {allowClose ? dispatch('closeInfo') : ""}}>
+    <button on:click={() => {dispatch('closeInfo')}}>X</button>
     {#if getError}
       <p>
         This call failed to fetch any information. This could be because
@@ -99,15 +111,17 @@ onMount(getCall)
     <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
     {/if}
     {#if !getting}
-    <Dependencies source={sourceCall} />
+    <Dependencies source={sourceCall} on:setAllowClose={(event) => {setAllowClose(event.detail)}} />
     {/if}
   </div>
 </div>
 
 <style>
-  .CallInfo {
+  .AbsoluteContainer {
     position: absolute;
     z-index: 2;
+  }
+  .CallInfo {
     display: flex;
     flex-direction: column;
     gap: 1rem;

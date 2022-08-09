@@ -49,7 +49,7 @@ function handleShareDance() {
     {
       action: "share",
       acting: "sharing",
-      text: "Are you sure you want to share this dance? Note that this will also share any dance calls that it uses.",
+      text: "Are you sure you want to share this dance? \n Note that this will also share any dance calls and music that it uses, and they will be permanently public.",
       item: dance.title,
       confirmColor: "blue",
     }
