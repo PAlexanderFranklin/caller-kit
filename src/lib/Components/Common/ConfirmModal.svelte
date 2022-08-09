@@ -6,8 +6,8 @@ const modalDetails = getContext('modalDetails');
 let text = [];
 let item = [];
 
-$: text = $modalDetails.text.split('\n');
-$: item = $modalDetails.item.split('\n');
+$: text = $modalDetails.text?.split('\n') || null;
+$: item = $modalDetails.item?.split('\n') || null;
 
 const dispatch = createEventDispatcher();
 

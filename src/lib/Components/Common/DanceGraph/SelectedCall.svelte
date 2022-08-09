@@ -11,6 +11,7 @@ let checkCall = {};
 let selectedCall = {};
 let sourceCall = {};
 let getting = false;
+let getError = false;
 
 $: {
   try {
@@ -30,8 +31,9 @@ async function getCall() {
       }
     }
     catch (err) {
-      console.log(err);
+      console.error(err);
       sourceCall = {}
+      getError = true;
     }
   }
   getting = false;
@@ -48,6 +50,15 @@ function removeCall(groupIndex, callIndex) {
 <div class="SelectedCall">
   {#if Object.keys(selectedCall).length !== 0}
     {#if !$viewedDance.selection.delay}
+      {#if getError}
+        <p>
+          This call failed to fetch any information. This could be because
+          either your internet or Skynet is not working properly, but it
+          could also be because the call it references has been deleted.
+          If the latter is the case, you should replace this call on this
+          dance.
+        </p>
+      {/if}
       <h4>Name: {selectedCall.title || "N/A"}</h4>
       {#if $viewedDance.editing}
         <label for="beatsInDelay">Delay in Beats: </label>
@@ -79,7 +90,7 @@ function removeCall(groupIndex, callIndex) {
       <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
       <Dependencies source={sourceCall} />
       {#if $viewedDance.editing}
-        <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}}>Remove</button>
+        <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}} class="RemoveButton">Remove</button>
       {/if}
     {:else}
       <label for="beatsInDelay">Delay in Beats: </label>
@@ -114,5 +125,8 @@ function removeCall(groupIndex, callIndex) {
     background-color: lightgrey;
     border: 2px solid black;
     font-weight: 500;
+  }
+  .RemoveButton {
+    margin-top: 1rem;
   }
 </style>

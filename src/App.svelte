@@ -91,7 +91,7 @@ async function openModal(confirm, cancel, details) {
       confirmModal = () => {showModal = false};
       closeModal = () => {showModal = false};
     }).finally(() => {
-      $modalDetails = {...details, acting: null};
+      $modalDetails = {...$modalDetails, acting: null};
     })
   }
   closeModal = () => {

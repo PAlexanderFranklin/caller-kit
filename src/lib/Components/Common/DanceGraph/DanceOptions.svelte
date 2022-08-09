@@ -1,6 +1,6 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
-import { calls, musicList } from '/src/lib/utils/danceModule';
+import { calls, getCallByRef, musicList } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 import Close from "svelte-material-icons/Close.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
@@ -9,7 +9,8 @@ import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 
 const dispatch = createEventDispatcher();
 
-const viewedDance = getContext("viewedDance")
+const viewedDance = getContext("viewedDance");
+const openModal = getContext("openModal");
 
 let selectingFootwork = false;
 let selectingHold = false;
@@ -25,6 +26,46 @@ function addMusic(music) {
     }
   ];
   selectingMusic = false;
+}
+
+async function updateDanceCalls() {
+  openModal(
+    async () => {
+      $viewedDance.dance.instructions = await Promise.all(
+        $viewedDance.dance.instructions.map(async (group) => {
+          return await Promise.all(
+            group.map(async (callRef) => {
+              try {
+                const res = await getCallByRef({id: callRef.id});
+                return {
+                  id: res.call.id,
+                  title: res.call.title,
+                  skyfeed: res.call.skyfeed,
+                  beats: callRef.beats,
+                  delay: callRef.delay
+                }
+              }
+              catch {
+                return callRef;
+              }
+            })
+          )
+        })
+      )
+      $viewedDance.dance.instructions = [...$viewedDance.dance.instructions];
+    },
+    async () => {},
+    {
+      action: "update",
+      acting: "updating",
+      text: `
+        Are you sure you want to update the call references on this dance?
+        This will replace every call in your dance with the version in your personal module storage if you have one.
+      `,
+      item: null,
+      confirmColor: "blue",
+    }
+  );
 }
 
 </script>
@@ -137,7 +178,8 @@ function addMusic(music) {
     {#if $viewedDance.saving}
       <button>{$viewedDance.dance.id ? "Saving" : "Creating"} Dance...</button>
     {:else}
-    <button on:click={() => {dispatch("createDance")}}>{$viewedDance.dance.id ? "Save" : "Create"} Dance</button>
+      <button on:click={updateDanceCalls} class="UpdateCalls">Update Calls</button>
+      <button on:click={() => {dispatch("createDance")}}>{$viewedDance.dance.id ? "Save" : "Create"} Dance</button>
     {/if}
   {:else}
     <h3>Title: {$viewedDance.dance.title}</h3>
@@ -169,5 +211,8 @@ function addMusic(music) {
     background-color: lightgrey;
     border: 2px solid black;
     font-weight: 500;
+  }
+  .UpdateCalls {
+    margin: 1rem 0rem;
   }
 </style>
