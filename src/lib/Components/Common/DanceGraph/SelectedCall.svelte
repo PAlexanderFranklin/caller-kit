@@ -1,11 +1,13 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
-import { getCallByRef } from '/src/lib/utils/danceModule';
+import { calls, getCallByRef, insertCall, updateCall } from '/src/lib/utils/danceModule';
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
+import Download from "svelte-material-icons/Download.svelte";
 
 const dispatch = createEventDispatcher();
 
 const viewedDance = getContext("viewedDance");
+const openModal = getContext("openModal");
 
 let checkCall = {};
 let selectedCall = {};
@@ -23,6 +25,7 @@ $: {
 
 async function getCall() {
   getting = true;
+  getError = false;
   if (selectedCall.id) {
     try {
       const res = await getCallByRef(selectedCall);
@@ -39,6 +42,50 @@ async function getCall() {
   getting = false;
 }
 $: selectedCall, getCall();
+
+async function handleSaveCall() {
+  let userCall;
+  try {
+    const res = await getCallByRef({id: sourceCall.id});
+    userCall = res.call;
+  } catch (error) {
+    userCall = null;
+  }
+  if (userCall) {
+    openModal(
+      async () => {
+        const res = await updateCall(sourceCall);
+        $calls = res.calls;
+        return res;
+      },
+      async () => {},
+      {
+        action: "overwrite",
+        acting: "overwriting",
+        text: "A call with the same id was found in your personal storage! \n If you save this call, it will overwrite the version in your personal storage, are you sure you want to do that?",
+        item: `Title: New: ${sourceCall.title}, Old: ${userCall.title} \n Id: ${sourceCall.id}`,
+        confirmColor: "red",
+      }
+    );
+  }
+  else {
+    openModal(
+      async () => {
+        const res = await insertCall(sourceCall);
+        $calls = res.calls;
+        return res;
+      },
+      async () => {},
+      {
+        action: "save",
+        acting: "saving",
+        text: "Are you sure you want to save this call to your personal module storage? None of its dependencies will be saved, you will have to save them separately if you want to avoid losing them.",
+        item: sourceCall.title,
+        confirmColor: "blue",
+      }
+    );
+  }
+}
 
 function removeCall(groupIndex, callIndex) {
   dispatch('removeCall', {groupIndex: groupIndex, callIndex: callIndex});
@@ -58,6 +105,8 @@ function removeCall(groupIndex, callIndex) {
           If the latter is the case, you should replace this call on this
           dance.
         </p>
+      {:else if sourceCall && sourceCall.skyfeed}
+        <button on:click={handleSaveCall}><Download color={"blue"} /></button>
       {/if}
       <h4>Name: {selectedCall.title || "N/A"}</h4>
       {#if $viewedDance.editing}
@@ -111,7 +160,7 @@ function removeCall(groupIndex, callIndex) {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 0rem 3rem 3rem 3rem;
+    padding: 2rem;
     width: 20rem;
     background-color: white;
     border: 2px solid;

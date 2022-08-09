@@ -42,7 +42,7 @@ function handleShareDance() {
         title: dance.title,
         skyfeed: dance.skyfeed,
       });
-      console.log(res)
+      console.log("shared:", res)
       return res;
     },
     async () => {},
@@ -51,7 +51,7 @@ function handleShareDance() {
       acting: "sharing",
       text: "Are you sure you want to share this dance? Note that this will also share any dance calls that it uses.",
       item: dance.title,
-      confirmColor: "green",
+      confirmColor: "blue",
     }
   );
 }
