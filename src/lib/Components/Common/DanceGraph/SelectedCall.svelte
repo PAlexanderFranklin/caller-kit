@@ -68,7 +68,6 @@ function removeCall(groupIndex, callIndex) {
             }
           }}
         />
-        <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}}>Remove</button>
       {:else}
         {#if selectedCall.delay}
         <div>Delay in Beats: {selectedCall.delay}</div>
@@ -79,6 +78,9 @@ function removeCall(groupIndex, callIndex) {
       {/if}
       <p>Description: {getting ? "Loading..." : sourceCall?.text || ""}</p>
       <Dependencies source={sourceCall} />
+      {#if $viewedDance.editing}
+        <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}}>Remove</button>
+      {/if}
     {:else}
       <label for="beatsInDelay">Delay in Beats: </label>
       <input

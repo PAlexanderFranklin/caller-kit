@@ -46,7 +46,7 @@ function editDance(dance) {
         []
       ],
       music: [],
-      ...dance
+      ...JSON.parse(JSON.stringify(dance))
     },
     selection: {group: 0, call: 0, delay: true},
     duration: 0,

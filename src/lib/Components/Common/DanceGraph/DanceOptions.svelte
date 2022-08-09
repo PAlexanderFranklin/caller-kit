@@ -113,14 +113,14 @@ function addMusic(music) {
       {#each $viewedDance.dance.music as music, i}
         <div style="display: flex; gap: 1rem;">
           <MusicInfo musicRef={music} />
-          <div
+          <button
             on:click={() => {
               console.log($viewedDance.dance.music.splice(i, 1));
               $viewedDance.dance.music = $viewedDance.dance.music;
             }}
           >
             <Close color="red"/>
-          </div>
+          </button>
         </div>
       {/each}
       {/if}
