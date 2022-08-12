@@ -89,6 +89,7 @@ async function updateDanceCalls() {
       text: `
         Are you sure you want to update the call references on this dance?
         This will replace every call in your dance with the version in your personal module storage if you have one. ${$viewedDance.dance.footwork || $viewedDance.dance.hold ? `This includes the ${$viewedDance.dance.footwork ? "footwork " : ""}${$viewedDance.dance.footwork && $viewedDance.dance.hold ? "and " : ""}${$viewedDance.dance.hold ? "hold " : ""}calls.` : ""}
+        You will still need to save the dance for the changes to take effect.
       `,
       item: null,
       confirmColor: "blue",

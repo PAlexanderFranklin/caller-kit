@@ -1,11 +1,9 @@
 <script>
-import { createEventDispatcher } from "svelte";
-import { createCall, updateCall, calls } from '/src/lib/utils/danceModule';
+import { createEventDispatcher, getContext } from "svelte";
+import { getCallByRef, createCall, updateCall, calls } from '/src/lib/utils/danceModule';
 import CallList from "./CallList.svelte";
 import CheckboxMarked from "svelte-material-icons/CheckboxMarked.svelte";
 import CheckboxMarkedOutline from "svelte-material-icons/CheckboxMarkedOutline.svelte";
-
-const dispatch = createEventDispatcher();
 
 export let call = {
   title: "",
@@ -14,6 +12,9 @@ export let call = {
   isFootwork: false,
   isHold: false,
 }
+
+const dispatch = createEventDispatcher();
+const openModal = getContext("openModal");
 
 let selectingFootwork = false;
 let selectingHold = false;
@@ -47,6 +48,48 @@ function handleCreateCall() {
       callingModule = false;
     });
   }
+}
+
+async function updateDependencies() {
+  openModal(
+    async () => {
+      let footworkPromise = null;
+      if (call.footwork) {
+        footworkPromise = getCallByRef({id: call.footwork.id});
+      }
+      let holdPromise = null;
+      if (call.hold) {
+        holdPromise = getCallByRef({id: call.hold.id});
+      }
+      const footworkResponse = await footworkPromise;
+      if (footworkResponse) {
+        call.footwork = {
+          id: footworkResponse.call.id,
+          title: footworkResponse.call.title,
+          skyfeed: footworkResponse.call.skyfeed,
+        };
+      }
+      const holdResponse = await holdPromise;
+      if (holdResponse) {
+        call.hold = {
+          id: holdResponse.call.id,
+          title: holdResponse.call.title,
+          skyfeed: holdResponse.call.skyfeed,
+        };
+      }
+    },
+    async () => {},
+    {
+      action: "update",
+      acting: "updating",
+      text: `
+        Are you sure you want to update the footwork and hold references on this call?
+        This will replace them with the version in your personal module storage if you have one. You will still need to save the call for the changes to take effect.
+      `,
+      item: null,
+      confirmColor: "blue",
+    }
+  );
 }
 
 </script>
@@ -96,7 +139,6 @@ function handleCreateCall() {
           id: newFootwork.id,
           title: newFootwork.title,
           skyfeed: newFootwork.skyfeed,
-          beats: call.footwork?.beats || newFootwork.beats
         };
       }}
     />
@@ -127,7 +169,6 @@ function handleCreateCall() {
           id: newHold.id,
           title: newHold.title,
           skyfeed: newHold.skyfeed,
-          beats: call.hold?.beats || newHold.beats
         };
       }}
     />
@@ -158,6 +199,9 @@ function handleCreateCall() {
   {#if callingModule}
     <button>{call.id ? "Saving" : "Creating"} Call...</button>
   {:else}
+    {#if call.footwork || call.hold}
+      <button on:click={updateDependencies} class="UpdateDependencies">Update Dependencies</button>
+    {/if}
     <button on:click={handleCreateCall}>{call.id ? "Save" : "Create"} Call</button>
   {/if}
 </div>
@@ -178,6 +222,9 @@ function handleCreateCall() {
   .EditCallToggle {
     display: flex;
     gap: 0.5rem;
+  }
+  .UpdateDependencies {
+    margin: 1rem 0rem;
   }
 
 </style>
