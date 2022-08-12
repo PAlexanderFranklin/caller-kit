@@ -31,6 +31,14 @@ function addMusic(music) {
 async function updateDanceCalls() {
   openModal(
     async () => {
+      let footworkPromise = null;
+      if ($viewedDance.dance.footwork) {
+        footworkPromise = getCallByRef({id: $viewedDance.dance.footwork.id});
+      }
+      let holdPromise = null;
+      if ($viewedDance.dance.hold) {
+        holdPromise = getCallByRef({id: $viewedDance.dance.hold.id});
+      }
       $viewedDance.dance.instructions = await Promise.all(
         $viewedDance.dance.instructions.map(async (group) => {
           return await Promise.all(
@@ -52,6 +60,26 @@ async function updateDanceCalls() {
           )
         })
       )
+      const footworkResponse = await footworkPromise;
+      if (footworkResponse) {
+        $viewedDance.dance.footwork = {
+          id: footworkResponse.call.id,
+          title: footworkResponse.call.title,
+          skyfeed: footworkResponse.call.skyfeed,
+          beats: $viewedDance.dance.footwork.beats,
+          delay: $viewedDance.dance.footwork.delay
+        }
+      }
+      const holdResponse = await holdPromise;
+      if (holdResponse) {
+        $viewedDance.dance.hold = {
+          id: holdResponse.call.id,
+          title: holdResponse.call.title,
+          skyfeed: holdResponse.call.skyfeed,
+          beats: $viewedDance.dance.hold.beats,
+          delay: $viewedDance.dance.hold.delay
+        }
+      }
       $viewedDance.dance.instructions = [...$viewedDance.dance.instructions];
     },
     async () => {},
@@ -60,7 +88,7 @@ async function updateDanceCalls() {
       acting: "updating",
       text: `
         Are you sure you want to update the call references on this dance?
-        This will replace every call in your dance with the version in your personal module storage if you have one.
+        This will replace every call in your dance with the version in your personal module storage if you have one. ${$viewedDance.dance.footwork || $viewedDance.dance.hold ? `This includes the ${$viewedDance.dance.footwork ? "footwork " : ""}${$viewedDance.dance.footwork && $viewedDance.dance.hold ? "and " : ""}${$viewedDance.dance.hold ? "hold " : ""}calls.` : ""}
       `,
       item: null,
       confirmColor: "blue",
