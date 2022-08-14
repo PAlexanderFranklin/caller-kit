@@ -1,13 +1,16 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
-import { FeedDAC } from 'skynet-dacs-library';
+import { FeedDAC, ProfileDAC } from 'skynet-dacs-library';
+import { getDanceByRef } from '/src/lib/utils/danceModule';
 import Post from './Post.svelte';
 
-export let userId = null;
-const currentUserId = getContext('currentUserId');
+const currentUserId = getContext("currentUserId");
+const routeUserId = getContext("routeUserId");
 
 const feedDAC = new FeedDAC();
+const profileDAC = new ProfileDAC();
 
+let profile;
 let posts = [];
 let filteredPosts = [];
 let filterText = "";
@@ -22,11 +25,30 @@ $: filterText, filteredPosts = posts.filter((post) => {
   )
 })
 
-$: if (!userId) {
-  feedDAC.loadPostsForUser($currentUserId, 'dances').then((res) => {posts = res});
-} else {
-  feedDAC.loadPostsForUser(userId, 'dances').then((res) => {posts = res});
+async function loadUserData(userId) {
+  posts = await feedDAC.loadPostsForUser(userId, 'dances');
+  profile = await profileDAC.getProfile(userId);
 }
+
+$: if (!$routeUserId) {
+  loadUserData($currentUserId);
+} else {
+  loadUserData($routeUserId);
+}
+
+async function selectDanceBySkyfeed(skyfeed) {
+  try {
+    const res = await getDanceByRef({skyfeed});
+    if (res.dance) {
+      dispatch('selectDance', res.dance);
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const routeDanceSkyfeed = getContext("routeDanceSkyfeed");
+$: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
 
 </script>
 

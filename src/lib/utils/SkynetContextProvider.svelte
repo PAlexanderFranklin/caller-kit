@@ -97,11 +97,38 @@ function grantPermissions() {
   }
 }
 
-const userId = writable("");
-setContext('currentUserId', userId);
+const currentUserId = writable("");
+setContext('currentUserId', currentUserId);
 
 $: if (permissionsGranted) {
-  identityDAC.userID().then((id) => {$userId = id})
+  identityDAC.userID().then((id) => {$currentUserId = id})
+}
+
+// Skyfeed Code
+
+let routeUserId = writable(null);
+setContext("routeUserId", routeUserId);
+let routeDanceSkyfeed = writable(null);
+setContext("routeDanceSkyfeed", routeDanceSkyfeed);
+
+function updateHash () {
+  let currentHash = window.location.hash;
+  let routeArray = currentHash.split('/');
+  if (routeArray[1] === "user") {
+    $routeUserId = routeArray[2];
+    $routeDanceSkyfeed = null;
+  } else if (routeArray[1] === "dance") {
+    $routeUserId = null;
+    $routeDanceSkyfeed = routeArray[2];
+  } else {
+    $routeUserId = null;
+    $routeDanceSkyfeed = null;
+  }
+}
+updateHash();
+
+window.onhashchange = function (event) {
+  updateHash();
 }
 
 </script>
