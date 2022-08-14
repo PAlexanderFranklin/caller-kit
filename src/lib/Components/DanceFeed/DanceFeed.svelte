@@ -40,7 +40,7 @@ async function selectDanceBySkyfeed(skyfeed) {
   try {
     const res = await getDanceByRef({skyfeed});
     if (res.dance) {
-      dispatch('selectDance', res.dance);
+      dispatch('selectDance', {dance: res.dance});
     }
   } catch (err) {
     console.error(err)

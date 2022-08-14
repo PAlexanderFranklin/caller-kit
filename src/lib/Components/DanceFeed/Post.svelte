@@ -5,6 +5,7 @@ import { dances, getDanceByRef, insertDance, updateDance } from '/src/lib/utils/
 import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 import Play from "svelte-material-icons/Play.svelte";
+import ClipboardOutline from "svelte-material-icons/ClipboardOutline.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
@@ -21,6 +22,10 @@ const currentUserId = getContext('currentUserId');
 const openModal = getContext('openModal');
   
 const dispatch = createEventDispatcher();
+
+async function copyDanceLink() {
+  await navigator.clipboard.writeText(post.ref);
+}
 
 async function handleSaveDance() {
   let userDance;
@@ -89,8 +94,9 @@ function handleDeletePost() {
   <div class="Header">
     <div class="HeaderTitle">
       {content.title}
-      <button on:click={handleSaveDance}><Download color={"blue"} /></button>
     </div>
+    <button on:click={handleSaveDance}><Download color={"blue"} /></button>
+    <button on:click={copyDanceLink}><ClipboardOutline color={"blue"} /></button>
     {#if post.ref?.match($currentUserId)}
     <!-- <button on:click={handleDeletePost}><Delete color={"red"} /></button> -->
     {/if}

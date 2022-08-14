@@ -112,14 +112,14 @@ let routeDanceSkyfeed = writable(null);
 setContext("routeDanceSkyfeed", routeDanceSkyfeed);
 
 function updateHash () {
-  let currentHash = window.location.hash;
-  let routeArray = currentHash.split('/');
-  if (routeArray[1] === "user") {
-    $routeUserId = routeArray[2];
+  let [hash, asset, ...address] = window.location.hash.split('/');
+  let data = address.join('/');
+  if (asset === "user") {
+    $routeUserId = data;
     $routeDanceSkyfeed = null;
-  } else if (routeArray[1] === "dance") {
+  } else if (asset === "dance") {
     $routeUserId = null;
-    $routeDanceSkyfeed = routeArray[2];
+    $routeDanceSkyfeed = data;
   } else {
     $routeUserId = null;
     $routeDanceSkyfeed = null;
