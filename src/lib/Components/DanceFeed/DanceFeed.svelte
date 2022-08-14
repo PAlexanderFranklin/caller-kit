@@ -4,7 +4,7 @@ import { FeedDAC } from 'skynet-dacs-library';
 import Post from './Post.svelte';
 
 export let userId = null;
-const currentUserId = getContext('userId');
+const currentUserId = getContext('currentUserId');
 
 const feedDAC = new FeedDAC();
 
