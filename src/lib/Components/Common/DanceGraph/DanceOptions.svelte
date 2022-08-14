@@ -1,11 +1,13 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
-import { calls, getCallByRef, musicList } from '/src/lib/utils/danceModule';
+import { calls, getCallByRef, dances, getDanceByRef, musicList } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 import Close from "svelte-material-icons/Close.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 import MusicList from "/src/lib/Components/Common/MusicList/MusicList.svelte";
 import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
+import Download from "svelte-material-icons/Download.svelte";
+import ClipboardOutline from "svelte-material-icons/ClipboardOutline.svelte";
 
 const dispatch = createEventDispatcher();
 
@@ -97,12 +99,60 @@ async function updateDanceCalls() {
   );
 }
 
+async function copyDanceLink() {
+  await navigator.clipboard.writeText(`callerkit.hns.skynetfree.net/#/dance/${$viewedDance.dance.skyfeed.split("//")[1]}`);
+}
+
+async function handleSaveDance() {
+  let userDance;
+  try {
+    const res = await getDanceByRef({id: $viewedDance.dance.id});
+    userDance = res.dance;
+  } catch (error) {
+    userDance = null;
+  }
+  if (userDance) {
+    openModal(
+      async () => {
+        const res = await updateDance($viewedDance.dance);
+        $dances = res.dances;
+        return res;
+      },
+      async () => {},
+      {
+        action: "overwrite",
+        acting: "overwriting",
+        text: "A dance with the same id was found in your personal storage! \n If you save this dance, it will overwrite the version in your personal storage, are you sure you want to do that?",
+        item: `Title: New: ${$viewedDance.dance.title}, Old: ${userDance.title} \n Id: ${userDance.id}`,
+        confirmColor: "red",
+      }
+    );
+  }
+  else {
+    openModal(
+      async () => {
+        const res = await insertDance($viewedDance.dance);
+        $dances = res.dances;
+        return res;
+      },
+      async () => {},
+      {
+        action: "save",
+        acting: "saving",
+        text: "Are you sure you want to save this dance to your personal module storage? None of its dependencies will be saved, you will have to save them separately if you want to avoid losing them.",
+        item: $viewedDance.dance.title,
+        confirmColor: "blue",
+      }
+    );
+  }
+}
+
 </script>
 
 <div class="sectionLabel">Dance</div>
 <div class="DanceOptions">
   {#if $viewedDance.editing}
-    <label for="title">Name: </label>
+    <label for="title">Title: </label>
     <input
       id="title"
       type="text"
@@ -211,7 +261,13 @@ async function updateDanceCalls() {
       <button on:click={() => {dispatch("createDance")}}>{$viewedDance.dance.id ? "Save" : "Create"} Dance</button>
     {/if}
   {:else}
-    <h3>Title: {$viewedDance.dance.title}</h3>
+    <div class="TitleSection">
+      <h3>Title: {$viewedDance.dance.title}</h3>
+      {#if $viewedDance.dance.skyfeed}
+        <button on:click={handleSaveDance} style="height: 2rem;"><Download color={"blue"} /></button>
+        <button on:click={copyDanceLink} style="height: 2rem;"><ClipboardOutline color={"blue"} /></button>
+      {/if}
+    </div>
     {#if $viewedDance.dance.music}
     {#each $viewedDance.dance.music as music}
       <MusicInfo musicRef={music} />
@@ -243,5 +299,10 @@ async function updateDanceCalls() {
   }
   .UpdateCalls {
     margin: 1rem 0rem;
+  }
+  .TitleSection {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 </style>

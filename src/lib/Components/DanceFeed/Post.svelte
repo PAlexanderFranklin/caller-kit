@@ -24,7 +24,7 @@ const openModal = getContext('openModal');
 const dispatch = createEventDispatcher();
 
 async function copyDanceLink() {
-  await navigator.clipboard.writeText(post.ref);
+  await navigator.clipboard.writeText(`callerkit.hns.skynetfree.net/#/dance/${post.ref.split("//")[1]}`);
 }
 
 async function handleSaveDance() {

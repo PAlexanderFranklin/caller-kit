@@ -119,7 +119,7 @@ function updateHash () {
     $routeDanceSkyfeed = null;
   } else if (asset === "dance") {
     $routeUserId = null;
-    $routeDanceSkyfeed = data;
+    $routeDanceSkyfeed = `skyfeed://${data}`;
   } else {
     $routeUserId = null;
     $routeDanceSkyfeed = null;

@@ -11,6 +11,7 @@ const feedDAC = new FeedDAC();
 const profileDAC = new ProfileDAC();
 
 let profile;
+let avatarUrl = "https://siasky.net/LACvgAooUazOoS0v1xYEo5MEDn6zBSmTgwDWJG2ji955YQ";
 let posts = [];
 let filteredPosts = [];
 let filterText = "";
@@ -28,12 +29,25 @@ $: filterText, filteredPosts = posts.filter((post) => {
 async function loadUserData(userId) {
   posts = await feedDAC.loadPostsForUser(userId, 'dances');
   profile = await profileDAC.getProfile(userId);
+  if (profile.avatar) {
+    avatarUrl = "https://siasky.net/" + profile.avatar[0].url.substring(6);
+  } else {
+    avatarUrl = "https://siasky.net/LACvgAooUazOoS0v1xYEo5MEDn6zBSmTgwDWJG2ji955YQ";
+  }
+  feedDAC.listenForPosts(userId, "dances", function (post) {
+    posts.unshift(post);
+    posts = posts;
+  })
 }
 
 $: if (!$routeUserId) {
   loadUserData($currentUserId);
 } else {
   loadUserData($routeUserId);
+}
+
+function navigateToProfile(userId) {
+  window.location.hash = `/user/${userId}`;
 }
 
 async function selectDanceBySkyfeed(skyfeed) {
@@ -53,7 +67,11 @@ $: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
 </script>
 
 <div class="DanceFeed">
-  <h1>Dance Feed</h1>
+  <button on:click={() => {navigateToProfile($currentUserId)}}>Go to my feed</button>
+  <div>
+    <h1>Dance Feed</h1>
+    <h4 class="UserInfo"><img src={avatarUrl} alt="Profile" class="picture" /> {profile?.username || ""}</h4>
+  </div>
   <div>
     Search: <input type="text" bind:value={filterText} />
   </div>
@@ -77,5 +95,14 @@ $: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
     background-color: white;
     border: 2px solid;
     border-color: black;
+  }
+  .UserInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .picture {
+    width: 2rem;
+    border-radius: 0.5rem;
   }
 </style>
