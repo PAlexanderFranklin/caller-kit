@@ -249,7 +249,7 @@ const handleCreateDance = (aq: ActiveQuery) => {
 }
 
 const handleGetDanceByRef = (aq: ActiveQuery) => {
-  if (aq.callerInput?.dance?.skyfeed === 'string') {
+  if (typeof aq.callerInput?.dance?.skyfeed === 'string') {
     myFeedDac.loadPost(aq.callerInput.dance.skyfeed).then((post) => {
       const retrievedData = post.content?.ext?.dance;
       if (retrievedData) {
