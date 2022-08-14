@@ -98,7 +98,7 @@ function grantPermissions() {
 }
 
 const userId = writable("");
-setContext('userId', userId);
+setContext('currentUserId', userId);
 
 $: if (permissionsGranted) {
   identityDAC.userID().then((id) => {$userId = id})

@@ -11,14 +11,13 @@ import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Download from "svelte-material-icons/Download.svelte";
 
 export let post;
-console.log(post);
 
 const feedDAC = new FeedDAC();
 
 let content = post.content;
 let hiddenDetails = true;
 
-const userId = getContext('userId');
+const currentUserId = getContext('currentUserId');
 const openModal = getContext('openModal');
   
 const dispatch = createEventDispatcher();
@@ -92,7 +91,7 @@ function handleDeletePost() {
       {content.title}
       <button on:click={handleSaveDance}><Download color={"blue"} /></button>
     </div>
-    {#if post.ref?.match($userId)}
+    {#if post.ref?.match($currentUserId)}
     <!-- <button on:click={handleDeletePost}><Delete color={"red"} /></button> -->
     {/if}
     {#if hiddenDetails}
