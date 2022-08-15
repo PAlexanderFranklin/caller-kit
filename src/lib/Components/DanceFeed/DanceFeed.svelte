@@ -1,17 +1,21 @@
 <script>
 import { createEventDispatcher, getContext } from 'svelte';
-import { FeedDAC, ProfileDAC } from 'skynet-dacs-library';
+import { FeedDAC, SocialDAC, ProfileDAC } from 'skynet-dacs-library';
 import { getDanceByRef } from '/src/lib/utils/danceModule';
 import Post from './Post.svelte';
+import Following from './Following.svelte';
 
 const currentUserId = getContext("currentUserId");
 const routeUserId = getContext("routeUserId");
 
 const feedDAC = new FeedDAC();
+const socialDAC = new SocialDAC();
 const profileDAC = new ProfileDAC();
 
 let profile;
 let avatarUrl = "https://siasky.net/LACvgAooUazOoS0v1xYEo5MEDn6zBSmTgwDWJG2ji955YQ";
+let following = false;
+let followAction = false;
 let posts = [];
 let filteredPosts = [];
 let filterText = "";
@@ -29,6 +33,7 @@ $: filterText, filteredPosts = posts.filter((post) => {
 async function loadUserData(userId) {
   posts = await feedDAC.loadPostsForUser(userId, 'dances');
   profile = await profileDAC.getProfile(userId);
+  following = await socialDAC.isFollowing(userId);
   if (profile.avatar) {
     avatarUrl = "https://siasky.net/" + profile.avatar[0].url.substring(6);
   } else {
@@ -61,40 +66,78 @@ async function selectDanceBySkyfeed(skyfeed) {
   }
 }
 
+async function followUser(userId) {
+  followAction = true;
+  socialDAC.follow(userId).then(() => {
+    following = true;
+  }).finally(() => {
+    followAction = false;
+  })
+}
+
+async function unfollowUser(userId) {
+  followAction = true;
+  socialDAC.unfollow(userId).then(() => {
+    following = false;
+  }).finally(() => {
+    followAction = false;
+  })
+}
+
 const routeDanceSkyfeed = getContext("routeDanceSkyfeed");
 $: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
 
 </script>
 
-<div class="DanceFeed">
-  <button on:click={() => {navigateToProfile($currentUserId)}}>Go to my feed</button>
-  <div>
-    <h1>Dance Feed</h1>
-    <h4 class="UserInfo"><img src={avatarUrl} alt="Profile" class="picture" /> {profile?.username || ""}</h4>
+<div class="FeedPage">
+  <div class="DanceFeed">
+    <button on:click={() => {navigateToProfile($currentUserId)}}>Go to my feed</button>
+    <div>
+      <h1>Dance Feed</h1>
+      <h4 class="UserInfo">
+        <img src={avatarUrl} alt="Profile" class="picture" />
+        {profile?.username || ""}
+        {#if following}
+          <button on:click={() => {unfollowUser(profile.userId)}} class="unfollow">
+            {followAction ? "Un" : ""}Following
+          </button>
+        {:else}
+          <button on:click={() => {followUser(profile.userId)}} class="follow">
+            Follow{followAction ? "ing..." : ""}
+          </button>
+        {/if}
+      </h4>
+    </div>
+    <div>
+      Search: <input type="text" bind:value={filterText} />
+    </div>
+    {#each filteredPosts as post (post.id)}
+        <Post
+          post={post}
+          on:selectDance
+        />
+    {/each}
   </div>
-  <div>
-    Search: <input type="text" bind:value={filterText} />
-  </div>
-  {#each filteredPosts as post (post.id)}
-      <Post
-        post={post}
-        on:selectDance
-      />
-  {/each}
+  <Following userId={$routeUserId}>This user is following:</Following>
+  <Following userId={$currentUserId}>You are following:</Following>
 </div>
 
 <style>
-  .DanceFeed {
+  .FeedPage {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 3rem;
     max-height: 50rem;
-    overflow-y: scroll;
     width: 80%;
     background-color: white;
     border: 2px solid;
     border-color: black;
+  }
+  .DanceFeed {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    gap: 0.75rem;
+    padding: 3rem;
+    overflow-y: scroll;
   }
   .UserInfo {
     display: flex;
@@ -104,5 +147,15 @@ $: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
   .picture {
     width: 2rem;
     border-radius: 0.5rem;
+  }
+  .follow:hover {
+    color: white;
+    background-color: blue;
+    border: blue solid 2px;
+  }
+  .unfollow:hover {
+    color: white;
+    background-color: red;
+    border: red solid 2px;
   }
 </style>
