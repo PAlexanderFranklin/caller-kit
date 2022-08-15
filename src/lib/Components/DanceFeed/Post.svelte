@@ -105,7 +105,7 @@ function handleDeletePost() {
     {:else}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronUp color={"blue"} /></button>
     {/if}
-    <button on:click={() => {dispatch('selectDance', {dance: content.ext?.dance})}}><Play color={"green"} /></button>
+    <button on:click={() => {dispatch('selectDance', {dance: {...content.ext?.dance, skyfeed: post.ref}})}}><Play color={"green"} /></button>
   </div>
   {#if !hiddenDetails}
   <div class="Content">

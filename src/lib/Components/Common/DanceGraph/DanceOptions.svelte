@@ -254,12 +254,14 @@ async function handleSaveDance() {
     {#if $viewedDance.error}
         <p>{$viewedDance.error}</p>
     {/if}
-    {#if $viewedDance.saving}
-      <button>{$viewedDance.dance.id ? "Saving" : "Creating"} Dance...</button>
-    {:else}
-      <button on:click={updateDanceCalls} class="UpdateCalls">Update Calls</button>
-      <button on:click={() => {dispatch("createDance")}}>{$viewedDance.dance.id ? "Save" : "Create"} Dance</button>
-    {/if}
+    <div class="SaveButtons">
+      {#if $viewedDance.saving}
+        <button>{$viewedDance.dance.id ? "Saving" : "Creating"} Dance...</button>
+      {:else}
+        <button on:click={updateDanceCalls}>Update Calls</button>
+        <button on:click={() => {dispatch("createDance")}}>{$viewedDance.dance.id ? "Save" : "Create"} Dance</button>
+      {/if}
+    </div>
   {:else}
     <div class="TitleSection">
       <h3>Title: {$viewedDance.dance.title}</h3>
@@ -297,8 +299,10 @@ async function handleSaveDance() {
     border: 2px solid black;
     font-weight: 500;
   }
-  .UpdateCalls {
-    margin: 1rem 0rem;
+  .SaveButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
   }
   .TitleSection {
     display: flex;
