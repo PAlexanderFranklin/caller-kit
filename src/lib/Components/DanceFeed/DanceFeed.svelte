@@ -13,7 +13,7 @@ const socialDAC = new SocialDAC();
 const profileDAC = new ProfileDAC();
 
 let profile;
-let avatarUrl = "https://siasky.net/LACvgAooUazOoS0v1xYEo5MEDn6zBSmTgwDWJG2ji955YQ";
+let avatarUrl = "https://siasky.net/CABdyKgcVLkjdsa0HIjBfNicRv0pqU7YL-tgrfCo23DmWw";
 let following = false;
 let followAction = false;
 let posts = [];
@@ -34,10 +34,10 @@ async function loadUserData(userId) {
   posts = await feedDAC.loadPostsForUser(userId, 'dances');
   profile = await profileDAC.getProfile(userId);
   following = await socialDAC.isFollowing(userId);
-  if (profile.avatar) {
+  try {
     avatarUrl = "https://siasky.net/" + profile.avatar[0].url.substring(6);
-  } else {
-    avatarUrl = "https://siasky.net/LACvgAooUazOoS0v1xYEo5MEDn6zBSmTgwDWJG2ji955YQ";
+  } catch {
+    avatarUrl = "https://siasky.net/CABdyKgcVLkjdsa0HIjBfNicRv0pqU7YL-tgrfCo23DmWw";
   }
   feedDAC.listenForPosts(userId, "dances", function (post) {
     posts.unshift(post);
@@ -125,7 +125,8 @@ $: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
 <style>
   .FeedPage {
     display: flex;
-    max-height: 50rem;
+    min-height: 30rem;
+    max-height: 30rem;
     width: 80%;
     background-color: white;
     border: 2px solid;

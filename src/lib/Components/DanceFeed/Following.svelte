@@ -15,10 +15,10 @@ async function getFollowing(userId) {
   })
   following = await Promise.all(filtered.map(async (element) => {
     let profile = await profileDAC.getProfile(element);
-    if (profile.avatar) {
+    try {
       profile.avatarUrl = "https://siasky.net/" + profile.avatar[0].url.substring(6);
-    } else {
-      profile.avatarUrl = "https://siasky.net/LACvgAooUazOoS0v1xYEo5MEDn6zBSmTgwDWJG2ji955YQ";
+    } catch {
+      profile.avatarUrl = "https://siasky.net/CABdyKgcVLkjdsa0HIjBfNicRv0pqU7YL-tgrfCo23DmWw";
     }
     return profile;
   }));
@@ -50,6 +50,7 @@ socialDAC.onFollowingChange(() => {
     max-height: 50rem;
     border-left: 2px solid;
     border-color: black;
+    overflow-y: scroll;
   }
   .UserInfo {
     display: flex;

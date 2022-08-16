@@ -46,6 +46,7 @@ export interface Music {
   title?: string,
   skyfeed?: string,
   link?: string,
+  skylink?: string,
   modifiedAt?: Date,
 }
 
