@@ -64,7 +64,6 @@ async function selectDanceBySkyfeed(skyfeed) {
     console.error(err)
   }
 }
-
 async function followUser(userId) {
   followAction = true;
   socialDAC.follow(userId).then(() => {

@@ -13,7 +13,7 @@ const dispatch = createEventDispatcher();
 
 </script>
 
-<div>
+<div class="Dependencies">
 {#if source?.footwork}
   {#if showFootwork}
     <button>
@@ -59,3 +59,10 @@ const dispatch = createEventDispatcher();
     <button>No Hold</button>
 {/if}
 </div>
+
+<style>
+  .Dependencies {
+    display: flex;
+    gap: 1rem;
+  }
+</style>

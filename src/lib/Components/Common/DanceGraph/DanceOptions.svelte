@@ -1,5 +1,6 @@
 <script>
 import { createEventDispatcher, getContext } from "svelte";
+import { SocialDAC, ProfileDAC } from 'skynet-dacs-library';
 import { calls, getCallByRef, dances, getDanceByRef, musicList } from '/src/lib/utils/danceModule';
 import CallList from "/src/lib/Components/Common/CallList/CallList.svelte";
 import Close from "svelte-material-icons/Close.svelte";
@@ -10,6 +11,8 @@ import Download from "svelte-material-icons/Download.svelte";
 import ClipboardOutline from "svelte-material-icons/ClipboardOutline.svelte";
 
 const dispatch = createEventDispatcher();
+const socialDAC = new SocialDAC();
+const profileDAC = new ProfileDAC();
 
 const viewedDance = getContext("viewedDance");
 const openModal = getContext("openModal");
@@ -17,6 +20,43 @@ const openModal = getContext("openModal");
 let selectingFootwork = false;
 let selectingHold = false;
 let selectingMusic = false;
+
+let profile;
+let avatarUrl = "https://siasky.net/CABdyKgcVLkjdsa0HIjBfNicRv0pqU7YL-tgrfCo23DmWw";
+let following = false;
+let followAction = false;
+
+async function followUser(userId) {
+  followAction = true;
+  socialDAC.follow(userId).then(() => {
+    following = true;
+  }).finally(() => {
+    followAction = false;
+  })
+}
+
+async function unfollowUser(userId) {
+  followAction = true;
+  socialDAC.unfollow(userId).then(() => {
+    following = false;
+  }).finally(() => {
+    followAction = false;
+  })
+}
+
+async function loadUserData(userId) {
+  profile = await profileDAC.getProfile(userId);
+  try {
+    avatarUrl = "https://siasky.net/" + profile.avatar[0].url.substring(6);
+  } catch {
+    avatarUrl = "https://siasky.net/CABdyKgcVLkjdsa0HIjBfNicRv0pqU7YL-tgrfCo23DmWw";
+  }
+}
+
+$: if ($viewedDance.dance.skyfeed) {
+  const [a, b, userId, ...address] = $viewedDance.dance.skyfeed.split('/');
+  loadUserData(userId);
+}
 
 function addMusic(music) {
   $viewedDance.dance.music = [
@@ -280,6 +320,22 @@ async function handleSaveDance() {
     {/if}
     <div>Duration in Beats: {$viewedDance.duration}</div>
     <Dependencies source={$viewedDance.dance} />
+    {#if $viewedDance.dance.skyfeed}
+      <h4 class="UserInfo">
+        By:
+        <img src={avatarUrl} alt="Profile" class="picture" />
+        {profile?.username || ""}
+        {#if following}
+          <button on:click={() => {unfollowUser(profile.userId)}} class="unfollow">
+            {followAction ? "Un" : ""}Following
+          </button>
+        {:else}
+          <button on:click={() => {followUser(profile.userId)}} class="follow">
+            Follow{followAction ? "ing..." : ""}
+          </button>
+        {/if}
+      </h4>
+    {/if}
   {/if}
 </div>
 
@@ -303,6 +359,25 @@ async function handleSaveDance() {
     display: flex;
     justify-content: space-between;
     margin-top: 1rem;
+  }
+  .UserInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .picture {
+    width: 2rem;
+    border-radius: 0.5rem;
+  }
+  .follow:hover {
+    color: white;
+    background-color: blue;
+    border: blue solid 2px;
+  }
+  .unfollow:hover {
+    color: white;
+    background-color: red;
+    border: red solid 2px;
   }
   .TitleSection {
     display: flex;
