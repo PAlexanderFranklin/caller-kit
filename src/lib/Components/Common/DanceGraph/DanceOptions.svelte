@@ -309,4 +309,7 @@ async function handleSaveDance() {
     align-items: center;
     gap: 1rem;
   }
+  #description {
+    height: 5rem;
+  }
 </style>

@@ -218,6 +218,9 @@ async function updateDependencies() {
     background-color: white;
     border: 2px black solid;
   }
+  #description {
+    height: 5rem;
+  }
 
   .EditCallToggle {
     display: flex;

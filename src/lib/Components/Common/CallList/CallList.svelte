@@ -15,9 +15,6 @@ $: filterText, filteredCalls = calls.filter((call) => {
   let filter = new RegExp(filterText.toLowerCase());
   return Boolean(filterText === ""
     || call.title?.toLowerCase().match(filter)
-    || call.text?.toLowerCase().match(filter)
-    || call.footwork?.title?.toLowerCase().match(filter)
-    || call.hold?.title?.toLowerCase().match(filter)
   )
 })
 

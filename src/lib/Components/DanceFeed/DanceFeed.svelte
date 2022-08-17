@@ -26,7 +26,6 @@ $: filterText, filteredPosts = posts.filter((post) => {
   let filter = new RegExp(filterText.toLowerCase());
   return Boolean(filterText === ""
     || post.content?.title?.toLowerCase().match(filter)
-    || post.content?.text?.toLowerCase().match(filter)
   )
 })
 
