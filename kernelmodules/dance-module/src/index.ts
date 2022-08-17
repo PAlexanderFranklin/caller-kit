@@ -155,6 +155,7 @@ const handleUpdateCall = (aq: ActiveQuery) => {
     if ('call' in aq.callerInput) {
       const updatedCall:Call = {
         ...aq.callerInput.call,
+        skyfeed: null,
         modifiedAt: (Date.now() / 1000),
       };
       if (!updatedCall.title) {
@@ -320,6 +321,7 @@ const handleUpdateDance = (aq: ActiveQuery) => {
     if ('dance' in aq.callerInput) {
       const updatedDance:Dance = {
         ...aq.callerInput.dance,
+        skyfeed: null,
         modifiedAt: (Date.now() / 1000),
       };
       if (!updatedDance.title) {
@@ -479,6 +481,7 @@ const handleUpdateMusic = (aq: ActiveQuery) => {
     if ('music' in aq.callerInput) {
       const updatedMusic:Music = {
         ...aq.callerInput.music,
+        skyfeed: null,
         modifiedAt: (Date.now() / 1000),
       };
       if (!updatedMusic.link) {
