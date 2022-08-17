@@ -321,7 +321,7 @@ async function handleSaveDance() {
     <div>Duration in Beats: {$viewedDance.duration}</div>
     <Dependencies source={$viewedDance.dance} />
     {#if $viewedDance.dance.skyfeed}
-      <h4 class="UserInfo">
+      <h4 class="UserInfo" on:click={() => {window.location.hash = `/user/${profile.userId}`}}>
         By:
         <img src={avatarUrl} alt="Profile" class="picture" />
         {profile?.username || ""}
