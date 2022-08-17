@@ -24,16 +24,16 @@ function addGroup() {
 </script>
 
 <div class="danceGraph">
-  {#if $viewedDance.editing}
-  <button on:click={addGroup}>
-    Add Group of Dancers
-  </button>
-  {/if}
   {#each $viewedDance.dance.instructions as group, i}
   <Group group={group} index={i}
     on:removeCall={(event) => {dispatch('removeCall', event.detail)}}
   />
   {/each}
+  {#if $viewedDance.editing}
+  <button on:click={addGroup} class="AddGroup">
+    Add Group of Dancers
+  </button>
+  {/if}
 </div>
 
 <style>
@@ -41,7 +41,13 @@ function addGroup() {
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    max-height: 24rem;
     min-width: 20rem;
     width: 50rem;
+  }
+  .AddGroup {
+    height: 3rem;
+    width: 20rem;
+    background-color: white;
   }
 </style>

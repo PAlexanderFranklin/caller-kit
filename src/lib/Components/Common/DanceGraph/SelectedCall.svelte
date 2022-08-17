@@ -141,7 +141,7 @@ function removeCall(groupIndex, callIndex) {
       {#if $viewedDance.editing}
         <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}} class="RemoveButton">Remove</button>
       {/if}
-    {:else}
+    {:else if $viewedDance.editing}
       <label for="beatsInDelay">Delay in Beats: </label>
       <input
         id="beatsInDelay"
@@ -149,6 +149,8 @@ function removeCall(groupIndex, callIndex) {
         bind:value={selectedCall.delay}
         on:keyup={() => {$viewedDance.duration = $viewedDance.duration}}
       />
+    {:else if selectedCall.delay}
+      <div>Delay in Beats: {selectedCall.delay}</div>
     {/if}
   {:else}
     No Call Selected

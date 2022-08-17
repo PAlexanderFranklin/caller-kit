@@ -110,8 +110,8 @@ setContext('openModal', openModal);
     <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceCreator}>Close Editor</button>
     {:else}
     <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
-    <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
     {/if}
+    <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
     <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceList}>My Dances</button>
     <button on:click={() => {hideComponents(); showDanceFeed = true}} class:selectedPage={showDanceFeed}>Dance Feed</button>
     {#if showDanceList}

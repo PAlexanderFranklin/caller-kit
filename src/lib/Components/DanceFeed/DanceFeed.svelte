@@ -117,7 +117,9 @@ $: if ($routeDanceSkyfeed) {selectDanceBySkyfeed($routeDanceSkyfeed)};
         />
     {/each}
   </div>
-  <Following userId={$routeUserId}>This user is following:</Following>
+  {#if $routeUserId}
+    <Following userId={$routeUserId}>This user is following:</Following>
+  {/if}
   <Following userId={$currentUserId}>You are following:</Following>
 </div>
 

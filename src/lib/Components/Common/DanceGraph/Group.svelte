@@ -76,7 +76,7 @@ async function deleteGroup() {
 <style>
   .danceGroup {
     display: flex;
-    height: 2rem;
+    height: 3rem;
     background-color: lightgrey;
     border: black solid 1px;
   }
