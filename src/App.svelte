@@ -1,17 +1,13 @@
 <script>
 import { setContext } from "svelte";
 import { writable } from "svelte/store";
-import { Router, Route, createHistory } from "svelte-navigator";
 import { dances } from '/src/lib/utils/danceModule';
-import createHashSource from "/src/lib/utils/hashHistory.js";
 import SkynetContextProvider from "/src/lib/utils/SkynetContextProvider.svelte";
 import DanceCreator from "/src/lib/Components/DanceCreator.svelte";
 import ConfirmModal from "/src/lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "/src/lib/Components/DanceList/DanceList.svelte";
 import DanceFeed from "/src/lib/Components/DanceFeed/DanceFeed.svelte";
 import DanceViewer from "/src/lib/Components/DanceViewer.svelte";
-  
-const hash = createHistory(createHashSource());
 
 let showDanceCreator = false;
 let showDanceList = false;
@@ -106,42 +102,36 @@ setContext('openModal', openModal);
 </script>
 
 <SkynetContextProvider>
-    <Router history={hash}>
-      <!-- <Route path="login" component={Login} /> -->
-
-      <Route>
-        <h1>Caller Kit</h1>
-        <p>All content created using this application is published in the public domain under the <a rel="license"
-          href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
-        </p>
-        {#if showDanceCreator}
-        <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceCreator}>Close Editor</button>
-        {:else}
-        <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
-        <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
-        {/if}
-        <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceList}>My Dances</button>
-        <button on:click={() => {hideComponents(); showDanceFeed = true}} class:selectedPage={showDanceFeed}>Dance Feed</button>
-        {#if showDanceList}
-        <DanceList
-          dances={$dances}
-          on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}
-          on:selectDance={(event) => {selectedDance = event.detail.dance}}
-        />
-        {/if}
-        {#if showDanceFeed}
-        <DanceFeed
-          on:selectDance={(event) => {selectedDance = event.detail.dance}}
-        />
-        {/if}
-        {#if selectedDance}
-        <DanceViewer dance={selectedDance} />
-        {/if}
-        {#if showDanceCreator}
-        <DanceCreator on:save={() => {hideComponents(); showDanceList = true}} />
-        {/if}
-      </Route>
-    </Router>
+    <h1>Caller Kit</h1>
+    <p>All content created using this application is published in the public domain under the <a rel="license"
+      href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero License</a> unless otherwise specified.
+    </p>
+    {#if showDanceCreator}
+    <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceCreator}>Close Editor</button>
+    {:else}
+    <button on:click={() => {hideComponents(); showDanceCreator = true}}>Open Editor</button>
+    {/if}
+    <button on:click={() => {hideComponents(); editDance({})}}>Create a New Dance</button>
+    <button on:click={() => {hideComponents(); showDanceList = true}} class:selectedPage={showDanceList}>My Dances</button>
+    <button on:click={() => {hideComponents(); showDanceFeed = true}} class:selectedPage={showDanceFeed}>Dance Feed</button>
+    {#if showDanceList}
+    <DanceList
+      dances={$dances}
+      on:editDance={(event) => {hideComponents(); editDance(event.detail.dance);}}
+      on:selectDance={(event) => {selectedDance = event.detail.dance}}
+    />
+    {/if}
+    {#if showDanceFeed}
+    <DanceFeed
+      on:selectDance={(event) => {selectedDance = event.detail.dance}}
+    />
+    {/if}
+    {#if selectedDance}
+    <DanceViewer dance={selectedDance} />
+    {/if}
+    {#if showDanceCreator}
+    <DanceCreator on:save={() => {hideComponents(); showDanceList = true}} />
+    {/if}
     {#if showModal}
     <ConfirmModal
       on:closeModal={closeModal}

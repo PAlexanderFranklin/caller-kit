@@ -93,18 +93,20 @@ onMount(getCall)
 
 <div class="AbsoluteContainer">
   <div class="CallInfo" use:clickOutside on:clickOutside={() => {allowClose ? dispatch('closeInfo') : ""}}>
-    <button on:click={() => {dispatch('closeInfo')}}>X</button>
-    {#if getError}
-      <p>
-        This call failed to fetch any information. This could be because
-        either your internet or Skynet is not working properly, but it
-        could also be because the call it references has been deleted.
-        If the latter is the case, you should replace this call on this
-        dance.
-      </p>
-    {:else if sourceCall && sourceCall.skyfeed}
-      <button on:click={handleSaveCall}><Download color={"blue"} /></button>
-    {/if}
+    <div class="buttons">
+      <button on:click={() => {dispatch('closeInfo')}}>X</button>
+      {#if getError}
+        <p>
+          This call failed to fetch any information. This could be because
+          either your internet or Skynet is not working properly, but it
+          could also be because the call it references has been deleted.
+          If the latter is the case, you should replace this call on this
+          dance.
+        </p>
+      {:else if sourceCall && sourceCall.skyfeed}
+        <button on:click={handleSaveCall}><Download color={"blue"} /></button>
+      {/if}
+    </div>
     <h4>Name: {getting ? "Loading..." : sourceCall.title || ""}</h4>
     <div>Duration in Beats: {getting ? "Loading..." : sourceCall.beats || ""}</div>
     {#if sourceCall?.text || getting}

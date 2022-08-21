@@ -12,9 +12,6 @@ $: filterText, filteredDances = dances.filter((dance) => {
   let filter = new RegExp(filterText.toLowerCase());
   return Boolean(filterText === ""
     || dance.title?.toLowerCase().match(filter)
-    || dance.text?.toLowerCase().match(filter)
-    || dance.footwork?.title?.toLowerCase().match(filter)
-    || dance.hold?.title?.toLowerCase().match(filter)
   )
 })
 

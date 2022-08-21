@@ -75,8 +75,8 @@ function handleCreateDance() {
     on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}}
   />
   <div>
-    <DanceOptions on:createDance={handleCreateDance} />
     <SelectedCall on:removeCall={(event) => {removeCall(event.detail.groupIndex, event.detail.callIndex)}} />
+    <DanceOptions on:createDance={handleCreateDance} />
   </div>
 </div>
 

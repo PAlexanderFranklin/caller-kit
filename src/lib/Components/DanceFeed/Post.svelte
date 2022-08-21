@@ -5,23 +5,27 @@ import { dances, getDanceByRef, insertDance, updateDance } from '/src/lib/utils/
 import MusicInfo from "/src/lib/Components/Common/Music/MusicInfo.svelte";
 import Dependencies from "/src/lib/Components/Common/Calls/Dependencies.svelte";
 import Play from "svelte-material-icons/Play.svelte";
+import ClipboardOutline from "svelte-material-icons/ClipboardOutline.svelte";
 import Delete from "svelte-material-icons/Delete.svelte";
 import ChevronDown from "svelte-material-icons/ChevronDown.svelte";
 import ChevronUp from "svelte-material-icons/ChevronUp.svelte";
 import Download from "svelte-material-icons/Download.svelte";
 
 export let post;
-console.log(post);
 
 const feedDAC = new FeedDAC();
 
 let content = post.content;
 let hiddenDetails = true;
 
-const userId = getContext('userId');
+const currentUserId = getContext('currentUserId');
 const openModal = getContext('openModal');
   
 const dispatch = createEventDispatcher();
+
+async function copyDanceLink() {
+  await navigator.clipboard.writeText(`callerkit.hns.skynetfree.net/#/dance/${post.ref.split("//")[1]}`);
+}
 
 async function handleSaveDance() {
   let userDance;
@@ -90,9 +94,10 @@ function handleDeletePost() {
   <div class="Header">
     <div class="HeaderTitle">
       {content.title}
-      <button on:click={handleSaveDance}><Download color={"blue"} /></button>
     </div>
-    {#if post.ref?.match($userId)}
+    <button on:click={handleSaveDance}><Download color={"blue"} /></button>
+    <button on:click={copyDanceLink}><ClipboardOutline color={"blue"} /></button>
+    {#if post.ref?.match($currentUserId)}
     <!-- <button on:click={handleDeletePost}><Delete color={"red"} /></button> -->
     {/if}
     {#if hiddenDetails}
@@ -100,7 +105,7 @@ function handleDeletePost() {
     {:else}
       <button on:click={() => {hiddenDetails = !hiddenDetails}}><ChevronUp color={"blue"} /></button>
     {/if}
-    <button on:click={() => {dispatch('selectDance', {dance: content.ext?.dance})}}><Play color={"green"} /></button>
+    <button on:click={() => {dispatch('selectDance', {dance: {...content.ext?.dance, skyfeed: post.ref}})}}><Play color={"green"} /></button>
   </div>
   {#if !hiddenDetails}
   <div class="Content">

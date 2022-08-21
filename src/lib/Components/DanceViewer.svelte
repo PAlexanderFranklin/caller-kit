@@ -31,8 +31,8 @@ $: {
 <div class="DanceViewer">
   <DanceGraph />
   <div class="InfoPanel">
-    <DanceOptions />
     <SelectedCall />
+    <DanceOptions />
   </div>
 </div>
 

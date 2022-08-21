@@ -48,24 +48,24 @@ const callGetState = () => {
 
 $: $userAuthStatus && !subscribed ? callGetState() : "";
 
-let permissionsGranted = false;
+let permissionsGranted = true; // Set to false when enabling permissions DAC
 let ungrantedPermissions = [];
 
-async function checkPermissions() {
-  ungrantedPermissions = await permissionDAC.checkPermissions([
-    "feed-dac.hns/post/create/feed/dances",
-    "feed-dac.hns/post/create/feed/danceCalls",
-    "feed-dac.hns/post/create/feed/danceMusic",
-  ]);
-  if (ungrantedPermissions.length > 0) {
-    permissionsGranted = false;
-  }
-  else {
-    permissionsGranted = true;
-  }
-}
+// async function checkPermissions() {
+//   ungrantedPermissions = await permissionDAC.checkPermissions([
+//     "feed-dac.hns/post/create/feed/dances",
+//     "feed-dac.hns/post/create/feed/danceCalls",
+//     "feed-dac.hns/post/create/feed/danceMusic",
+//   ]);
+//   if (ungrantedPermissions.length > 0) {
+//     permissionsGranted = false;
+//   }
+//   else {
+//     permissionsGranted = true;
+//   }
+// }
 
-$: checkPermissions();
+// $: checkPermissions();
 
 function grantPermissions() {
   if (ungrantedPermissions.length > 0) {
@@ -97,11 +97,38 @@ function grantPermissions() {
   }
 }
 
-const userId = writable("");
-setContext('userId', userId);
+const currentUserId = writable("");
+setContext('currentUserId', currentUserId);
 
 $: if (permissionsGranted) {
-  identityDAC.userID().then((id) => {$userId = id})
+  identityDAC.userID().then((id) => {$currentUserId = id})
+}
+
+// Skyfeed Code
+
+let routeUserId = writable(null);
+setContext("routeUserId", routeUserId);
+let routeDanceSkyfeed = writable(null);
+setContext("routeDanceSkyfeed", routeDanceSkyfeed);
+
+function updateHash () {
+  let [hash, asset, ...address] = window.location.hash.split('/');
+  let data = address.join('/');
+  if (asset === "user") {
+    $routeUserId = data;
+    $routeDanceSkyfeed = null;
+  } else if (asset === "dance") {
+    $routeUserId = null;
+    $routeDanceSkyfeed = `skyfeed://${data}`;
+  } else {
+    $routeUserId = null;
+    $routeDanceSkyfeed = null;
+  }
+}
+updateHash();
+
+window.onhashchange = function (event) {
+  updateHash();
 }
 
 </script>

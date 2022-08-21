@@ -97,6 +97,7 @@ function removeCall(groupIndex, callIndex) {
 <div class="SelectedCall">
   {#if Object.keys(selectedCall).length !== 0}
     {#if !$viewedDance.selection.delay}
+      <h4>Name: {selectedCall.title || "N/A"}</h4>
       {#if getError}
         <p>
           This call failed to fetch any information. This could be because
@@ -108,7 +109,6 @@ function removeCall(groupIndex, callIndex) {
       {:else if sourceCall && sourceCall.skyfeed}
         <button on:click={handleSaveCall}><Download color={"blue"} /></button>
       {/if}
-      <h4>Name: {selectedCall.title || "N/A"}</h4>
       {#if $viewedDance.editing}
         <label for="beatsInDelay">Delay in Beats: </label>
         <input
@@ -141,7 +141,7 @@ function removeCall(groupIndex, callIndex) {
       {#if $viewedDance.editing}
         <button on:click={() => {removeCall($viewedDance.selection.group, $viewedDance.selection.call)}} class="RemoveButton">Remove</button>
       {/if}
-    {:else}
+    {:else if $viewedDance.editing}
       <label for="beatsInDelay">Delay in Beats: </label>
       <input
         id="beatsInDelay"
@@ -149,6 +149,8 @@ function removeCall(groupIndex, callIndex) {
         bind:value={selectedCall.delay}
         on:keyup={() => {$viewedDance.duration = $viewedDance.duration}}
       />
+    {:else if selectedCall.delay}
+      <div>Delay in Beats: {selectedCall.delay}</div>
     {/if}
   {:else}
     No Call Selected
