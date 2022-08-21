@@ -48,24 +48,24 @@ const callGetState = () => {
 
 $: $userAuthStatus && !subscribed ? callGetState() : "";
 
-let permissionsGranted = false;
+let permissionsGranted = true; // Set to false when enabling permissions DAC
 let ungrantedPermissions = [];
 
-async function checkPermissions() {
-  ungrantedPermissions = await permissionDAC.checkPermissions([
-    "feed-dac.hns/post/create/feed/dances",
-    "feed-dac.hns/post/create/feed/danceCalls",
-    "feed-dac.hns/post/create/feed/danceMusic",
-  ]);
-  if (ungrantedPermissions.length > 0) {
-    permissionsGranted = false;
-  }
-  else {
-    permissionsGranted = true;
-  }
-}
+// async function checkPermissions() {
+//   ungrantedPermissions = await permissionDAC.checkPermissions([
+//     "feed-dac.hns/post/create/feed/dances",
+//     "feed-dac.hns/post/create/feed/danceCalls",
+//     "feed-dac.hns/post/create/feed/danceMusic",
+//   ]);
+//   if (ungrantedPermissions.length > 0) {
+//     permissionsGranted = false;
+//   }
+//   else {
+//     permissionsGranted = true;
+//   }
+// }
 
-$: checkPermissions();
+// $: checkPermissions();
 
 function grantPermissions() {
   if (ungrantedPermissions.length > 0) {
