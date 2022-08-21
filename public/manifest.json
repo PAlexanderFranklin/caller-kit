@@ -1,0 +1,17 @@
+{
+  "short_name": "CallerKit",
+  "name": "CallerKit (Beta)",
+  "description": "Describe dances and share them with your friends!",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "skylink": "AQAcLT3es5a1bF4my82IaEJgOtCaPieYWEGoH-5Ayn8ELg"
+}

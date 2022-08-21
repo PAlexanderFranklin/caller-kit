@@ -1,4 +1,4 @@
-[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/GABtl72ZCXQS5akue9LZ7-dHW3ntz_zEJtRjTDrqmvOuNA)
+[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/AQAcLT3es5a1bF4my82IaEJgOtCaPieYWEGoH-5Ayn8ELg)
 
 ### Caller Kit
 
