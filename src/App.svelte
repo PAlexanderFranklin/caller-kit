@@ -8,6 +8,7 @@ import ConfirmModal from "/src/lib/Components/Common/ConfirmModal.svelte";
 import DanceList from "/src/lib/Components/DanceList/DanceList.svelte";
 import DanceFeed from "/src/lib/Components/DanceFeed/DanceFeed.svelte";
 import DanceViewer from "/src/lib/Components/DanceViewer.svelte";
+import AddToHomescreen from '/src/assets/AddToHomescreen.svg';
 
 let showDanceCreator = false;
 let showDanceList = false;
@@ -139,6 +140,13 @@ setContext('openModal', openModal);
     />
     {/if}
 </SkynetContextProvider>
+<a
+  target="_blank"
+  href="https://homescreen.hns.skynetfree.net/#/skylink/AQAcLT3es5a1bF4my82IaEJgOtCaPieYWEGoH-5Ayn8ELg"
+  rel="noreferrer"
+>
+  <img src={AddToHomescreen} alt="Add To Skynet Homescreen" />
+</a>
 
 <style>
   :root {
