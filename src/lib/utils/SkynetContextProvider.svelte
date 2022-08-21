@@ -101,7 +101,10 @@ const currentUserId = writable("");
 setContext('currentUserId', currentUserId);
 
 $: if (permissionsGranted) {
-  identityDAC.userID().then((id) => {$currentUserId = id})
+  identityDAC.userID().then((id) => {
+    $currentUserId = id;
+    window.location.hash = `/user/${id}`;
+  })
 }
 
 // Skyfeed Code
